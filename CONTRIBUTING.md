@@ -1,13 +1,13 @@
-## Normes à respecter
-### Branches
-Le répertoire est découpé de la façon suivante:
-- Une branche `master` qui correspond à une version "livrable" du projet
+## Standards to be respected
+### Branch
+The directory is split up as follows:
+- A `master` branch which corresponds to a deliverable version of the project
 
 ### Gitmoji
-Comme mentionné dans le README, les commits suivent la norme
-[Gitmoji](https://gitmoji.dev/). Ça inclut les commit de merge de branches.
+As mentioned in the README, commits follow the [Gitmoji](https://gitmoji.dev/) standard. 
+This includes branch merge commits.
 
-## Contributeurs principaux
+## Main contributors
 - [CUVELLIER Sébastien](https://github.com/Saibe1111)
 - [DESPRÉS Antoine](https://github.com/antoinedespres)
 - [HUYNH Monica](https://github.com/Nakoshima)
