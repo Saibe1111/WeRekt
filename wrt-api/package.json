@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/Saibe1111/WeRekt/issues"
   },
-  "homepage": "https://github.com/Saibe1111/WeRekt#readme"
+  "homepage": "https://github.com/Saibe1111/WeRekt#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
