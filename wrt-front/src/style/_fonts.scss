@@ -44,3 +44,10 @@ $secondary-font-family: 'Quicksand', sans-serif;
     font-weight: normal;
     font-size: 28px;
 }
+.font-2-tiny-uppercase {
+    font-family: $secondary-font-family;
+    font-style: normal;
+    font-weight: normal;
+    text-transform: uppercase;
+    font-size: 14px;
+}
