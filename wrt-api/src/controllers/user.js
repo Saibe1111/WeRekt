@@ -1,4 +1,6 @@
-function getUser(req, res) {
+const { getCoverURL } = require("../helpers/igdb.js");
+
+async function getUser(req, res) {
 
     let username = req.query.username;        
     let User = {
@@ -7,7 +9,16 @@ function getUser(req, res) {
         description: "I'm a gamer!",
         age:20,
         country:"France",
-        games: ["AmongUs", "GTA5", "Rocket League"],
+        games: [{
+            name:"Among Us",
+            cover_url:await getCoverURL("Among Us")
+        }, {
+            name:"Grand Theft Auto V",
+            cover_url:await getCoverURL("Grand Theft Auto V")
+        }, {
+            name:"Minecraft",
+            cover_url:await getCoverURL("Minecraft")
+        }],
         languages: ["Français", "Anglais"],
         social_medias: [{
             name: "Instagram",
