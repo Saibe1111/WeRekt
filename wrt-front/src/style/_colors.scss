@@ -20,3 +20,10 @@ $color-secondary-bis: #FF3D00;
 //---------------------------------
 $color-font-primary: #FFFFFF;
 $color-font-secondary: #1B1B1B;
+
+//---------------------------------
+//        EXPORTED COLORS
+//---------------------------------
+:export {
+    colorMainBg: $color-main-bg;
+}
