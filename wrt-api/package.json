@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/Saibe1111/WeRekt#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.1"
   }
 }
