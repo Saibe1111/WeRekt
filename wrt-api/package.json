@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/Saibe1111/WeRekt#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-session": "^1.17.2",
     "node-fetch": "^2.6.1",
