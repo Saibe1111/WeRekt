@@ -20,6 +20,8 @@
   "homepage": "https://github.com/Saibe1111/WeRekt#readme",
   "dependencies": {
     "express": "^4.17.1",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.1",
+    "passport": "^0.4.1",
+    "passport-discord": "^0.1.4"
   }
 }
