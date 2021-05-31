@@ -30,3 +30,6 @@ jobs:
 
     - name: Build API
       run: cd wrt-api && npm i
+    
+    - name: Run API
+      run: pm2 restart API
