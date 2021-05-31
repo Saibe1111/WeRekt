@@ -7,24 +7,43 @@
       <v-icon color="white" size="36">mdi-account-circle</v-icon>
     </div>
     <div v-else :class="$style.btnContainer">
-      <v-btn :class="$style.btnLogin">Log in</v-btn>
+      <v-btn v-on:click="login" :class="$style.btnLogin">Log in</v-btn>
     </div>
   </v-app-bar>
 </template>
 
 <script>
+const fetch = require("node-fetch");
+
 export default {
   name: "NavBar",
   data() {
     return {
-      isLog:true
+      isLog:false
     };
   },
   methods: {
     testFonction() {},
+    login() {
+      window.location.href = 'http://localhost:3000/api/auth/discord/'
+    },
   },
   created() {
     console.log("NavBar created");
+    this.isLog = false;
+    fetch('http://localhost:3000/api/auth', {method:'GET',
+        credentials: 'include'
+      })
+    .then(
+        response => response.json()
+    ).then(function(data){
+        return new Promise(function(resolve) {
+        if(data.user){
+          resolve(true);
+        }
+        resolve(false);
+        });
+    }).then((state) => this.isLog = state);
   },
   mounted() {
     

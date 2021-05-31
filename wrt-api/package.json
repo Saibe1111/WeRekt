@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon src/index.js",
     "start": "node src/index.js"
   },
   "repository": {
@@ -18,7 +19,11 @@
   },
   "homepage": "https://github.com/Saibe1111/WeRekt#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.17.1",
-    "node-fetch": "^2.6.1"
+    "express-session": "^1.17.2",
+    "node-fetch": "^2.6.1",
+    "passport": "^0.4.1",
+    "passport-discord": "^0.1.4"
   }
 }
