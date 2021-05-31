@@ -9,7 +9,7 @@ const session = require("express-session");
 const cors = require('cors');
 
 app.use( cors({
-    origin: ['http://localhost:8080'],
+    origin: ['https://werekt.cuvellier.fr'],
     credentials: true,
 }));
 
