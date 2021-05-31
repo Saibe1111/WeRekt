@@ -25,13 +25,13 @@ export default {
   methods: {
     testFonction() {},
     login() {
-      window.location.href = 'http://werekt-api.cuvellier.fr/api/auth/discord/'
+      window.location.href = 'https://werekt-api.cuvellier.fr/api/auth/discord/'
     },
   },
   created() {
     console.log("NavBar created");
     this.isLog = false;
-    fetch('http://werekt-api.cuvellier.fr/api/auth', {method:'GET',
+    fetch('https://werekt-api.cuvellier.fr/api/auth', {method:'GET',
         credentials: 'include'
       })
     .then(
