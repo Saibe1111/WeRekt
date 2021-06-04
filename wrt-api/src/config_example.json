@@ -14,7 +14,7 @@
     },
     "mysql":{
         "HOST" : "",
-        "USERNAME" :"",
+        "USER" :"",
         "PASSWORD" :""
     }
 }
