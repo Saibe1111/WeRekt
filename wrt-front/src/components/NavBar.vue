@@ -50,14 +50,16 @@ export default {
   },
   methods: {
     login() {
-      window.location.href = "http://localhost:3000/api/auth/discord/";
+      let url = process.env.VUE_APP_API_URL;
+      window.location.href = `${url}/api/auth/discord/`;
     },
     redirect(item) {
       console.log(item);
     },
     getUser() {
+      let url = process.env.VUE_APP_API_URL;
       this.isLog = false;
-      fetch("http://localhost:3000/api/auth", {
+      fetch(`${url}/api/auth/`, {
         method: "GET",
         credentials: "include",
       })
