@@ -4,7 +4,7 @@ const passport = require('passport');
 router.get('/discord', passport.authenticate('discord'));
 
 router.get('/discord/redirect', passport.authenticate('discord'), (req, res) =>{
-    res.redirect('https://werekt.cuvellier.fr/');
+    res.redirect('http://localhost:8080/');
 });
 
 router.get('/', (req, res) =>{

@@ -9,8 +9,8 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser(async (discordId, done) => {
     try {
         const user = {
-            discordId: "181782320494280704",
-            username: "Sébastien",
+            discordId: "345823189449965579",
+            username: "Antoine",
         }; // On cherche dans la base de donnée , si pas trouvé = null
 
         return user ? done(null, user) : done(null, null);
