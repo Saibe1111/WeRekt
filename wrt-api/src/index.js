@@ -7,6 +7,9 @@ const config = require("./config.json");
 const routes = require("./routes");
 const session = require("express-session");
 const cors = require('cors');
+const database = require('./helpers/database.js');
+
+database.checkDbExist();
 
 app.use( cors({
     origin: ['http://localhost:8080'],
