@@ -61,18 +61,23 @@
       </div>
     </div>
     <!-- Third section -->
-    <h1 :class="$style.title">Find your team on any game</h1>
-    <p>More than xxxx games available</p>
-    <div class="gamesGrid">
-      <v-row>
-        <v-col v-for="n in 12" :key="n" cols="2">
-          <v-img
-            :src="`https://picsum.photos/500/300?image=${n * 5 + 10}`"
-            aspect-ratio="1"
-          >
-          </v-img>
-        </v-col>
-      </v-row>
+    <div class="d-flex flex-column">
+      <h1 :class="$style.title">Find your team on any game</h1>
+      <p :class="$style.description">More than xxxx games available</p>
+      <div :class="$style.gamesGrid">
+        <div class="d-flex justify-space-around px-16 py-10">
+          <v-row>
+            <v-col v-for="n in 12" :key="n" md="2" sm="4" class="d-flex justify-center">
+              <v-img
+                :src="`https://picsum.photos/500/300?image=${n * 5 + 10}`"
+                :aspect-ratio="3/4"
+                max-width="150"
+              >
+              </v-img>
+            </v-col>
+          </v-row>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -119,5 +124,9 @@ export default {
 .description {
   color: $color-font-primary;
   @extend .font-2-medium;
+}
+
+.gamesGrid {
+  background-color: $color-main-darker-bg;
 }
 </style>
