@@ -2,12 +2,28 @@
   <v-app-bar :color="$style.colorMainBg">
     <v-toolbar-title :class="$style.logo">WeRekt</v-toolbar-title>
     <v-spacer></v-spacer>
-    <div v-if="isLog">
-      <v-icon color="white" size="24">mdi-magnify</v-icon>
-      <v-icon color="white" size="36">mdi-account-circle</v-icon>
+    <div v-if="isLog" class="mr-5">
+      <v-icon class="mr-5" color="white" size="24">mdi-magnify</v-icon>
+      <v-menu offset-y>
+        <template v-slot:activator="{ on, attrs }">
+          <v-icon color="white" size="36" v-bind="attrs" v-on="on"
+            >mdi-account-circle
+          </v-icon>
+        </template>
+        <v-list dark :class="$style.menu">
+          <v-list-item
+            v-for="(item, index) in menuItems"
+            :key="index"
+            @click="redirect(item)"
+            :to="item.path"
+          >
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
     </div>
     <div v-else :class="$style.btnContainer">
-      <v-btn v-on:click="login" :class="$style.btnLogin">Log in</v-btn>
+      <v-btn @click="login()" :class="$style.btnLogin">Log in</v-btn>
     </div>
   </v-app-bar>
 </template>
@@ -19,35 +35,47 @@ export default {
   name: "NavBar",
   data() {
     return {
-      isLog:false
+      menuItems: [
+        {
+          title: "My profile",
+          path: "/profile",
+        },
+        {
+          title: "Log out",
+          path: "",
+        },
+      ],
+      isLog: false,
     };
   },
   methods: {
-    testFonction() {},
     login() {
-      window.location.href = 'http://localhost:3000/api/auth/discord/'
+      window.location.href = "http://localhost:3000/api/auth/discord/";
+    },
+    redirect(item) {
+      console.log(item);
+    },
+    getUser() {
+      this.isLog = false;
+      fetch("http://localhost:3000/api/auth", {
+        method: "GET",
+        credentials: "include",
+      })
+        .then((response) => response.json())
+        .then(function (data) {
+          return new Promise(function (resolve) {
+            if (data.user) {
+              resolve(true);
+            }
+            resolve(false);
+          });
+        })
+        .then((state) => (this.isLog = state));
     },
   },
   created() {
-    console.log("NavBar created");
-    this.isLog = false;
-    fetch('http:localhost:3000/api/auth', {method:'GET',
-        credentials: 'include'
-      })
-    .then(
-        response => response.json()
-    ).then(function(data){
-        return new Promise(function(resolve) {
-        if(data.user){
-          resolve(true);
-        }
-        resolve(false);
-        });
-    }).then((state) => this.isLog = state);
-  },
-  mounted() {
-    
-  },
+    this.getUser();
+  }
 };
 </script>
 
@@ -67,14 +95,19 @@ export default {
   @extend .font-2-tiny-uppercase;
 }
 
-.btnLogin::after{
-    position: absolute;
-    top: -2px; bottom: -2px;
-    left: -2px; right: -2px;
-    background: linear-gradient(45deg, $color-secondary, $color-secondary-bis);
-    content: '';
-    z-index: -1;
-    border-radius: 4px;
+.btnLogin::after {
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  left: -2px;
+  right: -2px;
+  background: linear-gradient(45deg, $color-secondary, $color-secondary-bis);
+  content: "";
+  z-index: -1;
+  border-radius: 4px;
 }
 
+.menu {
+  background-color: $color-main-bg !important;
+}
 </style>
