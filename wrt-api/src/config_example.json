@@ -11,5 +11,10 @@
         "URL" : "https://api.igdb.com/v4/",
         "CLIENT_ID" :"",
         "AUTHORIZATION" :""
+    },
+    "mysql":{
+        "HOST" : "",
+        "USERNAME" :"",
+        "PASSWORD" :""
     }
 }
