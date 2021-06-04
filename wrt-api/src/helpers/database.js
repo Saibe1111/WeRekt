@@ -40,11 +40,12 @@ async function createUser(connection){
     return new Promise((resolve, reject) => {
         connection.query(
             `CREATE TABLE IF NOT EXISTS werekt.Users ( 
-                PersonID int,
-                LastName varchar(255),
-                FirstName varchar(255),
-                Address varchar(255),
-                City varchar(255)
+                ID int,
+                Username varchar(255),
+                Profile_Url varchar(255),
+                Description varchar(255),
+                Country varchar(255),
+                Birthdate Date
             ) `,
 
             (error) => {
