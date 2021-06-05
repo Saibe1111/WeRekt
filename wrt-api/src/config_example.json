@@ -16,5 +16,8 @@
         "HOST" : "",
         "USER" :"",
         "PASSWORD" :""
+    },
+    "front":{
+        "URL" : "http://localhost:8080"
     }
 }

@@ -12,7 +12,7 @@ const database = require('./helpers/database.js');
 database.checkDbExist();
 
 app.use( cors({
-    origin: ['http://localhost:8080'],
+    origin: ['http://localhost:8080', 'https://werekt.cuvellier.fr'],
     credentials: true,
 }));
 

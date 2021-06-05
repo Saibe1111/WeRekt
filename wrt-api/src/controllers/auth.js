@@ -1,3 +1,5 @@
+const config = require("../config.json");
+
 async function getAuth(req, res) {
     if(req.user){
         res.json({user: req.user});
@@ -7,7 +9,7 @@ async function getAuth(req, res) {
 }
 
 async function discordRedirect(req, res) {
-    res.redirect('http://localhost:8080/');
+    res.redirect(config.front.URL);
 }
 
 module.exports = {
