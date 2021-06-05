@@ -7,14 +7,17 @@ const config = require("./config.json");
 const routes = require("./routes");
 const session = require("express-session");
 const cors = require('cors');
+const database = require('./helpers/database.js');
+
+database.checkDbExist();
 
 app.use( cors({
-    origin: ['https://werekt.cuvellier.fr'],
+    origin: ['http://localhost:8080'],
     credentials: true,
 }));
 
 app.use( session({
-    secret: 'secret-key',
+    secret: 'secret-key', //FIXME hide this
     cookie: {
         maxAge: 60000 * 60 * 24
     },

@@ -1,4 +1,3 @@
-
 const { response } = require("express");
 const config = require("../config.json");
 const fetch = require("node-fetch");
