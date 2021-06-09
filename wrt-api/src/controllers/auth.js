@@ -1,11 +1,8 @@
 const config = require("../config.json");
 
 async function getAuth(req, res) {
-    if(req.user){
-        res.json({user: req.user});
-    }else{
-        res.status(401).json({msg: "Unauthorized"});
-    }
+    res.json({user: req.user});
+    
 }
 
 async function discordRedirect(req, res) {
