@@ -33,6 +33,7 @@ passport.use(
             let user = {
                 discordId: profile.id,
                 username: profile.username,
+                avatarUrl: `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png`
             };
 
             try {
