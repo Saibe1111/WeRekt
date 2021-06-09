@@ -16,6 +16,9 @@ async function checkDbExist(){
 
     await werektDb(connection);
     await createUser(connection);
+    await createGameTable(connection);
+    await createMessageTable(connection);
+    await createLanguageTable(connection);
 
 }
 
@@ -33,6 +36,8 @@ async function werektDb(connection){
                 }
             }
         );
+    }).catch((error)=>{
+        console.log(error);
     });
 }
 
@@ -46,7 +51,7 @@ async function createUser(connection){
                 Description varchar(255),
                 Country varchar(255),
                 Birthdate Date
-            ) `,
+            ); `,
 
             (error) => {
                 if (error) {
@@ -58,6 +63,79 @@ async function createUser(connection){
                 }
             }
         );
+    }).catch((error)=>{
+        console.log(error);
+    });
+}
+
+async function createGameTable(connection){
+    return new Promise((resolve, reject) => {
+        connection.query(
+            `CREATE TABLE IF NOT EXISTS werekt.Game ( 
+                Id_Game int,
+                Name varchar(255)
+            ); `,
+
+            (error) => {
+                if (error) {
+                    console.error(error.message);
+                    reject(error)
+                }else{
+                    console.log("CREATE TABLE Game")
+                    resolve();
+                }
+            }
+        );
+    }).catch((error)=>{
+        console.log(error);
+    });
+}
+
+async function createLanguageTable(connection){
+    return new Promise((resolve, reject) => {
+        connection.query(
+            `CREATE TABLE IF NOT EXISTS werekt.Language ( 
+                Id_Lang int,
+                Name varchar(255)
+            ); `,
+
+            (error) => {
+                if (error) {
+                    console.error(error.message);
+                    reject(error)
+                }else{
+                    console.log("CREATE TABLE Language")
+                    resolve();
+                }
+            }
+        );
+    }).catch((error)=>{
+        console.log(error);
+    });
+}
+
+async function createMessageTable(connection){
+    return new Promise((resolve, reject) => {
+        connection.query(
+            `CREATE TABLE IF NOT EXISTS werekt.Message ( 
+                Id_Message int,
+                Name varchar(255),
+                Content varchar(255),
+                Sent_Time Date
+            ); `,
+
+            (error) => {
+                if (error) {
+                    console.error(error.message);
+                    reject(error)
+                }else{
+                    console.log("CREATE TABLE Message")
+                    resolve();
+                }
+            }
+        );
+    }).catch((error)=>{
+        console.log(error);
     });
 }
 
