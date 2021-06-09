@@ -3,26 +3,24 @@ const config = require("../config.json");
 const { Sequelize } = require("sequelize");
 
 async function getConnection() {
-    const sequelize = new Sequelize(
-        "werekt",
-        config.mysql.USER,
-        config.mysql.PASSWORD,
-        {
-            dialect: "mysql",
-            host: config.mysql.HOST,
-        }
-    );
 
-    try {
-        sequelize.authenticate();
-        console.log("Connected to database");
-    } catch (error) {
-        console.error("Error :", error);
-    }
+    const con = await mysql.createConnection({
+        host: config.mysql.HOST,
+        user: config.mysql.USER,
+        password: config.mysql.PASSWORD,
+        database: "werekt"
+    });
+
+    con.connect(function(err){
+        if(err) throw err;
+        console.log("connexion réussie");
+        
+    });
+    return con;
 }
 
-async function checkDbExist(){
-    
+async function checkDbExist() {
+
     const connection = mysql.createConnection({
         host: config.mysql.HOST,
         user: config.mysql.USER,
@@ -37,7 +35,7 @@ async function checkDbExist(){
 
 }
 
-async function werektDb(connection){
+async function werektDb(connection) {
     return new Promise((resolve, reject) => {
         connection.query(
             `CREATE DATABASE IF NOT EXISTS werekt;`,
@@ -45,18 +43,18 @@ async function werektDb(connection){
                 if (error) {
                     console.error(error.message);
                     reject(error)
-                }else{
+                } else {
                     console.log("CREATE DATABASE WEREKT")
                     resolve();
                 }
             }
         );
-    }).catch((error)=>{
+    }).catch((error) => {
         console.log(error);
     });
 }
 
-async function createUser(connection){
+async function createUser(connection) {
     return new Promise((resolve, reject) => {
         connection.query(
             `CREATE TABLE IF NOT EXISTS werekt.Users ( 
@@ -72,18 +70,18 @@ async function createUser(connection){
                 if (error) {
                     console.error(error.message);
                     reject(error)
-                }else{
+                } else {
                     console.log("CREATE TABLE USER")
                     resolve();
                 }
             }
         );
-    }).catch((error)=>{
+    }).catch((error) => {
         console.log(error);
     });
 }
 
-async function createGameTable(connection){
+async function createGameTable(connection) {
     return new Promise((resolve, reject) => {
         connection.query(
             `CREATE TABLE IF NOT EXISTS werekt.Game ( 
@@ -95,18 +93,18 @@ async function createGameTable(connection){
                 if (error) {
                     console.error(error.message);
                     reject(error)
-                }else{
+                } else {
                     console.log("CREATE TABLE Game")
                     resolve();
                 }
             }
         );
-    }).catch((error)=>{
+    }).catch((error) => {
         console.log(error);
     });
 }
 
-async function createLanguageTable(connection){
+async function createLanguageTable(connection) {
     return new Promise((resolve, reject) => {
         connection.query(
             `CREATE TABLE IF NOT EXISTS werekt.Language ( 
@@ -118,18 +116,18 @@ async function createLanguageTable(connection){
                 if (error) {
                     console.error(error.message);
                     reject(error)
-                }else{
+                } else {
                     console.log("CREATE TABLE Language")
                     resolve();
                 }
             }
         );
-    }).catch((error)=>{
+    }).catch((error) => {
         console.log(error);
     });
 }
 
-async function createMessageTable(connection){
+async function createMessageTable(connection) {
     return new Promise((resolve, reject) => {
         connection.query(
             `CREATE TABLE IF NOT EXISTS werekt.Message ( 
@@ -143,13 +141,13 @@ async function createMessageTable(connection){
                 if (error) {
                     console.error(error.message);
                     reject(error)
-                }else{
+                } else {
                     console.log("CREATE TABLE Message")
                     resolve();
                 }
             }
         );
-    }).catch((error)=>{
+    }).catch((error) => {
         console.log(error);
     });
 }

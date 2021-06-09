@@ -1,14 +1,17 @@
 const { getCoverURL } = require("../helpers/igdb.js");
+const db = require("../models/userDAO.js");
 
 async function getUser(req, res) {
-
-    let username = req.query.username;        
+    db.createUser(1, "steve", "https://images-ext-1.discordapp.net/external/GtvlXwMO1thEKkqVYnLBGlRW6Wfbbu3z7EemGmD9Egc/https/support.discord.com/system/photos/360198181611/profile_image_377013600211_678183.jpg");
+    let user = db.getUser(1)
+    let usernameO = user.username;    
+    var ageOf = new Date(user.birthdate).getFullYear - new Date().getFullYear;    
     let User = {
-        username: username,
-        profile_url: "https://images-ext-1.discordapp.net/external/GtvlXwMO1thEKkqVYnLBGlRW6Wfbbu3z7EemGmD9Egc/https/support.discord.com/system/photos/360198181611/profile_image_377013600211_678183.jpg",
-        description: "I'm a gamer!",
-        age:20,
-        country:"France",
+        username: usernameO,
+        profile_url: user.profile_url,
+        description: null,
+        age:ageOf,
+        country:user.country,
         games: [{
             name:"Among Us",
             cover_url:await getCoverURL("Among Us")

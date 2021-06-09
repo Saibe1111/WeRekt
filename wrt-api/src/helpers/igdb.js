@@ -37,7 +37,6 @@ async function getCoverURL(game_name){
     }).then(
         response => response.json()
     ).then(function(data){
-        console.log(data);
         return data[0].image_id;
     });
     return `https://images.igdb.com/igdb/image/upload/t_cover_big/${await response}.jpg`;
