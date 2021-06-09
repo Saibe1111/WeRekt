@@ -12,8 +12,14 @@ async function discordRedirect(req, res) {
     res.redirect(config.front.URL);
 }
 
+async function logout(req, res) {
+    req.logout();
+    res.redirect(config.front.URL);
+}
+
 module.exports = {
     getAuth,
-    discordRedirect
+    discordRedirect,
+    logout
 };
 
