@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar :color="$style.colorMainBg">
+  <v-app-bar fixed :color="$style.colorMainBg" elevate-on-scroll>
     <v-toolbar-title :class="$style.logo">WeRekt</v-toolbar-title>
     <v-spacer></v-spacer>
     <div v-if="isLog" class="mr-5">
@@ -15,7 +15,7 @@
             v-for="(item, index) in menuItems"
             :key="index"
             @click="redirect(item)"
-            :to="item.path"
+            :href="item.path"
           >
             <v-list-item-title>{{ item.title }}</v-list-item-title>
           </v-list-item>
@@ -42,7 +42,7 @@ export default {
         },
         {
           title: "Log out",
-          path: "",
+          path: `${process.env.VUE_APP_API_URL}/api/auth/logout`,
         },
       ],
       isLog: false,
@@ -77,7 +77,7 @@ export default {
   },
   created() {
     this.getUser();
-  }
+  },
 };
 </script>
 

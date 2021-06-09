@@ -1,67 +1,95 @@
-@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap");
 
-$default-font-family: 'Josefin Sans', sans-serif;
-$secondary-font-family: 'Quicksand', sans-serif;
+$default-font-family: "Josefin Sans", sans-serif;
+$secondary-font-family: "Quicksand", sans-serif;
 
 //---------------------------------
 //             FONT 1
 //---------------------------------
 .font-1-extra-large {
-    font-family: $default-font-family;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 96px;
+  font-family: $default-font-family;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 96px;
 }
 
 .font-1-large-bold {
-    font-family: $default-font-family;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 48px;
+  font-family: $default-font-family;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 48px;
 }
 
 .font-1-large {
-    font-family: $default-font-family;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 48px;
+  font-family: $default-font-family;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 48px;
 }
 
+.font-1-medium-bold {
+  font-family: $default-font-family;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 36px;
+}
 .font-1-medium {
-    font-family: $default-font-family;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 36px;
+  font-family: $default-font-family;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 36px;
 }
 
 .font-1-medium-small {
-    font-family: $default-font-family;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 28px;
+  font-family: $default-font-family;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 28px;
 }
 
 .font-1-small {
-    font-family: $default-font-family;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 18px;
+  font-family: $default-font-family;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+}
+
+.font-1-tiny {
+  font-family: $default-font-family;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
 }
 
 //---------------------------------
 //             FONT 2
 //---------------------------------
 .font-2-medium {
-    font-family: $secondary-font-family;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 28px;
+  font-family: $secondary-font-family;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 28px;
 }
+
+.font-2-small {
+  font-family: $secondary-font-family;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+}
+
 .font-2-tiny-uppercase {
-    font-family: $secondary-font-family;
-    font-style: normal;
-    font-weight: normal;
-    text-transform: uppercase;
-    font-size: 14px;
+  font-family: $secondary-font-family;
+  font-style: normal;
+  font-weight: normal;
+  text-transform: uppercase;
+  font-size: 14px;
+}
+
+.font-2-tiny {
+  font-family: $secondary-font-family;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
 }

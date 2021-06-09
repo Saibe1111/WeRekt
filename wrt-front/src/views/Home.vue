@@ -1,10 +1,14 @@
 <template>
-  <div :class="$style.background">
-    <NavBar />
-    <ToTopBtn />
+  <div>
     <!-- First section -->
-    <div class="d-flex justify-space-around">
-      <div style="width: 572px">
+    <div
+      class="d-flex flex-column justify-space-around align-center flex-md-row"
+      :class="$style.sectionHeight"
+    >
+      <div
+        class="ma-4"
+        :class="$vuetify.breakpoint.mdAndUp ? $style.widthFirstDesktop : ''"
+      >
         <div class="mb-8">
           <v-chip
             :class="$style.chip"
@@ -16,32 +20,48 @@
             >Matchmaking service
           </v-chip>
         </div>
-        <h1 :class="$style.mainTitle" class="mb-2">
+        <h1
+          :class="
+            $vuetify.breakpoint.mdAndUp
+              ? $style.mainTitle
+              : $style.mainTitleMobile
+          "
+          class="mb-2"
+        >
           Find the matching players to play with
         </h1>
-        <p :class="$style.description">
+        <p
+          :class="
+            $vuetify.breakpoint.mdAndUp
+              ? $style.description
+              : $style.descriptionMobile
+          "
+        >
           A social platform where you can join a team which meet your
           expectations
         </p>
       </div>
-      <div>
-        <v-img
-          :src="require('../assets/home/image1.jpg')"
-          height="500"
-          width="500"
-        ></v-img>
-      </div>
+      <v-img
+        :src="require('../assets/home/image1.jpg')"
+        :max-height="$vuetify.breakpoint.mdAndUp ? 500 : 300"
+        :max-width="$vuetify.breakpoint.mdAndUp ? 500 : 300"
+      ></v-img>
     </div>
     <!-- Second section -->
-    <div class="d-flex justify-space-around">
-      <div>
-        <v-img
-          :src="require('../assets/home/image2.jpg')"
-          height="500"
-          width="500"
-        ></v-img>
-      </div>
-      <div style="width: 470px">
+    <div
+      class="
+        d-flex
+        flex-column
+        justify-space-around
+        align-center
+        flex-md-row-reverse
+      "
+      :class="$style.sectionHeight"
+    >
+      <div
+        class="ma-4"
+        :class="$vuetify.breakpoint.mdAndUp ? $style.widthSecondDesktop : ''"
+      >
         <div class="mb-8">
           <v-chip
             :class="$style.chip"
@@ -53,24 +73,64 @@
             >Multiplayer</v-chip
           >
         </div>
-        <h1 :class="$style.title" class="mb-2">Connect with people</h1>
-        <p :class="$style.description">
+        <h1
+          :class="
+            $vuetify.breakpoint.mdAndUp ? $style.title : $style.titleMobile
+          "
+          class="mb-2"
+        >
+          Connect with people
+        </h1>
+        <p
+          :class="
+            $vuetify.breakpoint.mdAndUp
+              ? $style.description
+              : $style.descriptionMobile
+          "
+        >
           Don't play alone anymore. Meet people playing the same games who want
           to play them at the same time as you
         </p>
       </div>
+      <v-img
+        :src="require('../assets/home/image2.jpg')"
+        :max-height="$vuetify.breakpoint.mdAndUp ? 500 : 300"
+        :max-width="$vuetify.breakpoint.mdAndUp ? 500 : 300"
+      ></v-img>
     </div>
     <!-- Third section -->
     <div class="d-flex flex-column">
-      <h1 :class="$style.title">Find your team on any game</h1>
-      <p :class="$style.description">More than xxxx games available</p>
+      <div class="mx-2">
+        <h1
+          :class="
+            $vuetify.breakpoint.mdAndUp ? $style.title : $style.titleMobile
+          "
+        >
+          Find your team on any game
+        </h1>
+        <p
+          :class="
+            $vuetify.breakpoint.mdAndUp
+              ? $style.description
+              : $style.descriptionMobile
+          "
+        >
+          Hundreds of games compatible
+        </p>
+      </div>
       <div :class="$style.gamesGrid">
         <div class="d-flex justify-space-around px-16 py-10">
           <v-row>
-            <v-col v-for="n in 12" :key="n" md="2" sm="4" class="d-flex justify-center">
+            <v-col
+              v-for="n in 12"
+              :key="n"
+              md="2"
+              cols="4"
+              class="d-flex justify-center"
+            >
               <v-img
                 :src="`https://picsum.photos/500/300?image=${n * 5 + 10}`"
-                :aspect-ratio="3/4"
+                :aspect-ratio="3 / 4"
                 max-width="150"
               >
               </v-img>
@@ -79,19 +139,42 @@
         </div>
       </div>
     </div>
+    <div
+      class="d-flex justify-center pb-16"
+      :class="
+        $vuetify.breakpoint.mdAndUp
+          ? $style.lastSectionHeight
+          : $style.lastSectionHeightMobile
+      "
+    >
+      <h1
+        :class="$vuetify.breakpoint.mdAndUp ? $style.title : $style.titleMobile"
+      >
+        Join us
+      </h1>
+      <h1
+        :class="
+          $vuetify.breakpoint.mdAndUp
+            ? $style.coloredTitle
+            : $style.coloredTitleMobile
+        "
+        class="mx-2 px-2"
+      >
+        now
+      </h1>
+    </div>
+    <v-footer padless :color="$style.colorMainBg">
+      <v-col class="text-center" cols="12">
+        <span :class="$style.footerText">© 2021 WeRekt</span></v-col
+      >
+    </v-footer>
   </div>
 </template>
 
 <script>
-import NavBar from "../components/NavBar";
-import ToTopBtn from "../components/ToTopBtn";
-
 export default {
   name: "Home",
-  components: {
-    NavBar,
-    ToTopBtn,
-  },
+  components: {},
   data() {
     return {};
   },
@@ -100,11 +183,6 @@ export default {
 
 <style lang="scss" module>
 @import "../style";
-
-.background {
-  background-color: $color-main-bg;
-  height: 100%;
-}
 
 .chip {
   @extend .font-1-small;
@@ -116,9 +194,32 @@ export default {
   @extend .font-1-large-bold;
 }
 
+.coloredTitle {
+  background: linear-gradient(270deg, $color-secondary, $color-secondary-bis);
+  border-radius: 4px;
+  @extend .title;
+}
+
+.coloredTitleMobile {
+  background: linear-gradient(270deg, $color-secondary, $color-secondary-bis);
+  border-radius: 4px;
+  @extend .titleMobile;
+}
+
+.mainTitleMobile {
+  color: $color-font-primary;
+  text-transform: uppercase;
+  @extend .font-1-medium-bold;
+}
+
 .title {
   color: $color-font-primary;
   @extend .font-1-large-bold;
+}
+
+.titleMobile {
+  color: $color-font-primary;
+  @extend .font-1-medium-bold;
 }
 
 .description {
@@ -126,7 +227,52 @@ export default {
   @extend .font-2-medium;
 }
 
+.descriptionMobile {
+  color: $color-font-primary;
+  @extend .font-2-small;
+}
+
+.footerText {
+  color: $color-font-primary;
+  @extend .font-2-tiny;
+}
+
 .gamesGrid {
   background-color: $color-main-darker-bg;
+}
+
+.sectionHeight {
+  min-height: 100vh !important;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.lastSectionHeight {
+  min-height: 80vh !important;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+.lastSectionHeightMobile {
+  @extend .lastSectionHeight;
+  min-height: 40vh !important;
+}
+
+.widthFirstDesktop {
+  width: 572px;
+}
+.widthSecondDesktop {
+  width: 470px;
 }
 </style>
