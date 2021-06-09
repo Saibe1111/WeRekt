@@ -1,9 +1,24 @@
 const mysql = require("mysql2");
 const config = require("../config.json");
+const { Sequelize } = require("sequelize");
 
-async function getConnection(){
-    
+async function getConnection() {
+    const sequelize = new Sequelize(
+        "werekt",
+        config.mysql.USER,
+        config.mysql.PASSWORD,
+        {
+            dialect: "mysql",
+            host: config.mysql.HOST,
+        }
+    );
 
+    try {
+        sequelize.authenticate();
+        console.log("Connected to database");
+    } catch (error) {
+        console.error("Error :", error);
+    }
 }
 
 async function checkDbExist(){
