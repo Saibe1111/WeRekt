@@ -5,7 +5,6 @@ async function getUser(id) {
     return new Promise((resolve, reject) => {
 
         
-        if (err) throw err;
 
         let sql = "SELECT * FROM Users where ID=?;";
         connection.query(sql, [id], (error, results) => {

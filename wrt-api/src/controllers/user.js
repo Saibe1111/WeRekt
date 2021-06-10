@@ -2,8 +2,8 @@ const { getCoverURL } = require("../helpers/igdb.js");
 const db = require("../models/userDAO.js");
 
 async function getUser(req, res) {
-    db.createUser(1, "steve", "https://images-ext-1.discordapp.net/external/GtvlXwMO1thEKkqVYnLBGlRW6Wfbbu3z7EemGmD9Egc/https/support.discord.com/system/photos/360198181611/profile_image_377013600211_678183.jpg");
-    let user = db.getUser(1)
+    await db.createUser(1, "steve", "https://images-ext-1.discordapp.net/external/GtvlXwMO1thEKkqVYnLBGlRW6Wfbbu3z7EemGmD9Egc/https/support.discord.com/system/photos/360198181611/profile_image_377013600211_678183.jpg");
+    let user = await db.getUser(1)
     let usernameO = user.username;    
     var ageOf = new Date(user.birthdate).getFullYear - new Date().getFullYear;    
     let User = {
