@@ -2,25 +2,34 @@ const { getCoverURL } = require("../helpers/igdb.js");
 const db = require("../models/userDAO.js");
 
 async function getUser(req, res) {
-    await db.createUser(1, "steve", "https://images-ext-1.discordapp.net/external/GtvlXwMO1thEKkqVYnLBGlRW6Wfbbu3z7EemGmD9Egc/https/support.discord.com/system/photos/360198181611/profile_image_377013600211_678183.jpg");
-    let user = await db.getUser(1)
-    let usernameO = user.username;    
-    var ageOf = new Date(user.birthdate).getFullYear - new Date().getFullYear;    
+    //await db.createUser(1, "steve", "https://images-ext-1.discordapp.net/external/GtvlXwMO1thEKkqVYnLBGlRW6Wfbbu3z7EemGmD9Egc/https/support.discord.com/system/photos/360198181611/profile_image_377013600211_678183.jpg");
+
+    if(req.query.id===undefined)
+        res.status(400).json({msg: "No ID given"});
+    if(req.query.id===null)
+        res.status(404).json({msg:"ID cannot be null"});
+
+    let user = await db.getUser(req.query.id);
+
+    if(user===null)
+        res.status(404).json({msg:"User not found"});
+        
     let User = {
-        username: usernameO,
+        User_ID : req.query.id,
+        username: user.username,
         profile_url: user.profile_url,
-        description: null,
-        age:ageOf,
-        country:user.country,
+        description: user.description,
+        age: new Date(user.birthdate).getFullYear() - new Date().getFullYear(),
+        country: user.country,
         games: [{
-            name:"Among Us",
-            cover_url:await getCoverURL("Among Us")
+            name: "Among Us",
+            cover_url: await getCoverURL("Among Us")
         }, {
-            name:"Grand Theft Auto V",
-            cover_url:await getCoverURL("Grand Theft Auto V")
+            name: "Grand Theft Auto V",
+            cover_url: await getCoverURL("Grand Theft Auto V")
         }, {
-            name:"Minecraft",
-            cover_url:await getCoverURL("Minecraft")
+            name: "Minecraft",
+            cover_url: await getCoverURL("Minecraft")
         }],
         languages: ["Français", "Anglais"],
         social_medias: [{
@@ -37,8 +46,8 @@ async function getUser(req, res) {
             username: "steve"
         },
         {
-            name:"XBOX",
-            username:"steve"
+            name: "XBOX",
+            username: "steve"
 
         }]
 

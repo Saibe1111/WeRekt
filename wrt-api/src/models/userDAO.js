@@ -4,15 +4,21 @@ async function getUser(id) {
     const connection = await database.getConnection();
     return new Promise((resolve, reject) => {
 
-        
+
 
         let sql = "SELECT * FROM Users where ID=?;";
         connection.query(sql, [id], (error, results) => {
             if (error)
                 console.error(error.message);
 
-            if (results) {
-                resolve({ username: results.Username, profile_url: results.Profile_Url, description: results.Description, country: results.Country, birthdate: results.Birthdate });
+            if (results.length > 0) {
+                resolve({ 
+                    username: results[0].Username, 
+                    profile_url: results[0].Profile_Url, 
+                    description: results[0].Description, 
+                    country: results[0].Country, 
+                    birthdate: results[0].Birthdate 
+                });
             } else {
                 resolve(null);
             }
