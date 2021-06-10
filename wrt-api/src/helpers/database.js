@@ -59,7 +59,7 @@ async function createUser(connection) {
     return new Promise((resolve, reject) => {
         connection.query(
             `CREATE TABLE IF NOT EXISTS werekt.Users ( 
-                ID BIGINT PRIMARY KEY NOT NULL,
+                ID varchar(255) PRIMARY KEY NOT NULL,
                 Username varchar(255),
                 Profile_Url varchar(255),
                 Description varchar(255),
@@ -157,8 +157,8 @@ async function createIsFriendOfTable(connection) {
     return new Promise((resolve, reject) => {
         connection.query(
             `CREATE TABLE IF NOT EXISTS werekt.IsFriendOf ( 
-                ID_User1 BIGINT,
-                ID_User2 BIGINT,
+                ID_User1 varchar(255),
+                ID_User2 varchar(255),
                 FOREIGN KEY (ID_User1) REFERENCES Users(ID),
                 FOREIGN KEY (ID_User2) REFERENCES Users(ID),
                 CONSTRAINT PK_IsFriend PRIMARY KEY (ID_User1, ID_User2)
