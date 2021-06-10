@@ -3,9 +3,6 @@ const database = require('../helpers/database.js');
 async function getUser(id) {
     const connection = await database.getConnection();
     return new Promise((resolve, reject) => {
-
-
-
         let sql = "SELECT * FROM Users where ID=?;";
         connection.query(sql, [id], (error, results) => {
             if (error)
@@ -13,6 +10,7 @@ async function getUser(id) {
 
             if (results.length > 0) {
                 resolve({ 
+                    id: results[0].ID,
                     username: results[0].Username, 
                     profile_url: results[0].Profile_Url, 
                     description: results[0].Description, 
@@ -22,9 +20,7 @@ async function getUser(id) {
             } else {
                 resolve(null);
             }
-        }
-
-        )
+        });
 
     }).catch((error) => {
         console.log(error);
