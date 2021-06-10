@@ -29,7 +29,7 @@ async function getUser(id) {
 
 }
 
-async function createUser(discord_ID, name, Profile_Url) {
+async function createUser(discord_ID, username, Profile_Url) {
     const connection = await database.getConnection();
 
     return new Promise((resolve, reject) => {
@@ -37,7 +37,7 @@ async function createUser(discord_ID, name, Profile_Url) {
 
         let sql = "INSERT INTO Users (ID, Username, Profile_Url) values (?,?,?);";
 
-        connection.query(sql, [discord_ID, name, Profile_Url], (error) => {
+        connection.query(sql, [discord_ID, username, Profile_Url], (error) => {
             if (error) {
                 console.error(error.message);
                 reject(error)
@@ -53,10 +53,36 @@ async function createUser(discord_ID, name, Profile_Url) {
         console.log(error);
     });
 
+}
+
+async function updateUser(discord_ID, username, Profile_Url,Description, Country, Birthdate) {
+    const connection = await database.getConnection();
+
+    return new Promise((resolve, reject) => {
+
+
+        let sql = "UPDATE Users SET Username=?, Profile_Url=?,Description=?,Country=?, Birthdate = STR_TO_DATE(?, '%Y-%m-%d') WHERE ID = ?;";
+
+        connection.query(sql, [username, Profile_Url, Description, Country, Birthdate, discord_ID], (error) => {
+            if (error) {
+                console.error(error.message);
+                reject(error)
+            } else {
+                console.log("Row Updated");
+                resolve();
+            }
+        }
+
+        )
+
+    }).catch((error) => {
+        console.log(error);
+    });
 
 }
 
 module.exports = {
     getUser,
-    createUser
+    createUser,
+    updateUser
 }
