@@ -32,6 +32,7 @@ async function checkDbExist() {
     await createGameTable(connection);
     await createMessageTable(connection);
     await createLanguageTable(connection);
+    await createIsFriendOfTable(connection);
 
 }
 
@@ -58,7 +59,7 @@ async function createUser(connection) {
     return new Promise((resolve, reject) => {
         connection.query(
             `CREATE TABLE IF NOT EXISTS werekt.Users ( 
-                ID int,
+                ID varchar(255) PRIMARY KEY NOT NULL,
                 Username varchar(255),
                 Profile_Url varchar(255),
                 Description varchar(255),
@@ -85,7 +86,7 @@ async function createGameTable(connection) {
     return new Promise((resolve, reject) => {
         connection.query(
             `CREATE TABLE IF NOT EXISTS werekt.Game ( 
-                Id_Game int,
+                Id_Game int PRIMARY KEY NOT NULL,
                 Name varchar(255)
             ); `,
 
@@ -152,6 +153,32 @@ async function createMessageTable(connection) {
     });
 }
 
+async function createIsFriendOfTable(connection) {
+    return new Promise((resolve, reject) => {
+        connection.query(
+            `CREATE TABLE IF NOT EXISTS werekt.IsFriendOf ( 
+                ID_User1 varchar(255),
+                ID_User2 varchar(255),
+                FOREIGN KEY (ID_User1) REFERENCES Users(ID),
+                FOREIGN KEY (ID_User2) REFERENCES Users(ID),
+                CONSTRAINT PK_IsFriend PRIMARY KEY (ID_User1, ID_User2)
+            ); `,
+
+            (error) => {
+                if (error) {
+                    console.error(error.message);
+                    reject(error)
+                } else {
+                    console.log("CREATE TABLE IsFriendOf");
+                    resolve();
+                }
+            }
+        );
+       
+    }).catch((error) => {
+        console.log(error);
+    });
+}
 
 module.exports = {
     getConnection,

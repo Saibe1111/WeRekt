@@ -22,6 +22,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-session": "^1.17.2",
+    "moment": "^2.29.1",
     "mysql2": "^2.2.5",
     "node-fetch": "^2.6.1",
     "passport": "^0.4.1",

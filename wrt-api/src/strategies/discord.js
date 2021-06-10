@@ -1,18 +1,16 @@
 const passport = require("passport");
 const discordStrategy = require("passport-discord");
 const config = require("../config.json");
+const { createUser, getUser } = require("../models/userDAO");
 
 passport.serializeUser((user, done) => {
-    done(null, user.discordId);
+    done(null, user.id);
 });
 
-passport.deserializeUser(async (discordId, done) => {
+passport.deserializeUser(async (id, done) => {
     try {
-        const user = {
-            discordId: "345823189449965579",
-            username: "Antoine",
-        }; // On cherche dans la base de donnée , si pas trouvé = null
-
+        const user = await getUser(id);
+        console.log(user);
         return user ? done(null, user) : done(null, null);
     } catch (error) {
         console.log(error);
@@ -29,18 +27,16 @@ passport.use(
             scope: ["identify"],
         },
         async (accessToken, refreshToken, profile, done) => {
-            console.log(profile);
-            let user = {
-                discordId: profile.id,
-                username: profile.username,
-                avatarUrl: `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png`
-            };
-
+            
             try {
-                //On cherche un utilisateur,
-                //Si on trouve on update
-                //return done(null, user);
-                //Si on trouve pas on le créer
+                let user = await getUser(profile.id);
+                if(user === null){
+                    await createUser(profile.id, profile.username, `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png`)
+                    user  = await getUser(profile.id);
+                }else{
+                    //Si on trouve on update
+                }
+                console.log(user);
                 return done(null, user);
             } catch (error) {
                 console.log(error);
