@@ -58,7 +58,7 @@ async function createUser(connection) {
     return new Promise((resolve, reject) => {
         connection.query(
             `CREATE TABLE IF NOT EXISTS werekt.Users ( 
-                ID int,
+                ID int PRIMARY KEY NOT NULL,
                 Username varchar(255),
                 Profile_Url varchar(255),
                 Description varchar(255),
@@ -85,7 +85,7 @@ async function createGameTable(connection) {
     return new Promise((resolve, reject) => {
         connection.query(
             `CREATE TABLE IF NOT EXISTS werekt.Game ( 
-                Id_Game int,
+                Id_Game int PRIMARY KEY NOT NULL,
                 Name varchar(255)
             ); `,
 
