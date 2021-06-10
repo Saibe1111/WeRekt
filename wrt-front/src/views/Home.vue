@@ -163,11 +163,6 @@
         now
       </h1>
     </div>
-    <v-footer padless :color="$style.colorMainBg">
-      <v-col class="text-center" cols="12">
-        <span :class="$style.footerText">© 2021 WeRekt</span></v-col
-      >
-    </v-footer>
   </div>
 </template>
 
@@ -264,6 +259,7 @@ export default {
   -ms-flex-align: center;
   align-items: center;
 }
+
 .lastSectionHeightMobile {
   @extend .lastSectionHeight;
   min-height: 40vh !important;

@@ -4,9 +4,10 @@
       <div :class="$style.background">
         <NavBar></NavBar>
         <ToTopBtn />
-        <v-content class="mt-10">
+        <v-main class="mt-10">
           <router-view />
-        </v-content>
+          <Footer />
+        </v-main>
       </div>
     </v-main>
   </v-app>
@@ -14,6 +15,7 @@
 
 <script>
 import NavBar from "./components/NavBar";
+import Footer from "./components/Footer";
 import ToTopBtn from "./components/ToTopBtn";
 
 export default {
@@ -21,6 +23,7 @@ export default {
   components: {
     NavBar,
     ToTopBtn,
+    Footer,
   },
   data: () => ({}),
 };

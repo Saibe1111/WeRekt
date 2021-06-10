@@ -1,6 +1,8 @@
 <template>
   <v-app-bar fixed :color="$style.colorMainBg" elevate-on-scroll>
-    <v-toolbar-title :class="$style.logo">WeRekt</v-toolbar-title>
+    <v-toolbar-title>
+      <router-link to="/" :class="$style.logo">WeRekt</router-link>
+    </v-toolbar-title>
     <v-spacer></v-spacer>
     <div v-if="isLog" class="mr-5">
       <v-icon class="mr-5" color="white" size="24">mdi-magnify</v-icon>
@@ -86,6 +88,7 @@ export default {
 
 .logo {
   color: $color-font-primary !important;
+  text-decoration: none;
   @extend .font-1-medium;
 }
 
