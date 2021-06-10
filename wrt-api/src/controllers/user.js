@@ -4,18 +4,25 @@ const db = require("../models/userDAO.js");
 async function getUser(req, res) {
     //await db.createUser(1, "steve", "https://images-ext-1.discordapp.net/external/GtvlXwMO1thEKkqVYnLBGlRW6Wfbbu3z7EemGmD9Egc/https/support.discord.com/system/photos/360198181611/profile_image_377013600211_678183.jpg");
 
-    if(req.query.id===undefined)
-        res.status(400).json({msg: "No ID given"});
-    if(req.query.id===null)
+    let ID = req.query.id;
+
+    if(ID===undefined)
+        ID = req.user.id;
+    if(ID===null){
         res.status(404).json({msg:"ID cannot be null"});
+        return;
+    }
 
-    let user = await db.getUser(req.query.id);
 
-    if(user===null)
+    let user = await db.getUser(ID);
+
+    if(user===null){
         res.status(404).json({msg:"User not found"});
+        return;
+    }
         
     let User = {
-        User_ID : req.query.id,
+        User_ID : ID,
         username: user.username,
         profile_url: user.profile_url,
         description: user.description,
