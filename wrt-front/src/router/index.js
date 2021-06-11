@@ -18,6 +18,21 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "profile" */ "../views/Profile.vue"),
+  },
+  {
+    path: "/play",
+    name: "Play",
+    // route level code-splitting
+    // this generates a separate chunk (play.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () =>
+      import(/* webpackChunkName: "play" */ "../views/Play.vue"),
+  },
+  {
+    path: "*",
+    name: "PageNotFound",
+    component: () =>
+      import(/* webpackChunkName: "PageNotFound" */ "../views/PageNotFound.vue")
   }
 ];
 
