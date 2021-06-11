@@ -1,12 +1,24 @@
 <template>
   <div class="d-flex flex-column align-center">
-    <v-avatar :color="$style.colorMainBg" size="150">
+    <v-avatar
+      :color="$style.colorMainBg"
+      :size="$vuetify.breakpoint.mdAndUp ? 150 : 75"
+    >
       <v-img v-if="avatarImg" :src="avatarImg"></v-img>
-      <v-icon v-else size="200" :color="$style.colorSecondary">
+      <v-icon
+        v-else
+        :size="$vuetify.breakpoint.mdAndUp ? 200 : 100"
+        :color="$style.colorSecondary"
+      >
         mdi-account-circle
       </v-icon>
     </v-avatar>
-    <span :class="$style.username">{{ username }}</span>
+    <span
+      :class="
+        $vuetify.breakpoint.mdAndUp ? $style.username : $style.usernameMobile
+      "
+      >{{ username }}</span
+    >
   </div>
 </template>
 
@@ -33,5 +45,11 @@ export default {
   color: white;
   font-weight: bold;
   @extend .font-2-medium;
+}
+
+.usernameMobile {
+  color: white;
+  font-weight: bold;
+  @extend .font-2-small;
 }
 </style>
