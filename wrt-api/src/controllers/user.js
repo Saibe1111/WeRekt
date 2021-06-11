@@ -74,7 +74,7 @@ async function updateUser(req, res){
     let country = req.query.country;
     let birthdate = req.query.birthdate;
     
-    db.updateUser(req.query.id, username,profile_url,description,country,birthdate);
+    db.updateUser(req.user.id, username,profile_url,description,country,birthdate);
     
 }
 

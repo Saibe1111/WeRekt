@@ -3,7 +3,7 @@ const { getUser, updateUser } = require("../controllers/user.js");
 const { isAuthorized } = require("../middlewares/auth.js");
 
 router.get("/", isAuthorized, getUser);
-router.put("/update", updateUser);
+router.put("/update", isAuthorized, updateUser);
 
 
 module.exports = router;
