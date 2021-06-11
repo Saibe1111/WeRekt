@@ -16,6 +16,8 @@ router.get(
 
 router.get("/logout", auth.logout);
 
+router.get("/state", auth.state);
+
 router.get("/", isAuthorized, auth.getAuth);
 
 module.exports = router;
