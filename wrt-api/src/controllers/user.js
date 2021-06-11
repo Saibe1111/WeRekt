@@ -63,6 +63,8 @@ async function getUser(req, res) {
         }]
 
     }
+
+
     res.json(User);
 }
 
@@ -78,7 +80,13 @@ async function updateUser(req, res){
     
 }
 
+async function deleteUser(req, res){
+    await db.deleteUser(req.user.id);
+    res.json({message:"User has been deleted"});
+}
+
 module.exports = {
     getUser,
-    updateUser
+    updateUser,
+    deleteUser
 }

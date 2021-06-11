@@ -77,8 +77,31 @@ async function updateCredentials(discord_ID, access_Token, refresh_Token) {
 
 }
 
+async function deleteCredentials(id) {
+    const connection = await database.getConnection();
+    return new Promise((resolve, reject) => {
+        let sql = "DELETE FROM Credentials WHERE ID_User=?;";
+        connection.query(sql, [id], (error, results) => {
+            if (error){
+                console.error(error.message);
+                reject(error);
+            }
+            else {
+                resolve();
+                console.log("Row deleted");
+            }
+        });
+
+    }).catch((error) => {
+        console.log(error);
+    });
+
+
+}
+
 module.exports = {
     getCredentials,
     createCredentials,
-    updateCredentials
+    updateCredentials,
+    deleteCredentials
 }

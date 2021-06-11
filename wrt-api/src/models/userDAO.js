@@ -66,8 +66,9 @@ async function updateUser(discord_ID, Username=undefined, Profile_Url=undefined,
     let bdate = "";
 
     if(Username != undefined){
+        let Usname = Username.replace(/[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2580-\u27BF]|\uD83E[\uDD10-\uDDFF]/g, "");
         usname = "Username=?, ";
-        param.push(Username);
+        param.push(Usname);
     }
     if(Profile_Url != undefined){
         purl = "Profile_Url=?, ";
@@ -113,8 +114,31 @@ async function updateUser(discord_ID, Username=undefined, Profile_Url=undefined,
 
 }
 
+async function deleteUser(id) {
+    const connection = await database.getConnection();
+    return new Promise((resolve, reject) => {
+        let sql = "DELETE FROM Users WHERE ID=?;";
+        connection.query(sql, [id], (error, results) => {
+            if (error){
+                console.error(error.message);
+                reject(error);
+            }
+            else {
+                resolve();
+                console.log("Row deleted");
+            }
+        });
+
+    }).catch((error) => {
+        console.log(error);
+    });
+
+
+}
+
 module.exports = {
     getUser,
     createUser,
-    updateUser
+    updateUser,
+    deleteUser
 }
