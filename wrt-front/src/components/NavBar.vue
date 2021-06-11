@@ -61,20 +61,10 @@ export default {
     getUser() {
       let url = process.env.VUE_APP_API_URL;
       this.isLog = false;
-      fetch(`${url}/api/auth/`, {
+      fetch(`${url}/api/auth/state`, {
         method: "GET",
         credentials: "include",
-      })
-        .then((response) => response.json())
-        .then(function (data) {
-          return new Promise(function (resolve) {
-            if (data.user) {
-              resolve(true);
-            }
-            resolve(false);
-          });
-        })
-        .then((state) => (this.isLog = state));
+      }).then((response) => (this.isLog = response.status === 200 ? true : false));
     },
   },
   created() {
