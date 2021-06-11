@@ -180,6 +180,31 @@ async function createIsFriendOfTable(connection) {
     });
 }
 
+async function createCredentialsTable(connection) {
+    return new Promise((resolve, reject) => {
+        connection.query(
+            `CREATE TABLE IF NOT EXISTS werekt.Credentials ( 
+                ID_User varchar(255) PRIMARY KEY NOT NULL,
+                Access_Token varchar(255),
+                Refresh_Token varchar(255)
+            ); `,
+
+            (error) => {
+                if (error) {
+                    console.error(error.message);
+                    reject(error)
+                } else {
+                    console.log("CREATE TABLE Credentials");
+                    resolve();
+                }
+            }
+        );
+       
+    }).catch((error) => {
+        console.log(error);
+    });
+}
+
 module.exports = {
     getConnection,
     checkDbExist,
