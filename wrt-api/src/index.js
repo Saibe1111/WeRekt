@@ -17,7 +17,7 @@ app.use( cors({
 }));
 
 app.use( session({
-    secret: 'secret-key', //FIXME hide this
+    secret: config.encryption_key.SESSION,
     cookie: {
         maxAge: 60000 * 60 * 24
     },

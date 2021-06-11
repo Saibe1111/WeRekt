@@ -1,9 +1,10 @@
 const { getCoverURL } = require("../helpers/igdb.js");
+const { updateUserWithDiscord } = require("../helpers/discordUser");
 const db = require("../models/userDAO.js");
 
 async function getUser(req, res) {
     //await db.createUser(1, "steve", "https://images-ext-1.discordapp.net/external/GtvlXwMO1thEKkqVYnLBGlRW6Wfbbu3z7EemGmD9Egc/https/support.discord.com/system/photos/360198181611/profile_image_377013600211_678183.jpg");
-
+    
     let ID = req.query.id || req.user.id;
 
     if(ID===null){
@@ -11,6 +12,7 @@ async function getUser(req, res) {
         return;
     }
 
+    await updateUserWithDiscord(ID);
 
     let user = await db.getUser(ID);
 

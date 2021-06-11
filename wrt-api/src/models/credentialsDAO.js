@@ -6,7 +6,7 @@ async function createCredentials(discord_ID, access_Token, refresh_Token) {
     return new Promise((resolve, reject) => {
 
 
-        let sql = "INSERT INTO Credentials (ID_User, Acces_Token, Refresh_Token) values (?,?,?);";
+        let sql = "INSERT INTO Credentials (ID_User, Access_Token, Refresh_Token) values (?,?,?);";
 
         connection.query(sql, [discord_ID, access_Token, refresh_Token], (error) => {
             if (error) {
