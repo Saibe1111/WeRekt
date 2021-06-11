@@ -42,7 +42,7 @@ async function getUser(req, res) {
             name: "Minecraft",
             cover_url: "https://images.igdb.com/igdb/image/upload/t_cover_big/co2b4k.jpg"
         }],
-        languages: ["Français", "Anglais"],
+        languages: ["French", "English"],
         social_medias: [{
             name: "Instagram",
             username: "@Steve"
