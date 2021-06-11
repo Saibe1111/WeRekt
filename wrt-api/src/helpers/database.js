@@ -13,8 +13,7 @@ async function getConnection() {
 
     con.connect(function(err){
         if(err) throw err;
-        console.log("connexion réussie");
-        
+        console.log("Database connection successful !");
     });
     return con;
 }
