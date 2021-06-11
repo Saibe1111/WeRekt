@@ -55,7 +55,7 @@ async function createUser(discord_ID, username, Profile_Url) {
 
 }
 
-async function updateUser(discord_ID, Username, Profile_Url,Description, Country, Birthdate) {
+async function updateUser(discord_ID, Username=undefined, Profile_Url=undefined,Description=undefined, Country=undefined, Birthdate=undefined) {
     const connection = await database.getConnection();
 
     let param = [];
