@@ -115,7 +115,7 @@
               : $style.descriptionMobile
           "
         >
-          Hundreds of games compatible
+          Hundreds of compatible games
         </p>
       </div>
       <div :class="$style.gamesGrid">
@@ -237,7 +237,7 @@ export default {
 }
 
 .sectionHeight {
-  min-height: 100vh !important;
+  min-height: 70vh !important;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;

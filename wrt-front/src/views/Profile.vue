@@ -3,18 +3,25 @@
     <div class="d-flex justify">{{ editMode }}</div>
     <!-- Background Image -->
     <v-img
+      dark
       :class="$style.bannerBg"
       max-height="317"
       max-width="100vw"
       :src="bgUserProfile"
     ></v-img>
+    <div :class="$style.bannerTest"></div>
     <v-file-input
       prepend-icon="mdi-camera-image"
       dark
+      accept="image/png, image/jpeg"
       hide-input
       @change="changeBgFile"
       :class="$style.btnChangeBg"
     ></v-file-input>
+    <!-- Avatar à mettre dans un composant props img -->
+    <div :class="$style.displayAvatar">
+      <AvatarUser :username="username" :avatarImg="avatarUser"></AvatarUser>
+    </div>
     <v-btn @click="toggleEdit" :class="$style.btnEdit">Edit</v-btn>
     <v-form v-model="valid" class="d-flex justify-space-around px-16">
       <v-col>
@@ -40,7 +47,7 @@
             <template v-slot:activator="{ on, attrs }">
               <v-text-field
                 label="Birthday date"
-                v-model="date"
+                v-model="birthdayDate"
                 prepend-inner-icon="mdi-calendar"
                 readonly
                 dark
@@ -50,7 +57,7 @@
               ></v-text-field>
             </template>
             <v-date-picker
-              v-model="date"
+              v-model="birthdayDate"
               no-title
               scrollable
               :active-picker.sync="activePicker"
@@ -69,27 +76,30 @@
             dark
             :items="countryList"
             outlined
+            required
           ></v-select>
         </div>
         <div>
           <h3 :class="$style.secondaryTitle">Languages</h3>
-          <div class="d-flex align-center">
-            <v-select
-              label="Language"
-              v-model="language"
-              dark
-              hide-details
-              :items="languageList"
-              outlined
-            ></v-select>
-            <v-btn @click="addLanguage" :class="$style.btn">Add</v-btn>
-          </div>
-          <div v-for="lang in userLanguages" :key="lang">
-            <div class="d-flex align-center justify-space-between">
-              <div>{{ lang }}</div>
-              <v-btn @click="deleteLanguage(lang)" icon
-                ><v-icon>mdi-minus</v-icon></v-btn
+          <v-select
+            label="Language"
+            v-model="language"
+            dark
+            :items="languageList"
+            outlined
+            @change="addLanguage"
+          ></v-select>
+          <div class="d-flex flex-wrap">
+            <div v-for="lang in userLanguages" :key="lang" class="mr-2 mb-2">
+              <v-chip
+                close
+                :class="$style.chip"
+                :color="$style.colorCardBg"
+                :text-color="$style.colorFontPrirmary"
+                @click:close="deleteLanguage(lang)"
               >
+                {{ lang }}
+              </v-chip>
             </div>
           </div>
         </div>
@@ -97,6 +107,43 @@
       <v-col>
         <div>
           <h3 :class="$style.secondaryTitle">Platforms</h3>
+          <div class="d-flex flex-row">
+            <v-select
+              label="Platform"
+              v-model="plaform"
+              dark
+              :items="platformList"
+              outlined
+            ></v-select>
+            <v-text-field
+              label="Platform username"
+              v-model="platformUsername"
+              dark
+              outlined
+            ></v-text-field>
+            <v-btn :style="$style.btn" @click="addPlatform">Add</v-btn>
+          </div>
+          <div class="d-flex flex-wrap">
+            <div
+              v-for="plat in userPlatforms"
+              :key="plat.name"
+              class="mr-2 mb-2"
+            >
+              <v-badge color="transparent" overlap offset-x="32" offset-y="20">
+                <v-btn
+                  slot="badge"
+                  x-small
+                  icon
+                  dark
+                  @click="deletePlatform(plat.name)"
+                >
+                  <v-icon>mdi-close</v-icon>
+                </v-btn>
+                <v-img :src="bgUserProfile" height="80" width="80"></v-img>
+              </v-badge>
+              <div>{{ plat.name }} &nbsp;{{ plat.username }}</div>
+            </div>
+          </div>
         </div>
         <div>
           <h3 :class="$style.secondaryTitle">Social media</h3>
@@ -182,35 +229,53 @@
 </template>
 
 <script>
+import AvatarUser from "../components/AvatarUser.vue";
 export default {
   name: "Profile",
   props: {
     editMode: Boolean,
   },
-  components: {},
+  components: {
+    AvatarUser,
+  },
   data() {
     return {
       valid: false,
-      aboutMe: "",
       aboutMeRules: [
         (v) =>
           v.length <= 170 ||
           "About me section must be less than 170 characters",
       ],
       activePicker: null,
-      date: null,
-      menu: false,
-      country: "",
       countryList: [],
-      language: "",
       languageList: [],
+      platformList: ["PC", "PSN", "Xbox", "Nintendo Switch Online"],
+      language: "",
+      plaform: "",
+      platformUsername: "",
+      menu: false,
+      // models
+      bgUserProfile: "https://cdn.vuetifyjs.com/images/parallax/material.jpg",
+      aboutMe: "",
+      avatarUser: "",
+      birthdayDate: null,
+      country: "",
       userLanguages: [],
-      bgUserProfile: "https://picsum.photos/id/11/500/300",
+      userPlatforms: [],
+      username: "",
+      discordId: "",
       twitterId: "",
       instagramId: "",
-      discordId: "",
       twitchId: "",
     };
+  },
+  computed: {
+    styleBgUser() {
+      return (
+        this.bgUserProfile +
+        ", linear-gradient(180deg, rgba(255, 255, 255, 0), #1B1B1B)"
+      );
+    },
   },
   watch: {
     menu(val) {
@@ -236,6 +301,32 @@ export default {
         (language) => language !== lang
       );
     },
+    addPlatform() {
+      if (
+        !this.plaform ||
+        this.userPlatforms.map((plat) => plat.name).includes(this.plaform)
+      ) {
+        return;
+      }
+      if (!this.platformUsername) {
+        return;
+      }
+
+      let newPlatform = {
+        name: this.plaform,
+        username: this.platformUsername,
+      };
+
+      this.userPlatforms = [...this.userPlatforms, newPlatform];
+      this.plaform = "";
+      this.platformUsername = "";
+      console.log(this.userPlatforms);
+    },
+    deletePlatform(platformName) {
+      this.userPlatforms = this.userPlatforms.filter(
+        (platform) => platform.name !== platformName
+      );
+    },
     async getCountries() {
       const response = await fetch(
         "https://restcountries.eu/rest/v2/all?fields=name",
@@ -254,7 +345,6 @@ export default {
         }
       );
       const data = await response.json();
-
       data
         .map((country) => country.languages.map((lang) => lang.name))
         .forEach((element) => {
@@ -262,6 +352,7 @@ export default {
         });
     },
     changeBgFile(file) {
+      // todo: limiter le poids des fichiers
       let reader = new FileReader();
       reader.onload = (event) => {
         this.bgUserProfile = event.target.result;
@@ -269,8 +360,22 @@ export default {
       reader.readAsDataURL(file);
       console.log(file);
     },
+    initUserDate(user) {
+      if (user.profile_url != null) this.avatarUser = user.profile_url;
+      this.username = user.username;
+    },
+    async getUser() {
+      let url = process.env.VUE_APP_API_URL;
+      fetch(`${url}/api/user/`, {
+        method: "GET",
+        credentials: "include",
+      })
+        .then((response) => response.json())
+        .then((response) => this.initUserDate(response));
+    },
   },
   mounted() {
+    this.getUser();
     this.getCountries();
     this.getLanguages();
   },
@@ -281,7 +386,7 @@ export default {
 @import "../style";
 
 .bannerBg {
-  position: relative;
+  // position: relative;
 }
 
 .btnChangeBg {
@@ -300,6 +405,24 @@ export default {
   margin-right: 10px;
 }
 
+.chip {
+  @extend .font-1-small;
+}
+
+.displayAvatar {
+  position: absolute;
+  top: 85px;
+  margin-left: -75px;
+  left: 50%;
+}
+
+.displayAvatarMobile {
+  position: absolute;
+  top: 45px;
+  margin-left: -75px;
+  left: 50%;
+}
+
 .title {
   color: $color-font-primary;
   @extend .font-1-large-bold;
@@ -312,6 +435,7 @@ export default {
 
 .secondaryTitle {
   color: $color-secondary;
+  margin: 16px 0;
   @extend .font-1-medium;
 }
 

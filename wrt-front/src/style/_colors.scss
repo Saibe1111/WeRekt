@@ -3,8 +3,8 @@
 //---------------------------------
 
 // Main
-$color-main-bg: #1B1B1B;
-$color-main-darker-bg: #0F0F0F;
+$color-main-bg: #1b1b1b;
+$color-main-darker-bg: #0f0f0f;
 
 // Cards
 $color-card-bg: #353533;
@@ -12,20 +12,22 @@ $color-card-bg: #353533;
 //---------------------------------
 //          THEME COLORS
 //---------------------------------
-$color-secondary: #FFD422;
-$color-secondary-bis: #FF3D00;
+$color-secondary: #ffd422;
+$color-secondary-bis: #ff3d00;
 
 //---------------------------------
 //          FONT COLORS
 //---------------------------------
-$color-font-primary: #FFFFFF;
-$color-font-secondary: #1B1B1B;
+$color-font-primary: #ffffff;
+$color-font-secondary: #1b1b1b;
 
 //---------------------------------
 //        EXPORTED COLORS
 //---------------------------------
 :export {
-    colorMainBg: $color-main-bg;
-    colorSecondary: $color-secondary;
-    colorSecondaryBis : $color-secondary-bis;
+  colorMainBg: $color-main-bg;
+  colorSecondary: $color-secondary;
+  colorSecondaryBis: $color-secondary-bis;
+  colorCardBg: $color-card-bg;
+  colorFontPrirmary: $color-font-primary;
 }
