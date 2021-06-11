@@ -34,13 +34,13 @@ async function getUser(req, res) {
         country: user.country,
         games: [{
             name: "Among Us",
-            cover_url: await getCoverURL("Among Us")
+            cover_url: "https://images.igdb.com/igdb/image/upload/t_cover_big/co1uaf.jpg"
         }, {
             name: "Grand Theft Auto V",
-            cover_url: await getCoverURL("Grand Theft Auto V")
+            cover_url: "https://images.igdb.com/igdb/image/upload/t_cover_big/co2lbd.jpg"
         }, {
             name: "Minecraft",
-            cover_url: await getCoverURL("Minecraft")
+            cover_url: "https://images.igdb.com/igdb/image/upload/t_cover_big/co2b4k.jpg"
         }],
         languages: ["Français", "Anglais"],
         social_medias: [{
