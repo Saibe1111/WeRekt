@@ -55,15 +55,48 @@ async function createUser(discord_ID, username, Profile_Url) {
 
 }
 
-async function updateUser(discord_ID, username, Profile_Url,Description, Country, Birthdate) {
+async function updateUser(discord_ID, Username, Profile_Url,Description, Country, Birthdate) {
     const connection = await database.getConnection();
+
+    let param = [];
+    let usname = "";
+    let purl = "";
+    let desc = "";
+    let cty = "";
+    let bdate = "";
+
+    if(Username != undefined){
+        usname = "Username=?, ";
+        param.push(Username);
+    }
+    if(Profile_Url != undefined){
+        purl = "Profile_Url=?, ";
+        param.push(Profile_Url);
+    }
+    if(Description != undefined){
+        desc = "Description=?, ";
+        param.push(Description);
+    }
+    if(Country != undefined){
+        cty = "Country=?, ";
+        param.push(Country);
+    }
+    if(Birthdate != undefined){
+        bdate = "Birthdate=str_to_date(?,'%Y-%m-%d'), ";
+        param.push(Birthdate);
+    }
+
+    param.push(discord_ID);
+
+    let attributes = usname+purl+desc+cty+bdate;
+    console.log(attributes);
 
     return new Promise((resolve, reject) => {
 
 
-        let sql = "UPDATE Users SET Username=?, Profile_Url=?,Description=?,Country=?, Birthdate = STR_TO_DATE(?, '%Y-%m-%d') WHERE ID = ?;";
+        let sql = `UPDATE Users SET ${attributes.replace(/,\s*$/, "")} WHERE ID = ?;`;
 
-        connection.query(sql, [username, Profile_Url, Description, Country, Birthdate, discord_ID], (error) => {
+        connection.query(sql, param, (error) => {
             if (error) {
                 console.error(error.message);
                 reject(error)

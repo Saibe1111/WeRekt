@@ -67,7 +67,13 @@ async function getUser(req, res) {
 
 async function updateUser(req, res){
 
-    db.updateUser(req.user.id, req.query.username, req.query.profile_url, req.query.description, req.query.country, req.query.birthdate);
+    let username = req.query.username;
+    let profile_url = req.query.profile_url;
+    let description = req.query.description;
+    let country = req.query.country;
+    let birthdate = req.query.birthdate;
+    
+    db.updateUser(req.query.id, username,profile_url,description,country,birthdate);
     
 }
 
