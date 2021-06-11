@@ -31,13 +31,13 @@ async function getUser(id) {
 
 async function createUser(discord_ID, username, Profile_Url) {
     const connection = await database.getConnection();
-
+    let Usname = username.replace(/[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2580-\u27BF]|\uD83E[\uDD10-\uDDFF]/g, "");
     return new Promise((resolve, reject) => {
 
 
         let sql = "INSERT INTO Users (ID, Username, Profile_Url) values (?,?,?);";
 
-        connection.query(sql, [discord_ID, username, Profile_Url], (error) => {
+        connection.query(sql, [discord_ID, Usname, Profile_Url], (error) => {
             if (error) {
                 console.error(error.message);
                 reject(error)
