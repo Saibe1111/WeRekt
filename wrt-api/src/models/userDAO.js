@@ -89,7 +89,6 @@ async function updateUser(discord_ID, Username=undefined, Profile_Url=undefined,
     param.push(discord_ID);
 
     let attributes = usname+purl+desc+cty+bdate;
-    console.log(attributes);
 
     return new Promise((resolve, reject) => {
 
