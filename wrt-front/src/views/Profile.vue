@@ -1,31 +1,63 @@
 <template>
-  <div>
-    <div class="d-flex justify">{{ editMode }}</div>
+  <div id="profile">
     <!-- Background Image -->
-    <v-img
+    <!-- <v-img
       dark
       :class="$style.bannerBg"
       max-height="317"
       max-width="100vw"
       :src="bgUserProfile"
-    ></v-img>
-    <div :class="$style.bannerTest"></div>
+    ></v-img> -->
+
+    <!-- début bannière -->
+    <div
+      :class="
+        $vuetify.breakpoint.mdAndUp ? $style.bannerBg : $style.bannerBgMobile
+      "
+      :style="{ background: styleBgUser }"
+    ></div>
     <v-file-input
       prepend-icon="mdi-camera-image"
       dark
       accept="image/png, image/jpeg"
       hide-input
       @change="changeBgFile"
-      :class="$style.btnChangeBg"
+      :class="
+        $vuetify.breakpoint.mdAndUp
+          ? $style.btnChangeBg
+          : $style.btnChangeBgMobile
+      "
     ></v-file-input>
-    <!-- Avatar à mettre dans un composant props img -->
-    <div :class="$style.displayAvatar">
+    <div
+      :class="
+        $vuetify.breakpoint.mdAndUp
+          ? $style.displayAvatar
+          : $style.displayAvatarMobile
+      "
+    >
       <AvatarUser :username="username" :avatarImg="avatarUser"></AvatarUser>
     </div>
-    <v-btn @click="toggleEdit" :class="$style.btnEdit">Edit</v-btn>
-    <v-form v-model="valid" class="d-flex justify-space-around px-16">
+    <v-row :class="$style.containerBtnEdit">
+      <v-btn @click="toggleEdit" class="mt-2" :class="$style.btnEdit">{{
+        editMode ? "Edit" : "Save"
+      }}</v-btn>
+    </v-row>
+    <!-- fin bannière -->
+
+    <v-form
+      v-model="valid"
+      class="d-flex flex-md-row flex-column justify-space-around px-md-16 px-4"
+    >
       <v-col>
-        <h3 :class="$style.secondaryTitle">Personal information</h3>
+        <h3
+          :class="
+            $vuetify.breakpoint.mdAndUp
+              ? $style.secondaryTitle
+              : $style.secondaryTitleMobile
+          "
+        >
+          Personal information
+        </h3>
         <div>
           <v-textarea
             label="About me"
@@ -34,6 +66,7 @@
             :rules="aboutMeRules"
             :counter="170"
             outlined
+            :class="$style.inputText"
           ></v-textarea>
 
           <v-menu
@@ -54,12 +87,14 @@
                 v-bind="attrs"
                 v-on="on"
                 outlined
+                :class="$style.inputText"
               ></v-text-field>
             </template>
             <v-date-picker
               v-model="birthdayDate"
               no-title
               scrollable
+              color="amber accent-4"
               :active-picker.sync="activePicker"
               :max="
                 new Date(new Date().setFullYear(new Date().getFullYear() - 13))
@@ -70,25 +105,37 @@
             ></v-date-picker>
           </v-menu>
 
-          <v-select
+          <v-autocomplete
             label="Country"
             v-model="country"
             dark
             :items="countryList"
             outlined
             required
-          ></v-select>
+            item-color="amber accent-4"
+            :class="$style.inputText"
+          ></v-autocomplete>
         </div>
         <div>
-          <h3 :class="$style.secondaryTitle">Languages</h3>
-          <v-select
+          <h3
+            :class="
+              $vuetify.breakpoint.mdAndUp
+                ? $style.secondaryTitle
+                : $style.secondaryTitleMobile
+            "
+          >
+            Languages
+          </h3>
+          <v-autocomplete
             label="Language"
             v-model="language"
             dark
             :items="languageList"
             outlined
+            item-color="amber accent-4"
             @change="addLanguage"
-          ></v-select>
+            :class="$style.inputText"
+          ></v-autocomplete>
           <div class="d-flex flex-wrap">
             <div v-for="lang in userLanguages" :key="lang" class="mr-2 mb-2">
               <v-chip
@@ -106,122 +153,159 @@
       </v-col>
       <v-col>
         <div>
-          <h3 :class="$style.secondaryTitle">Platforms</h3>
-          <div class="d-flex flex-row">
+          <h3
+            :class="
+              $vuetify.breakpoint.mdAndUp
+                ? $style.secondaryTitle
+                : $style.secondaryTitleMobile
+            "
+          >
+            Platforms
+          </h3>
+          <div class="d-flex flex-column justify-space-between mb-md-0 mb-5">
             <v-select
               label="Platform"
               v-model="plaform"
               dark
+              item-color="amber accent-4"
               :items="platformList"
               outlined
+              :class="$style.inputText"
             ></v-select>
-            <v-text-field
-              label="Platform username"
-              v-model="platformUsername"
-              dark
-              outlined
-            ></v-text-field>
-            <v-btn :style="$style.btn" @click="addPlatform">Add</v-btn>
-          </div>
-          <div class="d-flex flex-wrap">
-            <div
-              v-for="plat in userPlatforms"
-              :key="plat.name"
-              class="mr-2 mb-2"
-            >
-              <v-badge color="transparent" overlap offset-x="32" offset-y="20">
-                <v-btn
-                  slot="badge"
-                  x-small
-                  icon
-                  dark
-                  @click="deletePlatform(plat.name)"
-                >
-                  <v-icon>mdi-close</v-icon>
-                </v-btn>
-                <v-img :src="bgUserProfile" height="80" width="80"></v-img>
-              </v-badge>
-              <div>{{ plat.name }} &nbsp;{{ plat.username }}</div>
+            <div class="d-flex flex-column flex-md-row">
+              <v-text-field
+                label="Platform username"
+                v-model="platformUsername"
+                dark
+                outlined
+                class="mr-md-5"
+                :class="$style.inputText"
+              ></v-text-field>
+              <v-btn :class="$style.btn" @click="addPlatform" class="py-7"
+                >Add</v-btn
+              >
             </div>
           </div>
+          <EditImgGrid
+            :imgList="userPlatforms"
+            @delete-img="deletePlatform"
+            imgHeight="80"
+            imgWidth="80"
+          />
         </div>
         <div>
-          <h3 :class="$style.secondaryTitle">Social media</h3>
-          <div>
-            <div class="d-flex mr-4">
-              <div class="d-flex align-center mb-5">
-                <v-img
-                  :src="require('../assets/profile/twitter.png')"
-                  :max-height="30"
-                  :max-width="30"
-                  contain
-                ></v-img>
-                <v-text-field
-                  label="Twitter ID"
-                  v-model="twitterId"
-                  hide-details
-                  dark
-                  outlined
-                  class="mx-2"
-                ></v-text-field>
-              </div>
-              <div class="d-flex align-center mb-5">
-                <v-img
-                  :src="require('../assets/profile/instagram.png')"
-                  :max-height="30"
-                  :max-width="30"
-                  contain
-                ></v-img>
-                <v-text-field
-                  label="Instagram ID"
-                  v-model="instagramId"
-                  hide-details
-                  dark
-                  outlined
-                  class="mx-2"
-                ></v-text-field>
-              </div>
+          <h3
+            :class="
+              $vuetify.breakpoint.mdAndUp
+                ? $style.secondaryTitle
+                : $style.secondaryTitleMobile
+            "
+          >
+            Social media
+          </h3>
+          <div class="d-flex flex-column flex-md-row justify-space-between">
+            <div class="d-flex align-center mb-5 mr-md-5">
+              <v-img
+                :src="require('../assets/profile/twitter.png')"
+                :max-height="30"
+                :max-width="30"
+                contain
+              ></v-img>
+              <v-text-field
+                label="Twitter ID"
+                v-model="twitterId"
+                hide-details
+                dark
+                outlined
+                class="ml-2"
+                :class="$style.inputText"
+              ></v-text-field>
             </div>
-            <div class="d-flex mr-4">
-              <div class="d-flex align-center">
-                <v-img
-                  :src="require('../assets/profile/discord.png')"
-                  height="30"
-                  width="30"
-                  contain
-                ></v-img>
-                <v-text-field
-                  label="Discord ID"
-                  v-model="discordId"
-                  hide-details
-                  dark
-                  outlined
-                  class="mx-2"
-                ></v-text-field>
-              </div>
-              <div class="d-flex align-center">
-                <v-img
-                  :src="require('../assets/profile/twitch.png')"
-                  :max-height="30"
-                  :max-width="30"
-                  contain
-                ></v-img>
-                <v-text-field
-                  label="Twitch ID"
-                  v-model="twitchId"
-                  hide-details
-                  dark
-                  outlined
-                  class="mx-2"
-                ></v-text-field>
-              </div>
+            <div class="d-flex align-center mb-5">
+              <v-img
+                :src="require('../assets/profile/instagram.png')"
+                :max-height="30"
+                :max-width="30"
+                contain
+              ></v-img>
+              <v-text-field
+                label="Instagram ID"
+                v-model="instagramId"
+                hide-details
+                dark
+                outlined
+                class="ml-2"
+                :class="$style.inputText"
+              ></v-text-field>
+            </div>
+          </div>
+          <div class="d-flex flex-column flex-md-row justify-space-between">
+            <div class="d-flex align-center mb-md-0 mb-5 mr-md-5">
+              <v-img
+                :src="require('../assets/profile/discord.png')"
+                :max-height="30"
+                :max-width="30"
+                contain
+              ></v-img>
+              <v-text-field
+                label="Discord ID"
+                v-model="discordId"
+                hide-details
+                dark
+                outlined
+                class="ml-2"
+                :class="$style.inputText"
+              ></v-text-field>
+            </div>
+            <div class="d-flex align-center">
+              <v-img
+                :src="require('../assets/profile/twitch.png')"
+                :max-height="30"
+                :max-width="30"
+                contain
+              ></v-img>
+              <v-text-field
+                label="Twitch ID"
+                v-model="twitchId"
+                hide-details
+                dark
+                outlined
+                class="ml-2"
+                :class="$style.inputText"
+              ></v-text-field>
             </div>
           </div>
         </div>
       </v-col>
       <v-col>
         <div>
-          <h3 :class="$style.secondaryTitle">Games</h3>
+          <h3
+            :class="
+              $vuetify.breakpoint.mdAndUp
+                ? $style.secondaryTitle
+                : $style.secondaryTitleMobile
+            "
+          >
+            Games
+          </h3>
+          <div class="d-flex flex-row">
+            <v-autocomplete
+              label="Game"
+              v-model="game"
+              dark
+              :items="gameList"
+              outlined
+              item-color="amber accent-4"
+              @change="addGame"
+              :class="$style.inputText"
+            ></v-autocomplete>
+          </div>
+          <EditImgGrid
+            :imgList="userGames"
+            @delete-img="deleteGame"
+            imgHeight="140"
+            imgWidth="100"
+          />
         </div>
       </v-col>
     </v-form>
@@ -230,6 +314,8 @@
 
 <script>
 import AvatarUser from "../components/AvatarUser.vue";
+import EditImgGrid from "../components/EditImgGrid.vue";
+
 export default {
   name: "Profile",
   props: {
@@ -237,6 +323,7 @@ export default {
   },
   components: {
     AvatarUser,
+    EditImgGrid,
   },
   data() {
     return {
@@ -249,9 +336,19 @@ export default {
       activePicker: null,
       countryList: [],
       languageList: [],
-      platformList: ["PC", "PSN", "Xbox", "Nintendo Switch Online"],
+      platformList: ["PC", "Play Station", "Xbox", "Nintendo Switch"],
+      // à remplacer par une liste plus complète de jeu
+      gameList: [
+        "League of Legends",
+        "Fortnite",
+        "Rocket League",
+        "Valorant",
+        "Among us",
+        "Minecraft",
+      ],
       language: "",
       plaform: "",
+      game: "",
       platformUsername: "",
       menu: false,
       // models
@@ -262,6 +359,7 @@ export default {
       country: "",
       userLanguages: [],
       userPlatforms: [],
+      userGames: [],
       username: "",
       discordId: "",
       twitterId: "",
@@ -272,8 +370,9 @@ export default {
   computed: {
     styleBgUser() {
       return (
+        "linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #1b1b1b 100%), center url('" +
         this.bgUserProfile +
-        ", linear-gradient(180deg, rgba(255, 255, 255, 0), #1B1B1B)"
+        "')"
       );
     },
   },
@@ -291,6 +390,7 @@ export default {
     },
     addLanguage() {
       if (!this.language || this.userLanguages.includes(this.language)) {
+        this.language = "";
         return;
       }
       this.userLanguages = [...this.userLanguages, this.language];
@@ -314,18 +414,40 @@ export default {
 
       let newPlatform = {
         name: this.plaform,
-        username: this.platformUsername,
+        description: this.platformUsername,
+        // path à changer une fois qu'on aura des images
+        path: this.bgUserProfile,
       };
 
       this.userPlatforms = [...this.userPlatforms, newPlatform];
       this.plaform = "";
       this.platformUsername = "";
-      console.log(this.userPlatforms);
     },
     deletePlatform(platformName) {
       this.userPlatforms = this.userPlatforms.filter(
         (platform) => platform.name !== platformName
       );
+    },
+    addGame() {
+      if (
+        !this.game ||
+        this.userGames.map((game) => game.name).includes(this.game)
+      ) {
+        return;
+      }
+
+      let newGame = {
+        name: this.game,
+        description: this.game,
+        // path à changer une fois qu'on aura des images
+        path: this.bgUserProfile,
+      };
+
+      this.userGames = [...this.userGames, newGame];
+      this.game = "";
+    },
+    deleteGame(gameName) {
+      this.userGames = this.userGames.filter((game) => game.name !== gameName);
     },
     async getCountries() {
       const response = await fetch(
@@ -386,23 +508,43 @@ export default {
 @import "../style";
 
 .bannerBg {
-  // position: relative;
+  height: 317px;
+  width: 100vw;
+}
+
+.bannerBgMobile {
+  height: 150px;
+  width: 100vw;
 }
 
 .btnChangeBg {
   position: absolute;
-  top: 280px;
+  top: 255px;
+  right: 20px;
+}
+
+.btnChangeBgMobile {
+  position: absolute;
+  top: 70px;
   right: 20px;
 }
 
 .btn {
   background-color: $color-secondary !important;
+  font-weight: bold;
+  @extend .font-2-tiny;
 }
 
 .btnEdit {
   @extend .btn;
-  float: right;
-  margin-right: 10px;
+  margin-right: 30px;
+}
+
+.containerBtnEdit {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  margin-top: 10px;
 }
 
 .chip {
@@ -418,8 +560,8 @@ export default {
 
 .displayAvatarMobile {
   position: absolute;
-  top: 45px;
-  margin-left: -75px;
+  top: 55px;
+  margin-left: -50px;
   left: 50%;
 }
 
@@ -439,7 +581,18 @@ export default {
   @extend .font-1-medium;
 }
 
+.secondaryTitleMobile {
+  color: $color-secondary;
+  margin: 16px 0;
+  @extend .font-1-medium-small;
+}
+
 .widthFirstDesktop {
   width: 572px;
+}
+
+.inputText {
+  color: $color-font-primary;
+  @extend .font-2-small;
 }
 </style>
