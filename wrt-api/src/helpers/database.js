@@ -32,6 +32,7 @@ async function checkDbExist() {
     await createMessageTable(connection);
     await createLanguageTable(connection);
     await createIsFriendOfTable(connection);
+    await createCredentialsTable(connection);
 
 }
 
