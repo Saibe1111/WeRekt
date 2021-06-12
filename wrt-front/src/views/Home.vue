@@ -37,7 +37,7 @@
               : $style.descriptionMobile
           "
         >
-          A social platform where you can join a team which meet your
+          A social platform where you can join a team which meets your
           expectations
         </p>
       </div>
