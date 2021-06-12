@@ -1,49 +1,18 @@
 <template>
   <div id="profile">
-    <!-- Background Image -->
-    <!-- <v-img
-      dark
-      :class="$style.bannerBg"
-      max-height="317"
-      max-width="100vw"
-      :src="bgUserProfile"
-    ></v-img> -->
-
-    <!-- début bannière -->
-    <div
-      :class="
-        $vuetify.breakpoint.mdAndUp ? $style.bannerBg : $style.bannerBgMobile
-      "
-      :style="{ background: styleBgUser }"
-    ></div>
-    <v-file-input
-      prepend-icon="mdi-camera-image"
-      dark
-      accept="image/png, image/jpeg"
-      hide-input
-      @change="changeBgFile"
-      :class="
-        $vuetify.breakpoint.mdAndUp
-          ? $style.btnChangeBg
-          : $style.btnChangeBgMobile
-      "
-    ></v-file-input>
-    <div
-      :class="
-        $vuetify.breakpoint.mdAndUp
-          ? $style.displayAvatar
-          : $style.displayAvatarMobile
-      "
-    >
-      <AvatarUser :username="username" :avatarImg="avatarUser"></AvatarUser>
-    </div>
-    <v-row :class="$style.containerBtnEdit">
+    <Banner
+      :bgUserProfile="bgUserProfile"
+      :username="username"
+      :avatarImg="avatarUser"
+      :editMode="editMode"
+      @toggle-edit="toggleEdit"
+      @change-bg-file="changeBgFile"
+    />
+    <v-row class="d-flex flex-row-reverse mt-2">
       <v-btn @click="toggleEdit" class="mt-2" :class="$style.btnEdit">{{
-        editMode ? "Edit" : "Save"
+        editMode ? "Save" : "Edit"
       }}</v-btn>
     </v-row>
-    <!-- fin bannière -->
-
     <v-form
       v-model="valid"
       class="d-flex flex-md-row flex-column justify-space-around px-md-16 px-4"
@@ -313,7 +282,7 @@
 </template>
 
 <script>
-import AvatarUser from "../components/AvatarUser.vue";
+import Banner from "../components/Banner.vue";
 import EditImgGrid from "../components/EditImgGrid.vue";
 
 export default {
@@ -322,7 +291,7 @@ export default {
     editMode: Boolean,
   },
   components: {
-    AvatarUser,
+    Banner,
     EditImgGrid,
   },
   data() {
@@ -366,15 +335,6 @@ export default {
       instagramId: "",
       twitchId: "",
     };
-  },
-  computed: {
-    styleBgUser() {
-      return (
-        "linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #1b1b1b 100%), center url('" +
-        this.bgUserProfile +
-        "')"
-      );
-    },
   },
   watch: {
     menu(val) {
@@ -474,7 +434,7 @@ export default {
         });
     },
     changeBgFile(file) {
-      // todo: limiter le poids des fichiers
+      // TODO: limiter le poids des fichiers
       let reader = new FileReader();
       reader.onload = (event) => {
         this.bgUserProfile = event.target.result;
@@ -507,28 +467,6 @@ export default {
 <style lang="scss" module>
 @import "../style";
 
-.bannerBg {
-  height: 317px;
-  width: 100vw;
-}
-
-.bannerBgMobile {
-  height: 150px;
-  width: 100vw;
-}
-
-.btnChangeBg {
-  position: absolute;
-  top: 255px;
-  right: 20px;
-}
-
-.btnChangeBgMobile {
-  position: absolute;
-  top: 70px;
-  right: 20px;
-}
-
 .btn {
   background-color: $color-secondary !important;
   font-weight: bold;
@@ -539,30 +477,16 @@ export default {
   @extend .btn;
   margin-right: 30px;
 }
-
+/*
 .containerBtnEdit {
   display: flex;
   align-items: center;
   justify-content: end;
   margin-top: 10px;
 }
-
+*/
 .chip {
   @extend .font-1-small;
-}
-
-.displayAvatar {
-  position: absolute;
-  top: 85px;
-  margin-left: -75px;
-  left: 50%;
-}
-
-.displayAvatarMobile {
-  position: absolute;
-  top: 55px;
-  margin-left: -50px;
-  left: 50%;
 }
 
 .title {

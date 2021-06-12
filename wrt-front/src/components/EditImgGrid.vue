@@ -4,8 +4,6 @@
       v-for="img in imgList"
       :key="img.name"
       class="d-flex flex-column align-center mb-2"
-      md="4"
-      cols="6"
     >
       <v-badge
         color="transparent"
@@ -30,6 +28,24 @@
           <v-img :src="img.path" :height="imgHeight" :width="imgWidth"></v-img>
         </v-card>
       </v-badge>
+      <!-- <v-hover v-slot="{ hover }">
+        <v-card class="rounded-lg">
+          <v-img
+            :src="img.path"
+            :height="imgHeight"
+            :width="imgWidth"
+            class="rounded-lg"
+          ></v-img>
+          <v-fade-transition>
+            <v-overlay v-if="hover" absolute color="black" style="z-index: 1">
+              <v-btn small icon dark @click="$emit('delete-img', img.name)">
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
+            </v-overlay>
+          </v-fade-transition>
+        </v-card>
+      </v-hover> -->
+
       <span
         class="text-flow text-center"
         :class="
