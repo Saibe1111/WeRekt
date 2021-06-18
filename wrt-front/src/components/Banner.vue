@@ -69,7 +69,7 @@ export default {
       );
     },
   },
-  emits: ["toggle-edit", "change-bg-file"],
+  emits: ["change-bg-file"],
 };
 </script>
 

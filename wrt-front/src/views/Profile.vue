@@ -4,88 +4,25 @@
       :bgUserProfile="bgUserProfile"
       :username="username"
       :avatarImg="avatarUser"
-      :editMode="editMode"
-      @toggle-edit="toggleEdit"
-      @change-bg-file="changeBgFile"
+      :editMode="false"
     />
     <v-row class="d-flex flex-row-reverse mt-2">
-      <v-btn @click="toggleEdit" class="mt-2" :class="$style.btnEdit">{{
-        editMode ? "Save" : "Edit"
-      }}</v-btn>
+      <router-link style="text-decoration: none" to="/profile/edit"
+        ><v-btn class="mt-2" :class="$style.btnEdit">Edit</v-btn></router-link
+      >
     </v-row>
-    <v-form
-      v-model="valid"
-      class="d-flex flex-md-row flex-column justify-space-around px-md-16 px-4"
+    <div
+      class="d-flex flex-column justify-space-around px-md-16 px-4 my-12 mx-4"
     >
-      <v-col>
-        <h3
-          :class="
-            $vuetify.breakpoint.mdAndUp
-              ? $style.secondaryTitle
-              : $style.secondaryTitleMobile
-          "
-        >
-          Personal information
-        </h3>
-        <div>
-          <v-textarea
-            label="About me"
-            v-model="aboutMe"
-            dark
-            :rules="aboutMeRules"
-            :counter="170"
-            outlined
-            :class="$style.inputText"
-          ></v-textarea>
-
-          <v-menu
-            ref="menu"
-            v-model="menu"
-            :close-on-content-click="false"
-            transition="scale-transition"
-            offset-y
-            min-width="auto"
-          >
-            <template v-slot:activator="{ on, attrs }">
-              <v-text-field
-                label="Birthday date"
-                v-model="birthdayDate"
-                prepend-inner-icon="mdi-calendar"
-                readonly
-                dark
-                v-bind="attrs"
-                v-on="on"
-                outlined
-                :class="$style.inputText"
-              ></v-text-field>
-            </template>
-            <v-date-picker
-              v-model="birthdayDate"
-              no-title
-              scrollable
-              color="amber accent-4"
-              :active-picker.sync="activePicker"
-              :max="
-                new Date(new Date().setFullYear(new Date().getFullYear() - 13))
-                  .toISOString()
-                  .substr(0, 10)
-              "
-              @change="saveDate"
-            ></v-date-picker>
-          </v-menu>
-
-          <v-autocomplete
-            label="Country"
-            v-model="country"
-            dark
-            :items="countryList"
-            outlined
-            required
-            item-color="amber accent-4"
-            :class="$style.inputText"
-          ></v-autocomplete>
-        </div>
-        <div>
+      <v-row
+        class="
+          d-flex
+          flex-md-row flex-column
+          align-center align-md-stretch
+          justify-space-between
+        "
+      >
+        <v-col :class="$style.card" class="ma-4 px-8" cols="11" md="3">
           <h3
             :class="
               $vuetify.breakpoint.mdAndUp
@@ -93,161 +30,37 @@
                 : $style.secondaryTitleMobile
             "
           >
-            Languages
+            About me
           </h3>
-          <v-autocomplete
-            label="Language"
-            v-model="language"
-            dark
-            :items="languageList"
-            outlined
-            item-color="amber accent-4"
-            @change="addLanguage"
-            :class="$style.inputText"
-          ></v-autocomplete>
-          <div class="d-flex flex-wrap">
-            <div v-for="lang in userLanguages" :key="lang" class="mr-2 mb-2">
-              <v-chip
-                close
-                :class="$style.chip"
-                :color="$style.colorCardBg"
-                :text-color="$style.colorFontPrirmary"
-                @click:close="deleteLanguage(lang)"
-              >
-                {{ lang }}
-              </v-chip>
-            </div>
-          </div>
-        </div>
-      </v-col>
-      <v-col>
-        <div>
-          <h3
+          <p
             :class="
               $vuetify.breakpoint.mdAndUp
-                ? $style.secondaryTitle
-                : $style.secondaryTitleMobile
+                ? $style.description
+                : $style.descriptionMobile
             "
           >
-            Platforms
-          </h3>
-          <div class="d-flex flex-column justify-space-between mb-md-0 mb-5">
-            <v-select
-              label="Platform"
-              v-model="plaform"
-              dark
-              item-color="amber accent-4"
-              :items="platformList"
-              outlined
-              :class="$style.inputText"
-            ></v-select>
-            <div class="d-flex flex-column flex-md-row">
-              <v-text-field
-                label="Platform username"
-                v-model="platformUsername"
-                dark
-                outlined
-                class="mr-md-5"
-                :class="$style.inputText"
-              ></v-text-field>
-              <v-btn :class="$style.btn" @click="addPlatform" class="py-7"
-                >Add</v-btn
-              >
-            </div>
-          </div>
-          <EditImgGrid
-            :imgList="userPlatforms"
-            @delete-img="deletePlatform"
-            imgHeight="80"
-            imgWidth="80"
-          />
-        </div>
-        <div>
-          <h3
+            {{ this.aboutMe }}
+          </p>
+          <p
             :class="
               $vuetify.breakpoint.mdAndUp
-                ? $style.secondaryTitle
-                : $style.secondaryTitleMobile
+                ? $style.description
+                : $style.descriptionMobile
             "
           >
-            Social media
-          </h3>
-          <div class="d-flex flex-column flex-md-row justify-space-between">
-            <div class="d-flex align-center mb-5 mr-md-5">
-              <v-img
-                :src="require('../assets/profile/twitter.png')"
-                :max-height="30"
-                :max-width="30"
-                contain
-              ></v-img>
-              <v-text-field
-                label="Twitter ID"
-                v-model="twitterId"
-                hide-details
-                dark
-                outlined
-                class="ml-2"
-                :class="$style.inputText"
-              ></v-text-field>
-            </div>
-            <div class="d-flex align-center mb-5">
-              <v-img
-                :src="require('../assets/profile/instagram.png')"
-                :max-height="30"
-                :max-width="30"
-                contain
-              ></v-img>
-              <v-text-field
-                label="Instagram ID"
-                v-model="instagramId"
-                hide-details
-                dark
-                outlined
-                class="ml-2"
-                :class="$style.inputText"
-              ></v-text-field>
-            </div>
-          </div>
-          <div class="d-flex flex-column flex-md-row justify-space-between">
-            <div class="d-flex align-center mb-md-0 mb-5 mr-md-5">
-              <v-img
-                :src="require('../assets/profile/discord.png')"
-                :max-height="30"
-                :max-width="30"
-                contain
-              ></v-img>
-              <v-text-field
-                label="Discord ID"
-                v-model="discordId"
-                hide-details
-                dark
-                outlined
-                class="ml-2"
-                :class="$style.inputText"
-              ></v-text-field>
-            </div>
-            <div class="d-flex align-center">
-              <v-img
-                :src="require('../assets/profile/twitch.png')"
-                :max-height="30"
-                :max-width="30"
-                contain
-              ></v-img>
-              <v-text-field
-                label="Twitch ID"
-                v-model="twitchId"
-                hide-details
-                dark
-                outlined
-                class="ml-2"
-                :class="$style.inputText"
-              ></v-text-field>
-            </div>
-          </div>
-        </div>
-      </v-col>
-      <v-col>
-        <div>
+            Birthday: {{ this.birthdayDate ? this.birthdayDate : "Unknown" }}
+          </p>
+          <p
+            :class="
+              $vuetify.breakpoint.mdAndUp
+                ? $style.description
+                : $style.descriptionMobile
+            "
+          >
+            Country: {{ this.country ? this.country : "Unknown" }}
+          </p>
+        </v-col>
+        <v-col :class="[$style.card]" class="ma-4 px-8" cols="11" md="8">
           <h3
             :class="
               $vuetify.breakpoint.mdAndUp
@@ -257,209 +70,281 @@
           >
             Games
           </h3>
-          <div class="d-flex flex-row">
-            <v-autocomplete
-              label="Game"
-              v-model="game"
-              dark
-              :items="gameList"
-              outlined
-              item-color="amber accent-4"
-              @change="addGame"
-              :class="$style.inputText"
-            ></v-autocomplete>
-          </div>
-          <EditImgGrid
-            :imgList="userGames"
-            @delete-img="deleteGame"
-            imgHeight="140"
-            imgWidth="100"
-          />
-        </div>
-      </v-col>
-    </v-form>
+          <v-slide-group multiple show-arrows="always" dark>
+            <v-slide-item v-for="(game, index) in userGames" :key="index">
+              <v-card class="ma-4" height="140" width="100">
+                <v-tooltip top>
+                  <template v-slot:activator="{ on }">
+                    <v-img
+                      :src="game.path"
+                      v-on="on"
+                      height="140"
+                      max-width="100"
+                      class="rounded-lg"
+                    ></v-img>
+                  </template>
+                  <span>{{ game.description }}</span>
+                </v-tooltip>
+              </v-card>
+            </v-slide-item>
+          </v-slide-group>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col :class="$style.card" class="ma-4 px-8">
+          <h3
+            :class="
+              $vuetify.breakpoint.mdAndUp
+                ? $style.secondaryTitle
+                : $style.secondaryTitleMobile
+            "
+          >
+            Languages
+          </h3>
+          <p
+            v-for="lang in userLanguages"
+            :key="lang"
+            :class="
+              $vuetify.breakpoint.mdAndUp
+                ? $style.description
+                : $style.descriptionMobile
+            "
+          >
+            {{ lang }}
+          </p>
+        </v-col>
+        <v-col :class="$style.card" class="ma-4 px-8">
+          <h3
+            :class="
+              $vuetify.breakpoint.mdAndUp
+                ? $style.secondaryTitle
+                : $style.secondaryTitleMobile
+            "
+          >
+            Social media
+          </h3>
+          <v-row>
+            <v-col class="d-flex">
+              <v-img
+                :src="require('../assets/profile/twitter.png')"
+                :max-height="30"
+                :max-width="30"
+                contain
+              ></v-img>
+              <p
+                :class="
+                  $vuetify.breakpoint.mdAndUp
+                    ? $style.description
+                    : $style.descriptionMobile
+                "
+                class="ml-2"
+              >
+                {{ this.twitterId ? this.twitterId : "Unknown" }}
+              </p>
+            </v-col>
+            <v-col class="d-flex">
+              <v-img
+                :src="require('../assets/profile/instagram.png')"
+                :max-height="30"
+                :max-width="30"
+                contain
+              ></v-img>
+              <p
+                :class="
+                  $vuetify.breakpoint.mdAndUp
+                    ? $style.description
+                    : $style.descriptionMobile
+                "
+                class="ml-2"
+              >
+                {{ this.instagramId ? this.instagramId : "Unknown" }}
+              </p>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col class="d-flex">
+              <v-img
+                :src="require('../assets/profile/discord.png')"
+                :max-height="30"
+                :max-width="30"
+                contain
+              ></v-img>
+              <p
+                :class="
+                  $vuetify.breakpoint.mdAndUp
+                    ? $style.description
+                    : $style.descriptionMobile
+                "
+                class="ml-2"
+              >
+                {{ this.discordId ? this.discordId : "Unknown" }}
+              </p>
+            </v-col>
+            <v-col class="d-flex">
+              <v-img
+                :src="require('../assets/profile/twitch.png')"
+                :max-height="30"
+                :max-width="30"
+                contain
+              ></v-img>
+              <p
+                :class="
+                  $vuetify.breakpoint.mdAndUp
+                    ? $style.description
+                    : $style.descriptionMobile
+                "
+                class="ml-2"
+              >
+                {{ this.twitterId ? this.twitterId : "Unknown" }}
+              </p>
+            </v-col>
+          </v-row>
+        </v-col>
+        <v-col :class="$style.card" class="ma-4 px-8">
+          <h3
+            :class="
+              $vuetify.breakpoint.mdAndUp
+                ? $style.secondaryTitle
+                : $style.secondaryTitleMobile
+            "
+          >
+            Platforms
+          </h3>
+          <v-row>
+            <v-col
+              v-for="(platform, index) in userPlatforms"
+              :key="index"
+              cols="6"
+              md="3"
+              class="d-flex"
+            >
+              <v-tooltip top>
+                <template v-slot:activator="{ on }">
+                  <v-img
+                    :src="platform.path"
+                    v-on="on"
+                    class="rounded-lg"
+                  ></v-img>
+                </template>
+                <span>{{ platform.description }}</span>
+              </v-tooltip>
+            </v-col>
+          </v-row>
+        </v-col>
+      </v-row>
+    </div>
   </div>
 </template>
 
 <script>
 import Banner from "../components/Banner.vue";
-import EditImgGrid from "../components/EditImgGrid.vue";
 
 export default {
   name: "Profile",
-  props: {
-    editMode: Boolean,
-  },
+  props: {},
   components: {
     Banner,
-    EditImgGrid,
   },
   data() {
     return {
-      valid: false,
-      aboutMeRules: [
-        (v) =>
-          v.length <= 170 ||
-          "About me section must be less than 170 characters",
-      ],
-      activePicker: null,
-      countryList: [],
-      languageList: [],
-      platformList: ["PC", "Play Station", "Xbox", "Nintendo Switch"],
-      // à remplacer par une liste plus complète de jeu
-      gameList: [
-        "League of Legends",
-        "Fortnite",
-        "Rocket League",
-        "Valorant",
-        "Among us",
-        "Minecraft",
-      ],
-      language: "",
-      plaform: "",
-      game: "",
-      platformUsername: "",
-      menu: false,
       // models
       bgUserProfile: "https://cdn.vuetifyjs.com/images/parallax/material.jpg",
-      aboutMe: "",
+      aboutMe:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec. nec nonummy molestie, enim est",
       avatarUser: "",
       birthdayDate: null,
       country: "",
-      userLanguages: [],
-      userPlatforms: [],
-      userGames: [],
-      username: "",
-      discordId: "",
-      twitterId: "",
-      instagramId: "",
+      userLanguages: ["English", "French", "Spanish", "Italian"],
+      userPlatforms: [
+        {
+          name: "PC",
+          description: "leplusfor93",
+          path: require("../assets/profile/platforms/PC.png"),
+        },
+        {
+          name: "Play Station",
+          description: "leplusnul93",
+          path: require("../assets/profile/platforms/Play Station.png"),
+        },
+        {
+          name: "Nintendo Switch",
+          description: "leplusmid93",
+          path: require("../assets/profile/platforms/Nintendo Switch.png"),
+        },
+        {
+          name: "Xbox",
+          description: "leplusmid93",
+          path: require("../assets/profile/platforms/Xbox.png"),
+        },
+      ],
+      userGames: [
+        {
+          name: "League of Legends",
+          description: "League of Legends",
+          path: "https://cdn.vuetifyjs.com/images/parallax/material.jpg",
+        },
+        {
+          name: "Minecrafteeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+          description: "Minecrafteeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+          path: "https://cdn.vuetifyjs.com/images/parallax/material.jpg",
+        },
+        {
+          name: "Fortnite Fortnite Fortnite Fortnite Fortnite",
+          description: "Fortnite Fortnite Fortnite Fortnite Fortnite",
+          path: "https://cdn.vuetifyjs.com/images/parallax/material.jpg",
+        },
+        {
+          name: "Valorant",
+          description: "Valorant",
+          path: "https://cdn.vuetifyjs.com/images/parallax/material.jpg",
+        },
+        {
+          name: "Rocket League",
+          description: "Rocket League",
+          path: "https://cdn.vuetifyjs.com/images/parallax/material.jpg",
+        },
+        {
+          name: "Among us",
+          description: "Among us",
+          path: "https://cdn.vuetifyjs.com/images/parallax/material.jpg",
+        },
+        {
+          name: "League of Legends",
+          description: "League of Legends",
+          path: "https://cdn.vuetifyjs.com/images/parallax/material.jpg",
+        },
+        {
+          name: "Minecraft",
+          description: "Minecraft",
+          path: "https://cdn.vuetifyjs.com/images/parallax/material.jpg",
+        },
+        {
+          name: "Fortnite",
+          description: "Fortnite",
+          path: "https://cdn.vuetifyjs.com/images/parallax/material.jpg",
+        },
+        {
+          name: "Valorant",
+          description: "Valorant",
+          path: "https://cdn.vuetifyjs.com/images/parallax/material.jpg",
+        },
+        {
+          name: "Rocket League",
+          description: "Rocket League",
+          path: "https://cdn.vuetifyjs.com/images/parallax/material.jpg",
+        },
+        {
+          name: "Among us",
+          description: "Among us",
+          path: "https://cdn.vuetifyjs.com/images/parallax/material.jpg",
+        },
+      ],
+      username: "Truc",
+      discordId: "discord id",
+      twitterId: "twitter id",
+      instagramId: "instagram id",
       twitchId: "",
     };
-  },
-  watch: {
-    menu(val) {
-      val && setTimeout(() => (this.activePicker = "YEAR"));
-    },
-  },
-  methods: {
-    toggleEdit() {
-      this.editMode = !this.editMode;
-    },
-    saveDate(date) {
-      this.$refs.menu.save(date);
-    },
-    addLanguage() {
-      if (!this.language || this.userLanguages.includes(this.language)) {
-        this.language = "";
-        return;
-      }
-      this.userLanguages = [...this.userLanguages, this.language];
-      this.language = "";
-    },
-    deleteLanguage(lang) {
-      this.userLanguages = this.userLanguages.filter(
-        (language) => language !== lang
-      );
-    },
-    addPlatform() {
-      if (
-        !this.plaform ||
-        this.userPlatforms.map((plat) => plat.name).includes(this.plaform)
-      ) {
-        return;
-      }
-      if (!this.platformUsername) {
-        return;
-      }
-
-      let newPlatform = {
-        name: this.plaform,
-        description: this.platformUsername,
-        // path à changer une fois qu'on aura des images
-        path: this.bgUserProfile,
-      };
-
-      this.userPlatforms = [...this.userPlatforms, newPlatform];
-      this.plaform = "";
-      this.platformUsername = "";
-    },
-    deletePlatform(platformName) {
-      this.userPlatforms = this.userPlatforms.filter(
-        (platform) => platform.name !== platformName
-      );
-    },
-    addGame() {
-      if (
-        !this.game ||
-        this.userGames.map((game) => game.name).includes(this.game)
-      ) {
-        return;
-      }
-
-      let newGame = {
-        name: this.game,
-        description: this.game,
-        // path à changer une fois qu'on aura des images
-        path: this.bgUserProfile,
-      };
-
-      this.userGames = [...this.userGames, newGame];
-      this.game = "";
-    },
-    deleteGame(gameName) {
-      this.userGames = this.userGames.filter((game) => game.name !== gameName);
-    },
-    async getCountries() {
-      const response = await fetch(
-        "https://restcountries.eu/rest/v2/all?fields=name",
-        {
-          method: "GET",
-        }
-      );
-      const data = await response.json();
-      this.countryList = data.map((country) => country.name).sort();
-    },
-    async getLanguages() {
-      const response = await fetch(
-        "https://restcountries.eu/rest/v2/all?fields=languages",
-        {
-          method: "GET",
-        }
-      );
-      const data = await response.json();
-      data
-        .map((country) => country.languages.map((lang) => lang.name))
-        .forEach((element) => {
-          this.languageList = this.languageList.concat(element).sort();
-        });
-    },
-    changeBgFile(file) {
-      // TODO: limiter le poids des fichiers
-      let reader = new FileReader();
-      reader.onload = (event) => {
-        this.bgUserProfile = event.target.result;
-      };
-      reader.readAsDataURL(file);
-      console.log(file);
-    },
-    initUserDate(user) {
-      if (user.profile_url != null) this.avatarUser = user.profile_url;
-      this.username = user.username;
-    },
-    async getUser() {
-      let url = process.env.VUE_APP_API_URL;
-      fetch(`${url}/api/user/`, {
-        method: "GET",
-        credentials: "include",
-      })
-        .then((response) => response.json())
-        .then((response) => this.initUserDate(response));
-    },
-  },
-  mounted() {
-    this.getUser();
-    this.getCountries();
-    this.getLanguages();
   },
 };
 </script>
@@ -477,26 +362,20 @@ export default {
   @extend .btn;
   margin-right: 30px;
 }
-/*
-.containerBtnEdit {
-  display: flex;
-  align-items: center;
-  justify-content: end;
-  margin-top: 10px;
-}
-*/
-.chip {
-  @extend .font-1-small;
+
+.card {
+  background-color: $color-card-bg;
+  border-radius: 20px;
 }
 
-.title {
+.description {
   color: $color-font-primary;
-  @extend .font-1-large-bold;
+  @extend .font-2-small;
 }
 
-.titleMobile {
+.descriptionMobile {
   color: $color-font-primary;
-  @extend .font-1-medium-bold;
+  @extend .font-2-tiny;
 }
 
 .secondaryTitle {
@@ -509,14 +388,5 @@ export default {
   color: $color-secondary;
   margin: 16px 0;
   @extend .font-1-medium-small;
-}
-
-.widthFirstDesktop {
-  width: 572px;
-}
-
-.inputText {
-  color: $color-font-primary;
-  @extend .font-2-small;
 }
 </style>
