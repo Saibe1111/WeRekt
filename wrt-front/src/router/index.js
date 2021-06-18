@@ -20,6 +20,15 @@ const routes = [
       import(/* webpackChunkName: "profile" */ "../views/Profile.vue"),
   },
   {
+    path: "/profile/edit",
+    name: "ProfileEdition",
+    // route level code-splitting
+    // this generates a separate chunk (profile.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () =>
+      import(/* webpackChunkName: "profile" */ "../views/ProfileEdit.vue"),
+  },
+  {
     path: "/play",
     name: "Play",
     // route level code-splitting
@@ -27,6 +36,15 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "play" */ "../views/Play.vue"),
+  },
+  {
+    path: "/chat",
+    name: "Chat",
+    // route level code-splitting
+    // this generates a separate chunk (play.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () =>
+      import(/* webpackChunkName: "chat" */ "../views/Chat.vue"),
   },
   {
     path: "*",
