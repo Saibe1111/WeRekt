@@ -114,7 +114,7 @@ async function createPlaysTable(connection) {
         connection.query(
             `CREATE TABLE IF NOT EXISTS werekt.Plays ( 
                 Game_Id int,
-                User_Id int,
+                User_Id varchar(255),
                 FOREIGN KEY (Game_Id) REFERENCES Game(Game_Id),
                 FOREIGN KEY (User_Id) REFERENCES Users(ID),
                 CONSTRAINT PK_Plays PRIMARY KEY (Game_Id, User_Id)
