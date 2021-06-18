@@ -8,6 +8,7 @@ const routes = require("./routes");
 const session = require("express-session");
 const cors = require('cors');
 const database = require('./helpers/database.js');
+const { isAuthorized } = require("./middlewares/auth.js");
 
 database.checkDbExist();
 
@@ -28,7 +29,10 @@ app.use( session({
 app.use(express.json());
 app.use(passport.initialize());
 app.use(passport.session());
+
 app.use("/api", routes);
+app.use('/public', isAuthorized, express.static(__dirname + '/public'));
+
 
 app.listen(config.express.PORT, () => {
     console.log(`The server is listening on port: ${config.express.PORT}`);

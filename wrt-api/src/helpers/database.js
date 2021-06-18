@@ -12,8 +12,7 @@ async function getConnection() {
     });
 
     con.connect(function(err){
-        if(err) throw err;
-        console.log("Database connection successful !");
+        if(err) console.err("Connection to database impossible !");
     });
     return con;
 }
@@ -29,8 +28,8 @@ async function checkDbExist() {
     await werektDb(connection);
     await createUser(connection);
     await createGameTable(connection);
+    await createPlaysTable(connection);
     await createMessageTable(connection);
-    await createLanguageTable(connection);
     await createIsFriendOfTable(connection);
     await createCredentialsTable(connection);
 
@@ -64,7 +63,11 @@ async function createUser(connection) {
                 Profile_Url varchar(255),
                 Description varchar(255),
                 Country varchar(255),
-                Birthdate Date
+                Birthdate Date,
+                Banner varchar(255),
+                Languages json,
+                Platforms json,
+                Social_Networks json
             ); `,
 
             (error) => {
@@ -85,9 +88,10 @@ async function createUser(connection) {
 async function createGameTable(connection) {
     return new Promise((resolve, reject) => {
         connection.query(
-            `CREATE TABLE IF NOT EXISTS werekt.Game ( 
-                Id_Game int PRIMARY KEY NOT NULL,
-                Name varchar(255)
+            `CREATE TABLE IF NOT EXISTS werekt.Game (
+                Game_Id int PRIMARY KEY NOT NULL,
+                Game_Name varchar(255),
+                Cover_Url varchar(255)
             ); `,
 
             (error) => {
@@ -95,7 +99,7 @@ async function createGameTable(connection) {
                     console.error(error.message);
                     reject(error)
                 } else {
-                    console.log("CREATE TABLE Game")
+                    console.log("CREATE TABLE GAME")
                     resolve();
                 }
             }
@@ -105,12 +109,15 @@ async function createGameTable(connection) {
     });
 }
 
-async function createLanguageTable(connection) {
+async function createPlaysTable(connection) {
     return new Promise((resolve, reject) => {
         connection.query(
-            `CREATE TABLE IF NOT EXISTS werekt.Language ( 
-                Id_Lang int,
-                Name varchar(255)
+            `CREATE TABLE IF NOT EXISTS werekt.Plays ( 
+                Game_Id int,
+                User_Id varchar(255),
+                FOREIGN KEY (Game_Id) REFERENCES Game(Game_Id),
+                FOREIGN KEY (User_Id) REFERENCES Users(ID),
+                CONSTRAINT PK_Plays PRIMARY KEY (Game_Id, User_Id)
             ); `,
 
             (error) => {
@@ -118,7 +125,7 @@ async function createLanguageTable(connection) {
                     console.error(error.message);
                     reject(error)
                 } else {
-                    console.log("CREATE TABLE Language")
+                    console.log("CREATE TABLE PLAYS")
                     resolve();
                 }
             }
