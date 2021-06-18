@@ -64,7 +64,9 @@ export default {
       fetch(`${url}/api/auth/state`, {
         method: "GET",
         credentials: "include",
-      }).then((response) => (this.isLog = response.status === 200 ? true : false));
+      }).then(
+        (response) => (this.isLog = response.status === 200 ? true : false)
+      );
     },
   },
   created() {
@@ -77,7 +79,16 @@ export default {
 @import "../style";
 
 .logo {
-  color: $color-font-primary !important;
+  //color: $color-font-primary !important;
+  font-weight: bold;
+  background: -webkit-linear-gradient(
+    45deg,
+    $color-secondary,
+    $color-secondary-bis
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
   text-decoration: none;
   @extend .font-1-medium;
 }
