@@ -1,11 +1,22 @@
 <template>
-  <v-app-bar fixed :color="$style.colorMainBg" elevate-on-scroll>
+  <v-app-bar
+    app
+    clipped-left
+    fixed
+    :color="$style.colorMainBg"
+    elevate-on-scroll
+  >
     <v-toolbar-title>
       <router-link to="/" :class="$style.logo">WeRekt</router-link>
     </v-toolbar-title>
     <v-spacer></v-spacer>
     <div v-if="isLog" class="mr-5">
-      <v-icon class="mr-5" color="white" size="24">mdi-magnify</v-icon>
+      <v-icon class="mr-5" color="white" size="24" @click="redirect('play')"
+        >mdi-magnify</v-icon
+      >
+      <v-icon class="mr-5" color="white" size="24" @click="redirect('chat')"
+        >mdi-forum</v-icon
+      >
       <v-menu offset-y>
         <template v-slot:activator="{ on, attrs }">
           <v-icon color="white" size="36" v-bind="attrs" v-on="on"
@@ -16,7 +27,6 @@
           <v-list-item
             v-for="(item, index) in menuItems"
             :key="index"
-            @click="redirect(item)"
             :href="item.path"
           >
             <v-list-item-title>{{ item.title }}</v-list-item-title>
@@ -37,39 +47,52 @@ export default {
   name: "NavBar",
   data() {
     return {
-      menuItems: [
+      ownDiscordId: "",
+      isLog: false,
+    };
+  },
+  computed: {
+    menuItems() {
+      return [
         {
           title: "My profile",
-          path: "/profile",
+          path: "/profile/" + this.ownDiscordId,
         },
         {
           title: "Log out",
           path: `${process.env.VUE_APP_API_URL}/api/auth/logout`,
         },
-      ],
-      isLog: false,
-    };
+      ];
+    },
   },
   methods: {
     login() {
       let url = process.env.VUE_APP_API_URL;
       window.location.href = `${url}/api/auth/discord/`;
     },
-    redirect(item) {
-      console.log(item);
+    redirect(name) {
+      this.$router.push("/" + name);
     },
-    getUser() {
+    getUserState() {
       let url = process.env.VUE_APP_API_URL;
       this.isLog = false;
       fetch(`${url}/api/auth/state`, {
         method: "GET",
         credentials: "include",
-      }).then(
-        (response) => (this.isLog = response.status === 200 ? true : false)
-      );
+      }).then((response) => (this.isLog = response.status === 200));
+    },
+    async getUser() {
+      let url = process.env.VUE_APP_API_URL;
+      const res = await fetch(`${url}/api/user/`, {
+        method: "GET",
+        credentials: "include",
+      });
+      const data = await res.json();
+      this.ownDiscordId = data.User_ID;
     },
   },
   created() {
+    this.getUserState();
     this.getUser();
   },
 };

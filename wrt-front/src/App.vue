@@ -1,10 +1,10 @@
 <template>
   <v-app>
-    <v-main>
+    <v-main class="pa-0">
       <div :class="$style.background">
         <NavBar></NavBar>
         <ToTopBtn />
-        <v-main class="mt-10">
+        <v-main>
           <router-view />
           <Footer />
         </v-main>
