@@ -3,7 +3,7 @@ const database = require('../helpers/database.js');
 async function createUser(discord_ID, username, Profile_Url) {
     const connection = await database.getConnection();
     let Usname = username.replace(/[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2580-\u27BF]|\uD83E[\uDD10-\uDDFF]/g, "");
-    return new Promise((resolve, reject) => {
+
 
 
         let sql = "INSERT INTO Users (ID, Username, Profile_Url) values (?,?,?);";
@@ -11,19 +11,15 @@ async function createUser(discord_ID, username, Profile_Url) {
         connection.query(sql, [discord_ID, Usname, Profile_Url], (error) => {
             if (error) {
                 console.error(error.message);
-                reject(error)
+
             } else {
                 console.log("Row inserted");
-                resolve();
+
             }
         }
 
         )
-
-    }).catch((error) => {
-        console.log(error);
-    });
-
+        connection.end();
 }
 
 async function getUser(id) {
@@ -47,6 +43,7 @@ async function getUser(id) {
             }else{
                 resolve(null);
             }
+            connection.end();
         });
 
     }).catch((error) => {
@@ -92,7 +89,7 @@ async function updateUser(discord_ID, Username=undefined, Profile_Url=undefined,
 
     let attributes = usname+purl+desc+cty+bdate;
 
-    return new Promise((resolve, reject) => {
+
 
 
         let sql = `UPDATE Users SET ${attributes.replace(/,\s*$/, "")} WHERE ID = ?;`;
@@ -100,40 +97,32 @@ async function updateUser(discord_ID, Username=undefined, Profile_Url=undefined,
         connection.query(sql, param, (error) => {
             if (error) {
                 console.error(error.message);
-                reject(error)
+                return;
             } else {
                 console.log("Row Updated");
-                resolve();
+
             }
         }
 
         )
-
-    }).catch((error) => {
-        console.log(error);
-    });
+        connection.end();
 
 }
 
 async function deleteUser(id) {
     const connection = await database.getConnection();
-    return new Promise((resolve, reject) => {
+
         let sql = "DELETE FROM Users WHERE ID=?;";
         connection.query(sql, [id], (error, results) => {
             if (error){
                 console.error(error.message);
-                reject(error);
+                return;
             }
             else {
-                resolve();
                 console.log("Row deleted");
             }
         });
-
-    }).catch((error) => {
-        console.log(error);
-    });
-
+        connection.end();
 
 }
 
