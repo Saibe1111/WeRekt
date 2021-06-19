@@ -11,7 +11,7 @@ async function getUser(req, res) {
         return;
     }
 
-    await updateUserWithDiscord(ID);
+    
 
     let user = await db.getUser(ID);
 
@@ -19,6 +19,8 @@ async function getUser(req, res) {
         res.status(404).json({msg:"User not found"});
         return;
     }
+
+    await updateUserWithDiscord(ID);
 
     let ageOf = null;
 

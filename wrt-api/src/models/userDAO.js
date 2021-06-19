@@ -34,7 +34,9 @@ async function getUser(id) {
             if (error)
                 console.error(error.message);
 
-            if (results) {
+            console.log(results);
+
+            if (results.length > 0) {
                 resolve({ 
                     id: results[0].ID,
                     username: results[0].Username, 
