@@ -33,8 +33,8 @@ async function getCredentials(id) {
         connection.query(sql, [id], (error, results) => {
             if (error)
                 console.error(error.message);
-
-            if (results.length > 0) {
+            
+            if (results) {
                 resolve({
                     access_token: results[0].Access_Token,
                     refresh_token: results[0].Refresh_Token
