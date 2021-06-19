@@ -1,27 +1,68 @@
 <template>
   <div>
-    <h1>(game name) rooms</h1>
-    <div v-for="game in gameList" :key="gameName">
-      <RoomLine icon="" roomName="" />
-    </div>
+    <v-navigation-drawer dark clipped app :color="$style.colorMainBg">
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title :class="$style.mainTitle">
+            Rooms
+          </v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+
+      <v-list dense nav>
+        <v-list-item-group v-model="selectedRoom">
+          <v-list-item
+            v-for="room in rooms"
+            :key="room.id"
+            link
+            @click="changeRoom(room)"
+          >
+            <v-list-item-icon>
+              <v-img max-width="30" :src="room.gameIcon"></v-img>
+            </v-list-item-icon>
+
+            <v-list-item-content>
+              <v-list-item-title :class="$style.gameText"
+                >{{ room.game }} {{ room.id }}</v-list-item-title
+              >
+            </v-list-item-content>
+          </v-list-item>
+        </v-list-item-group>
+      </v-list>
+    </v-navigation-drawer>
   </div>
 </template>
 
-<style lang="scss" module>
-@import "../style";
-//TODO
-</style>
-
 <script>
 export default {
-  name: "ChatBubble",
+  name: "RoomGroup",
   props: {
-    // On doit pouvoir différencier si le msg vient de nous ou non
-    // dans le cas ou qqn a le même nom que soi
-    username: String,
-    userID: Number,
-    msgContent: String,
-    sentAt: String,
+    rooms: {
+      type: Array,
+    },
+  },
+  data() {
+    return {
+      selectedRoom: "",
+    };
+  },
+  methods: {
+    changeRoom(room) {
+      this.selectedRoom = room;
+      this.$emit("roomChanged", room);
+    },
   },
 };
 </script>
+
+<style lang="scss" module>
+@import "../style";
+
+.mainTitle {
+  @extend .font-1-medium-small;
+}
+
+.gameText {
+  @extend .font-2-small;
+}
+</style>
