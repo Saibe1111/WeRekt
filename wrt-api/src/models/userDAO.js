@@ -33,10 +33,9 @@ async function getUser(id) {
         connection.query(sql, [id], (error, results) => {
             if (error)
                 console.error(error.message);
-
-            console.log(results);
-
-            if (results.length > 0) {
+            if(results === undefined){
+                resolve(null);
+            }else if(results.length > 0){
                 resolve({ 
                     id: results[0].ID,
                     username: results[0].Username, 
@@ -45,7 +44,7 @@ async function getUser(id) {
                     country: results[0].Country, 
                     birthdate: results[0].Birthdate 
                 });
-            } else {
+            }else{
                 resolve(null);
             }
         });

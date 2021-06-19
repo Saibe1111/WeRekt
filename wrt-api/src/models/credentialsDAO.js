@@ -32,10 +32,10 @@ async function getCredentials(id) {
             "SELECT Access_Token, Refresh_Token FROM Credentials where ID_User=?;";
         connection.query(sql, [id], (error, results) => {
             if (error) console.error(error.message);
-            
-            console.log(results);
 
-            if (results.length > 0) {
+            if(results === undefined){
+                resolve(null);
+            }else if(results.length > 0){
                 resolve({
                     access_token: results[0].Access_Token,
                     refresh_token: results[0].Refresh_Token,
