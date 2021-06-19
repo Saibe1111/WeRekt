@@ -11,7 +11,16 @@ const routes = [
     component: Home,
   },
   {
-    path: "/profile",
+    path: "/profile/edit",
+    name: "ProfileEdition",
+    // route level code-splitting
+    // this generates a separate chunk (profile.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () =>
+      import(/* webpackChunkName: "profileEdit" */ "../views/ProfileEdit.vue"),
+  },
+  {
+    path: "/profile/:id",
     name: "Profile",
     // route level code-splitting
     // this generates a separate chunk (profile.[hash].js) for this route
@@ -19,15 +28,7 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "profile" */ "../views/Profile.vue"),
   },
-  {
-    path: "/profile/edit",
-    name: "ProfileEdition",
-    // route level code-splitting
-    // this generates a separate chunk (profile.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "profile" */ "../views/ProfileEdit.vue"),
-  },
+  
   {
     path: "/play",
     name: "Play",
@@ -47,8 +48,8 @@ const routes = [
       import(/* webpackChunkName: "chat" */ "../views/Chat.vue"),
   },
   {
-    path: "*",
-    name: "PageNotFound",
+    path: "/PageNotFound",
+    alias: "*",
     component: () =>
       import(/* webpackChunkName: "PageNotFound" */ "../views/PageNotFound.vue")
   }
@@ -59,5 +60,26 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes,
 });
+
+// router.beforeEach((to, from, next) => {
+//   if (to.name !== "Home") {
+//     let url = process.env.VUE_APP_API_URL;
+//     fetch(`${url}/api/auth/state`, {
+//       method: "GET",
+//       credentials: "include",
+//     }
+//     ).then(
+//       (response) => {
+//         if (response.status === 200) {
+//           next();
+//         }
+//         else {
+//           next({ name: 'Home' });
+//         }
+//       }
+//     )
+//   }
+//   else next();
+// })
 
 export default router;
