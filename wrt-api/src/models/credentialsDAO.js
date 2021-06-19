@@ -18,8 +18,11 @@ async function createCredentials(discord_ID, access_Token, refresh_Token) {
                     console.log("Row inserted");
                     resolve();
                 }
+
             }
+            
         );
+        connection.end();
     }).catch((error) => {
         console.log(error);
     });
@@ -44,6 +47,7 @@ async function getCredentials(id) {
                 resolve(null);
             }
         });
+        connection.end();
     }).catch((error) => {
         console.log(error);
     });
@@ -68,6 +72,7 @@ async function updateCredentials(discord_ID, access_Token, refresh_Token) {
                 }
             }
         );
+        connection.end();
     }).catch((error) => {
         console.log(error);
     });
@@ -86,6 +91,7 @@ async function deleteCredentials(id) {
                 console.log("Row deleted");
             }
         });
+        connection.end();
     }).catch((error) => {
         console.log(error);
     });
