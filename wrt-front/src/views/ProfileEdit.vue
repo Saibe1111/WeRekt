@@ -271,8 +271,8 @@
           <EditImgGrid
             :imgList="userGames"
             @delete-img="deleteGame"
-            imgHeight="140"
-            imgWidth="100"
+            imgHeight="160"
+            imgWidth="120"
           />
         </div>
       </v-col>
@@ -318,7 +318,7 @@ export default {
       platformUsername: "",
       menu: false,
       // models
-      bgUserProfile: "https://cdn.vuetifyjs.com/images/parallax/material.jpg",
+      bgUserProfile: "",
       aboutMe: "",
       avatarUser: "",
       birthdayDate: null,
@@ -460,9 +460,12 @@ export default {
       }
     },
     initUserDate(user) {
+      console.log(user);
+      this.username = user.username;
       if (user.profile_url != null) this.avatarUser = user.profile_url;
+      if (user.banner_url != null) this.bgUserProfile = user.banner_url;
       if (user.description != null) this.aboutMe = user.description;
-      if (user.country != null) this.countryList = user.country;
+      if (user.country != null) this.country = user.country;
       if (user.languages != null) this.userLanguages = user.languages;
       if (user.platforms != null) {
         user.platforms.forEach((el) => {
@@ -485,7 +488,6 @@ export default {
           this.initSocialMedia(el);
         });
       }
-      this.username = user.username;
     },
     async getUser() {
       let url = process.env.VUE_APP_API_URL;

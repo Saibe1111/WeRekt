@@ -6,7 +6,10 @@
       :avatarImg="avatarUser"
       :editMode="false"
     />
-    <v-row class="d-flex flex-row-reverse mt-2">
+    <v-row
+      v-if="this.connectedUserID == this.$route.params.id"
+      class="d-flex flex-row-reverse mt-2"
+    >
       <router-link style="text-decoration: none" to="/profile/edit"
         ><v-btn class="mt-2" :class="$style.btnEdit">Edit</v-btn></router-link
       >
@@ -70,16 +73,20 @@
           >
             Games
           </h3>
-          <v-slide-group multiple show-arrows="always" dark>
+          <v-slide-group multiple show-arrows="always" dark class="my-4">
             <v-slide-item v-for="(game, index) in userGames" :key="index">
-              <v-card class="ma-4" height="140" width="100">
+              <v-card
+                class="ma-auto pa-4"
+                height="200"
+                width="150"
+                color="transparent"
+                elevation="0"
+              >
                 <v-tooltip top>
                   <template v-slot:activator="{ on }">
                     <v-img
                       :src="game.path"
                       v-on="on"
-                      height="140"
-                      max-width="100"
                       class="rounded-lg"
                     ></v-img>
                   </template>
@@ -195,7 +202,7 @@
                 "
                 class="ml-2"
               >
-                {{ this.twitterId ? this.twitterId : "Unknown" }}
+                {{ this.twitchId ? this.twitchId : "Unknown" }}
               </p>
             </v-col>
           </v-row>
@@ -214,9 +221,7 @@
             <v-col
               v-for="(platform, index) in userPlatforms"
               :key="index"
-              cols="6"
-              md="3"
-              class="d-flex"
+              class="d-flex justify-center"
             >
               <v-tooltip top>
                 <template v-slot:activator="{ on }">
@@ -224,10 +229,23 @@
                     :src="platform.path"
                     v-on="on"
                     class="rounded-lg"
+                    max-width="100"
+                    contain
+                    @click="copyText(platform.description)"
                   ></v-img>
                 </template>
-                <span>{{ platform.description }}</span>
+                <span v-bind:id="platform.description">{{
+                  platform.description
+                }}</span>
               </v-tooltip>
+              <v-snackbar
+                v-model="copySnackbar"
+                timeout="1000"
+                content-class="text-center"
+                dark
+              >
+                {{ snackbarText }}
+              </v-snackbar>
             </v-col>
           </v-row>
         </v-col>
@@ -247,104 +265,126 @@ export default {
   },
   data() {
     return {
-      // models
-      bgUserProfile: "https://cdn.vuetifyjs.com/images/parallax/material.jpg",
-      aboutMe:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec. nec nonummy molestie, enim est",
+      connectedUserID: "",
+      copySnackbar: false,
+      snackbarText: "",
+      // User models
+      bgUserProfile: "",
+      aboutMe: "",
       avatarUser: "",
       birthdayDate: null,
       country: "",
-      userLanguages: ["English", "French", "Spanish", "Italian"],
-      userPlatforms: [
-        {
-          name: "PC",
-          description: "leplusfor93",
-          path: require("../assets/profile/platforms/PC.png"),
-        },
-        {
-          name: "Play Station",
-          description: "leplusnul93",
-          path: require("../assets/profile/platforms/Play Station.png"),
-        },
-        {
-          name: "Nintendo Switch",
-          description: "leplusmid93",
-          path: require("../assets/profile/platforms/Nintendo Switch.png"),
-        },
-        {
-          name: "Xbox",
-          description: "leplusmid93",
-          path: require("../assets/profile/platforms/Xbox.png"),
-        },
-      ],
-      userGames: [
-        {
-          name: "League of Legends",
-          description: "League of Legends",
-          path: "https://cdn.vuetifyjs.com/images/parallax/material.jpg",
-        },
-        {
-          name: "Minecrafteeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-          description: "Minecrafteeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-          path: "https://cdn.vuetifyjs.com/images/parallax/material.jpg",
-        },
-        {
-          name: "Fortnite Fortnite Fortnite Fortnite Fortnite",
-          description: "Fortnite Fortnite Fortnite Fortnite Fortnite",
-          path: "https://cdn.vuetifyjs.com/images/parallax/material.jpg",
-        },
-        {
-          name: "Valorant",
-          description: "Valorant",
-          path: "https://cdn.vuetifyjs.com/images/parallax/material.jpg",
-        },
-        {
-          name: "Rocket League",
-          description: "Rocket League",
-          path: "https://cdn.vuetifyjs.com/images/parallax/material.jpg",
-        },
-        {
-          name: "Among us",
-          description: "Among us",
-          path: "https://cdn.vuetifyjs.com/images/parallax/material.jpg",
-        },
-        {
-          name: "League of Legends",
-          description: "League of Legends",
-          path: "https://cdn.vuetifyjs.com/images/parallax/material.jpg",
-        },
-        {
-          name: "Minecraft",
-          description: "Minecraft",
-          path: "https://cdn.vuetifyjs.com/images/parallax/material.jpg",
-        },
-        {
-          name: "Fortnite",
-          description: "Fortnite",
-          path: "https://cdn.vuetifyjs.com/images/parallax/material.jpg",
-        },
-        {
-          name: "Valorant",
-          description: "Valorant",
-          path: "https://cdn.vuetifyjs.com/images/parallax/material.jpg",
-        },
-        {
-          name: "Rocket League",
-          description: "Rocket League",
-          path: "https://cdn.vuetifyjs.com/images/parallax/material.jpg",
-        },
-        {
-          name: "Among us",
-          description: "Among us",
-          path: "https://cdn.vuetifyjs.com/images/parallax/material.jpg",
-        },
-      ],
-      username: "Truc",
-      discordId: "discord id",
-      twitterId: "twitter id",
-      instagramId: "instagram id",
+      userLanguages: [],
+      userPlatforms: [],
+      userGames: [],
+      username: "",
+      discordId: "",
+      twitterId: "",
+      instagramId: "",
       twitchId: "",
     };
+  },
+  methods: {
+    renameKey(obj, oldKey, newKey) {
+      obj[newKey] = obj[oldKey];
+      delete obj[oldKey];
+    },
+    initSocialMedia(media) {
+      switch (media.name) {
+        case "Twitter":
+          this.twitterId = media.username;
+          break;
+        case "Instagram":
+          this.instagramId = media.username;
+          break;
+        case "Discord":
+          this.discordId = media.username;
+          break;
+        case "Twitch":
+          this.twitchId = media.username;
+          break;
+        default:
+      }
+    },
+    initUserDate(user) {
+      this.username = user.username;
+      if (user.profile_url != null) this.avatarUser = user.profile_url;
+      if (user.banner_url != null) this.bgUserProfile = user.banner_url;
+      if (user.description != null) this.aboutMe = user.description;
+      if (user.country != null) this.country = user.country;
+      if (user.languages != null) this.userLanguages = user.languages;
+      if (user.platforms != null) {
+        user.platforms.forEach((el) => {
+          this.renameKey(el, "username", "description");
+          el["path"] = require("../assets/profile/platforms/" +
+            el.name +
+            ".png");
+        });
+        this.userPlatforms = user.platforms;
+      }
+      if (user.games != null) {
+        user.games.forEach((el) => {
+          this.renameKey(el, "cover_url", "path");
+          el["description"] = el.name;
+        });
+        this.userGames = user.games;
+      }
+      if (user.social_medias != null) {
+        user.social_medias.forEach((el) => {
+          this.initSocialMedia(el);
+        });
+      }
+    },
+    async getUser() {
+      let url = process.env.VUE_APP_API_URL;
+      fetch(
+        `${url}/api/user?` +
+          new URLSearchParams({
+            id: this.$route.params.id,
+          }),
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      )
+        .then((response) => {
+          if (response.status === 404) {
+            this.$router.push({
+              path: "/PageNotFound",
+            });
+          } else {
+            return response.json();
+          }
+        })
+        .then((data) => {
+          if (data) this.initUserDate(data);
+        });
+    },
+    async getConnectedUser() {
+      let url = process.env.VUE_APP_API_URL;
+      const res = await fetch(`${url}/api/user`, {
+        method: "GET",
+        credentials: "include",
+      });
+
+      const user = await res.json();
+
+      this.connectedUserID = user.User_ID;
+    },
+    copyText(toCopyElementId) {
+      let r = document.createRange();
+      r.selectNode(document.getElementById(toCopyElementId));
+      window.getSelection().removeAllRanges();
+      window.getSelection().addRange(r);
+      document.execCommand("copy");
+      window.getSelection().removeAllRanges();
+      this.copySnackbar = true;
+      this.snackbarText = `"${toCopyElementId}" copied to clipboard!`;
+    },
+  },
+  mounted() {
+    this.getUser();
+    this.getConnectedUser();
   },
 };
 </script>
