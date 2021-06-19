@@ -11,7 +11,6 @@ async function getUser(req, res) {
         return;
     }
 
-    
 
     let user = await db.getUser(ID);
 
@@ -19,21 +18,17 @@ async function getUser(req, res) {
         res.status(404).json({msg:"User not found"});
         return;
     }
-
     await updateUserWithDiscord(ID);
 
     let ageOf = null;
 
-    if(user.birthdate != null)
-        ageOf = moment(user.birthdate, "YYYY-MM-DD").fromNow();
-        
     let User = {
         User_ID : ID,
         username: user.username,
         profile_url: user.profile_url,
-        banner_url: "https://images-ext-1.discordapp.net/external/VxHUXBWEMJvN3xfP540MmCNvVxE31yWwltPjjpjEj3Q/https/cdn.vuetifyjs.com/images/parallax/material.jpg",
+        banner: user.banner,
         description: user.description,
-        birthdate: ageOf,
+        birthdate: user.birthdate,
         country: user.country,
         games: [{
             name: "Among Us",
@@ -45,25 +40,9 @@ async function getUser(req, res) {
             name: "Minecraft",
             cover_url: "https://images.igdb.com/igdb/image/upload/t_cover_big/co2b4k.jpg"
         }],
-        languages: ["French", "English"],
-        social_medias: [{
-            name: "Instagram",
-            username: "@Steve"
-        },
-        {
-            name: "Twitter",
-            username: "@kevin"
-        }
-        ],
-        platforms: [{
-            name: "Play Station",
-            username: "steve"
-        },
-        {
-            name: "Xbox",
-            username: "kevin"
-
-        }]
+        languages: user.languages.Languages,
+        social_networks: user.social_networks.Social_Networks,
+        platforms: user.platforms.Platforms
 
     }
 
@@ -79,7 +58,9 @@ async function updateUser(req, res){
     let country = req.query.country;
     let birthdate = req.query.birthdate;
     
-    db.updateUser(req.user.id, username,profile_url,description,country,birthdate);
+    db.updateUser(req.query.id, username,profile_url,description,
+        country,birthdate,req.query.banner,req.query.languages,req.query.platforms,
+        req.query.social_networks);
     
 }
 
