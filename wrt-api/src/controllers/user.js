@@ -29,8 +29,9 @@ async function getUser(req, res) {
         User_ID : ID,
         username: user.username,
         profile_url: user.profile_url,
+        banner_url: "https://images-ext-1.discordapp.net/external/VxHUXBWEMJvN3xfP540MmCNvVxE31yWwltPjjpjEj3Q/https/cdn.vuetifyjs.com/images/parallax/material.jpg",
         description: user.description,
-        age: ageOf,
+        birthdate: ageOf,
         country: user.country,
         games: [{
             name: "Among Us",
@@ -49,16 +50,16 @@ async function getUser(req, res) {
         },
         {
             name: "Twitter",
-            username: "@Steve"
+            username: "@kevin"
         }
         ],
         platforms: [{
-            name: "PSN",
+            name: "Play Station",
             username: "steve"
         },
         {
-            name: "XBOX",
-            username: "steve"
+            name: "Xbox",
+            username: "kevin"
 
         }]
 
