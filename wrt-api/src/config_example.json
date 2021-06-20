@@ -20,6 +20,9 @@
     "front":{
         "URL" : "http://localhost:8080"
     },
+    "api":{
+        "URL" : "http://localhost:3000"
+    },
     "encryption_key":{
         "SESSION":"k9#UZrOPTiV'/F/fb(fz@jfvi+~[a=3N=:.>)##fE,/KlsVx|j~eDgM<w0lvelQ",
         "DATABASE":"N'E4~PGe*XxpIb+<@FUlWk9ez2}nW*yc#phyi%(iv[t^X0F^UDb.(:NsKzr5qJt"
