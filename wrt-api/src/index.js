@@ -43,7 +43,7 @@ app.use(passport.session());
 
 app.use("/api", routes);
 app.use("/public", isAuthorized, express.static(__dirname + "/public"));
-console.log(__dirname + "/../node_modules/socket.io");
+
 app.use(
     "/socket.io",
     express.static(__dirname + "/../node_modules/socket.io/client-dist")

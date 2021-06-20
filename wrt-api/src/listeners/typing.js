@@ -1,5 +1,5 @@
-module.exports = function (io) {
-    io.on("typing", function (socket) {
+module.exports = function (socket) {
+    socket.on("typing", function (socket) {
         
     });
 };

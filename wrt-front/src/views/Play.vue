@@ -107,12 +107,11 @@ export default {
         document.location.href="/chat";
       });
 
-
       
     },
     cancelBtn() {
       this.waiting = false;
-
+      socket.disconnect();
     },
     
   },

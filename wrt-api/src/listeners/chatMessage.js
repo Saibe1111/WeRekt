@@ -1,5 +1,5 @@
-module.exports = function (io) {
-    io.on("chat_message", function (socket) {
+module.exports = function (socket) {
+    socket.on("chat_message", function () {
         
     });
 };
