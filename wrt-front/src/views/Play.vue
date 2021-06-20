@@ -58,24 +58,63 @@
 </template>
 
 <script>
+import socket from "../socket";
 export default {
   name: "Play",
   components: {},
   data() {
     return {
+      connectedUserID: "",
       chosenGame: "",
       // prendre le nb de gens max + actuel du back
       waiting: false,
     };
   },
   methods: {
-    playBtn() {
+
+    async getConnectedUser() {
+      let url = process.env.VUE_APP_API_URL;
+      const res = await fetch(`${url}/api/user`, {
+        method: "GET",
+        credentials: "include",
+      });
+
+      const user = await res.json();
+      this.connectedUserID = user.User_ID;
+    },
+
+    async playBtn() {
       // vérifier que le jeu chosenGame existe
       this.waiting = true;
+      let game = this.chosenGame;
+
+      await this.getConnectedUser();
+
+      let userId = this.connectedUserID;
+
+      socket.connect();
+      socket.on("connect", () => {
+          socket.emit("game_search", game, userId);
+      });
+
+      socket.on("number_user", (nb, max) => {
+        // message = `Nombre de joueurs : ${nb}/${max}`
+        console.log(`Nombre de joueurs : ${nb}/${max}`)
+      });	
+
+      socket.on("launch_game", () => {
+        // message = "La partie se lance ..."
+        document.location.href="/chat";
+      });
+
+
+      
     },
     cancelBtn() {
       this.waiting = false;
+
     },
+    
   },
 };
 </script>
