@@ -32,6 +32,8 @@ async function checkDbExist() {
     await createMessageTable(connection);
     await createIsFriendOfTable(connection);
     await createCredentialsTable(connection);
+    await createRoom(connection);
+    await createMessage(connection);
 
 }
 
@@ -53,6 +55,61 @@ async function werektDb(connection) {
         console.log(error);
     });
 }
+
+async function createRoom(connection) {
+    return new Promise((resolve, reject) => {
+        connection.query(
+            `CREATE TABLE IF NOT EXISTS werekt.Rooms ( 
+                Id int PRIMARY KEY NOT NULL AUTO_INCREMENT,
+                user varchar(255),
+                roomId int,
+                FOREIGN KEY (user) REFERENCES Users(ID)
+            ); `,
+
+            (error) => {
+                if (error) {
+                    console.error(error.message);
+                    reject(error);
+                } else {
+                    console.log("CREATE TABLE ROOMS");
+                    resolve();
+                }
+            }
+        );
+    }).catch((error) => {
+        console.log(error);
+    });
+}
+
+async function createMessage(connection) {
+    return new Promise((resolve, reject) => {
+        connection.query(
+            `CREATE TABLE IF NOT EXISTS werekt.Messages ( 
+                ID int PRIMARY KEY NOT NULL AUTO_INCREMENT,
+                content varchar(255),
+                timestamp varchar(255),
+                senderId varchar(255),
+                roomId int,
+                FOREIGN KEY (senderId) REFERENCES Users(ID),
+                FOREIGN KEY (roomId) REFERENCES Rooms(ID)
+            ); `,
+
+            (error) => {
+                if (error) {
+                    console.error(error.message);
+                    reject(error);
+                } else {
+                    console.log("CREATE TABLE MESSAGES");
+                    resolve();
+                }
+            }
+        );
+    }).catch((error) => {
+        console.log(error);
+    });
+}
+
+
 
 async function createUser(connection) {
     return new Promise((resolve, reject) => {
