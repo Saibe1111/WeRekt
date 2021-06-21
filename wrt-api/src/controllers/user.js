@@ -27,7 +27,7 @@ async function getUser(req, res) {
 
     let bt = null;
     if(user.birthdate != null)
-        bt = moment(user.birthdate).format('YYYYMMDD');
+        bt = moment(user.birthdate).format('YYYY-MM-DD');
 
     let User = {
         User_ID: ID,
