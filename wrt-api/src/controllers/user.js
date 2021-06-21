@@ -3,9 +3,12 @@ const { updateUserWithDiscord } = require("../helpers/discordUser");
 const db = require("../models/userDAO.js");
 const config = require("../config.json");
 const moment = require('moment');
+const { getUserGames, updateUserGames } = require('../models/gameDAO.js');
 
 async function getUser(req, res) {
-    let ID = req.query.id || req.user.id;
+
+
+    let ID = req.query.id || req.user?.id;
 
     if (ID === null) {
         res.status(404).json({ msg: "ID cannot be null" });
@@ -13,21 +16,22 @@ async function getUser(req, res) {
     }
 
     let user = await db.getUser(ID);
-    
+
     if (user === null) {
         res.status(404).json({ msg: "User not found" });
         return;
     }
 
-    if(user === undefined){
-        res.status(404).json({msg:"User not found"});
-        return;
+    if (user === undefined) {
+        res.status(404).json({ msg: "User not found" });
     }
     await updateUserWithDiscord(ID);
 
     let bt = null;
-    if(user.birthdate != null)
+    if (user.birthdate != null)
         bt = moment(user.birthdate).format('YYYY-MM-DD');
+
+    Igames = await getUserGames(ID);
 
     let User = {
         User_ID: ID,
@@ -35,25 +39,9 @@ async function getUser(req, res) {
         profile_url: user.profile_url,
         banner: user.banner,
         description: user.description,
-        birthdate:bt,
+        birthdate: bt,
         country: user.country,
-        games: [
-            {
-                name: "Among Us",
-                cover_url:
-                    "https://images.igdb.com/igdb/image/upload/t_cover_big/co1uaf.jpg",
-            },
-            {
-                name: "Grand Theft Auto V",
-                cover_url:
-                    "https://images.igdb.com/igdb/image/upload/t_cover_big/co2lbd.jpg",
-            },
-            {
-                name: "Minecraft",
-                cover_url:
-                    "https://images.igdb.com/igdb/image/upload/t_cover_big/co2b4k.jpg",
-            },
-        ],
+        games: Igames,
         languages: user.languages.Languages,
         social_networks: user.social_networks.Social_Networks,
         platforms: user.platforms.Platforms,
@@ -69,9 +57,10 @@ async function updateUser(req, res) {
     let country = req.body.country;
     let birthdate = req.body.birthdate;
     let banner = `${config.api.URL}/public/upload/images/banner/${req.user.id}.png`;
-    
-    console.log(req.body.social_networks);
 
+    console.log(req.body.games);
+    await updateUserGames(req.user.id, req.body.games);
+    
     db.updateUser(
         req.user.id,
         username,
@@ -85,7 +74,8 @@ async function updateUser(req, res) {
         req.body.social_networks
     );
 
-    res.status(200).json({msg:"ok"});
+
+    res.status(200).json({ msg: "ok" });
 }
 
 async function deleteUser(req, res) {
