@@ -2,8 +2,7 @@
   <div id="profile">
     <Banner
       :bgUserProfile="bgUserProfile"
-      :username="username"
-      :avatarImg="avatarUser"
+      :id="this.$route.params.id"
       :editMode="false"
     />
     <v-row
@@ -306,12 +305,14 @@ export default {
         default:
       }
     },
-    initUserDate(user) {
+    initUserData(user) {
+      console.log(user);
       this.username = user.username;
       if (user.profile_url != null) this.avatarUser = user.profile_url;
-      if (user.banner_url != null) this.bgUserProfile = user.banner_url;
+      if (user.banner != null) this.bgUserProfile = user.banner;
       if (user.description != null) this.aboutMe = user.description;
       if (user.country != null) this.country = user.country;
+      if (user.birthdate != null) this.birthdayDate = user.birthdate;
       if (user.languages != null) this.userLanguages = user.languages;
       if (user.platforms != null) {
         user.platforms.forEach((el) => {
@@ -329,8 +330,8 @@ export default {
         });
         this.userGames = user.games;
       }
-      if (user.social_medias != null) {
-        user.social_medias.forEach((el) => {
+      if (user.social_networks != null) {
+        user.social_networks.forEach((el) => {
           this.initSocialMedia(el);
         });
       }
@@ -357,7 +358,7 @@ export default {
           }
         })
         .then((data) => {
-          if (data) this.initUserDate(data);
+          if (data) this.initUserData(data);
         });
     },
     async getConnectedUser() {

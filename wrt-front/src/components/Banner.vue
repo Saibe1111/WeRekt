@@ -1,13 +1,4 @@
 <template>
-  <!-- Background Image -->
-  <!-- <v-img
-      dark
-      :class="$style.bannerBg"
-      max-height="317"
-      max-width="100vw"
-      :src="bgUserProfile"
-    ></v-img> -->
-
   <div>
     <div
       :class="
@@ -36,7 +27,7 @@
           : $style.displayAvatarMobile
       "
     >
-      <AvatarUser :username="username" :avatarImg="avatarImg"></AvatarUser>
+      <AvatarUser :id="id"></AvatarUser>
     </div>
   </div>
 </template>
@@ -51,6 +42,7 @@ export default {
     username: String,
     avatarImg: String,
     editMode: Boolean,
+    id: String,
   },
   data() {
     return {

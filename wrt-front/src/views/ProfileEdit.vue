@@ -2,8 +2,7 @@
   <div id="profile">
     <Banner
       :bgUserProfile="bgUserProfile"
-      :username="username"
-      :avatarImg="avatarUser"
+      :id="userID"
       :editMode="true"
       @change-bg-file="changeBgFile"
     />
@@ -110,7 +109,7 @@
                 close
                 :class="$style.chip"
                 :color="$style.colorCardBg"
-                :text-color="$style.colorFontPrirmary"
+                :text-color="$style.colorFontPrimary"
                 @click:close="deleteLanguage(lang)"
               >
                 {{ lang }}
@@ -317,8 +316,10 @@ export default {
       game: "",
       platformUsername: "",
       menu: false,
+      userID: "",
       // models
       bgUserProfile: "",
+      bgUserProfileFile: null,
       aboutMe: "",
       avatarUser: "",
       birthdayDate: null,
@@ -432,11 +433,9 @@ export default {
       let reader = new FileReader();
       reader.onload = (event) => {
         this.bgUserProfile = event.target.result;
+        this.bgUserProfileFile = file;
       };
       reader.readAsDataURL(file);
-      console.log(file);
-      // il faudra l'envoyer au back et attendre de recevoir la reponse (sous format URL)
-      // this.bgUserProfile = response
     },
     renameKey(obj, oldKey, newKey) {
       obj[newKey] = obj[oldKey];
@@ -459,13 +458,15 @@ export default {
         default:
       }
     },
-    initUserDate(user) {
+    initUserData(user) {
       console.log(user);
       this.username = user.username;
+      this.userID = user.User_ID;
       if (user.profile_url != null) this.avatarUser = user.profile_url;
-      if (user.banner_url != null) this.bgUserProfile = user.banner_url;
+      if (user.banner != null) this.bgUserProfile = user.banner;
       if (user.description != null) this.aboutMe = user.description;
       if (user.country != null) this.country = user.country;
+      if (user.birthdate != null) this.birthdayDate = user.birthdate;
       if (user.languages != null) this.userLanguages = user.languages;
       if (user.platforms != null) {
         user.platforms.forEach((el) => {
@@ -483,8 +484,8 @@ export default {
         });
         this.userGames = user.games;
       }
-      if (user.social_medias != null) {
-        user.social_medias.forEach((el) => {
+      if (user.social_networks != null) {
+        user.social_networks.forEach((el) => {
           this.initSocialMedia(el);
         });
       }
@@ -497,12 +498,84 @@ export default {
       })
         .then((response) => response.json())
         .then((response) => {
-          this.initUserDate(response);
+          this.initUserData(response);
         });
     },
     saveBtn() {
-      this.$router.push("/profile");
-      // TODO: envoyer les données au back
+      let url = new URL(`${process.env.VUE_APP_API_URL}/api/user?`);
+
+      // Social networks
+      let socialNetworks = {
+        social_networks: [
+          {
+            name: "Instagram",
+            username: this.instagramId,
+          },
+          {
+            name: "Twitter",
+            username: this.twitterId,
+          },
+          {
+            name: "Discord",
+            username: this.discordId,
+          },
+          {
+            name: "Twitch",
+            username: this.twitchId,
+          },
+        ],
+      };
+
+      let lang = {
+        languages: this.userLanguages,
+      };
+
+      let platformsCopy = this.userPlatforms.slice();
+      platformsCopy.forEach((el) => {
+        this.renameKey(el, "description", "username");
+        delete el.path;
+      });
+
+      let plat = {
+        platforms: platformsCopy,
+      };
+
+      let games = {
+        games: this.userGames.map((el) => el.name),
+      };
+
+      console.log(JSON.stringify(socialNetworks));
+      console.log(JSON.stringify(lang));
+      console.log(JSON.stringify(plat));
+      console.log(JSON.stringify(games));
+
+      // body
+      let formData = new FormData();
+      formData.append("image", this.bgUserProfileFile);
+      formData.append("languages", JSON.stringify(lang));
+      formData.append("social_networks", JSON.stringify(socialNetworks));
+      formData.append("description", this.aboutMe);
+      formData.append("birthdate", this.birthdayDate);
+      formData.append("country", this.country);
+      formData.append("platforms", JSON.stringify(plat));
+      formData.append("games", JSON.stringify(games));
+
+      for (let pair of formData.entries()) {
+        console.log(pair[0] + ": " + pair[1]);
+      }
+
+      fetch(url, {
+        method: "PUT",
+        credentials: "include",
+        body: formData,
+      }).then((response) => {
+        console.log(response.json());
+        if (response.status === 200) {
+          this.$router.push(`/profile/${this.userID}`);
+        } else {
+          window.alert("marche pa");
+        }
+      });
     },
   },
   mounted() {
