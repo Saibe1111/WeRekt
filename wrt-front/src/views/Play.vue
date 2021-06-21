@@ -24,14 +24,14 @@
         </h1>
       </div>
       <div class="d-flex align-center mt-12 mx-5">
-        <v-select
+        <v-text-field
           class="mr-5"
           label="Choose a game"
           v-model="chosenGame"
           hide-details
           dark
           outlined
-        ></v-select>
+        ></v-text-field>
         <v-btn :class="$style.btn" @click="playBtn()">Play</v-btn>
       </div>
     </div>
@@ -92,7 +92,7 @@ export default {
       await this.getConnectedUser();
 
       let userId = this.connectedUserID;
-
+      socket.disconnect();
       socket.connect();
       socket.on("connect", () => {
         socket.emit("game_search", game, userId);
@@ -105,7 +105,10 @@ export default {
       });
 
       socket.on("launch_game", () => {
+        socket.emit("leave_room");
+        
         this.message = "A room for " + this.chosenGame + " is being created";
+        socket.disconnect();
         document.location.href = "/chat";
       });
     },

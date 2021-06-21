@@ -39,6 +39,7 @@
 import RoomGroup from "../components/RoomGroup.vue";
 import ChatZone from "../components/ChatZone.vue";
 import ListMembersChat from "../components/ListMembersChat.vue";
+import socket from "../socket";
 
 export default {
   name: "Chat",
@@ -52,77 +53,13 @@ export default {
       connectedUserID: "",
       connectedUsername: "",
       userPanel: true,
-      rooms: [
-        {
-          id: "1",
-          game: "Among Us",
-          gameIcon:
-            "https://images.igdb.com/igdb/image/upload/t_cover_big/co1uaf.jpg",
-        },
-        {
-          id: "2",
-          game: "Among Us",
-          gameIcon:
-            "https://images.igdb.com/igdb/image/upload/t_cover_big/co1uaf.jpg",
-        },
-        {
-          id: "3",
-          game: "Grand Theft Auto V",
-          gameIcon:
-            "https://images.igdb.com/igdb/image/upload/t_cover_big/co2lbd.jpg",
-        },
-        {
-          id: "4",
-          game: "Minecraft",
-          gameIcon:
-            "https://images.igdb.com/igdb/image/upload/t_cover_big/co2b4k.jpg",
-        },
-      ],
+      rooms: [],
       selectedRoom: {
         id: "1",
         game: "Among Us",
       },
-      messages: [
-        {
-          content: "I'm the impostor :D",
-          timestamp: "TODO",
-          sender: "Antoine",
-          senderId: "345823189449965579",
-        },
-        {
-          content: "._.",
-          timestamp: "ioiuo",
-          sender: "Monica",
-          senderId: "283639048483110922",
-        },
-        {
-          content:
-            "AAAAAAAAAH qsqfsd fdsfs df sd fsdf sdf sdf sdf sdf dsefezfes s fzef sdf esfs fds frez fsdf ",
-          timestamp: "ghfghf",
-          sender: "Vivi",
-          senderId: "578957887108546571",
-        },
-      ],
-      members: [
-        {
-          User_ID: "578957887108546571",
-          // username: "Vivi",
-          // profile_url:
-          //   "https://cdn.discordapp.com/avatars/578957887108546571/71714a0dbf66a6d85cbdb24953875d03.png",
-        },
-        {
-          User_ID: "345823189449965579",
-          // username: "Antoine",
-          // profile_url:
-          //   "https://cdn.discordapp.com/avatars/345823189449965579/a_9b9e67636f6a4154d7c277a8d5509053.png",
-        },
-        {
-          User_ID: "283639048483110922",
-          // username: "Monica",
-          // profile_url:
-          //   "https://cdn.discordapp.com/avatars/283639048483110922/113cb2453cb70ef21a3212177956ae40.png",
-        },
-      ],
+      messages: [],
+      members: [],
     };
   },
   methods: {
@@ -155,35 +92,35 @@ export default {
       this.userPanel = !this.userPanel;
     },
   },
-  mounted() {
-    this.getConnectedUser();
+  async mounted() {
+
+    console.log('Montage')
+    await this.getConnectedUser();
+    let userId = this.connectedUserID;
+    socket.emit("user_connected", userId);
+    socket.connect();
+      socket.on("connect", () => {
+      });
+
+      socket.on("room", (rooms) => {
+        if (Array.isArray(rooms)){
+          this.rooms = rooms;
+        }else{
+          this.rooms = [...this.rooms, rooms];
+        }
+      });	
+
+      socket.on("room_Info", (messages, users) => {
+        if (Array.isArray(messages)){
+          this.messages = messages;
+          this.members = users;
+        }else{
+          this.messages = [...this.messages, messages];
+        }
+      });	
   },
 };
 
-// rooms: [
-//   {
-//     id: "",
-//     game: "",
-//     gameIcon: "",
-//     members: [
-//       {
-//         username: "",
-//         avatar: "",
-//       },
-//       {
-//         username: "",
-//         avatar: "",
-//       },
-//     ],
-//     messages: [
-//       {
-//         content: "",
-//         timestamp: "",
-//         sender: "",
-//       },
-//     ],
-//   },
-// ],
 </script>
 
 <style lang="scss" module>
