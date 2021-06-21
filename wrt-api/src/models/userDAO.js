@@ -93,9 +93,10 @@ async function updateUser(discord_ID, Username=undefined, Profile_Url=undefined,
     if(Languages !=undefined){
       
         attributes = attributes + "Languages = JSON_SET(`Languages`,";
-        for (var i = 0; i < Languages.length; i++) {
+        let LG = JSON.parse(Languages)
+        for (var i = 0; i < LG.languages.length; i++) {
             attributes = attributes + `"$.Languages[${i}]",?, `;
-            param.push(Languages[i]);
+            param.push(LG.languages[i]);
           }
           attributes = attributes.replace(/,\s*$/, "") + "), "
 
@@ -104,10 +105,10 @@ async function updateUser(discord_ID, Username=undefined, Profile_Url=undefined,
     if(Platforms != undefined){
         attributes = attributes + "Platforms = JSON_SET(`Platforms`,";
         let PLT = JSON.parse(Platforms);
-        for (var i = 0; i < Platforms.length; i++) {
+        for (var i = 0; i < PLT.platforms.length; i++) {
             attributes = attributes + `"$.Platforms[${i}]",JSON_OBJECT("name",?,"username",?), `;
-            param.push(Platforms[i].name);
-            param.push(Platforms[i].username);
+            param.push(PLT.platforms[i].name);
+            param.push(PLT.platforms[i].username);
           }
           attributes = attributes.replace(/,\s*$/, "") + "), "
     }
