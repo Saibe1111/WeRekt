@@ -105,8 +105,8 @@ async function updateUser(discord_ID, Username=undefined, Profile_Url=undefined,
         attributes = attributes + "Platforms = JSON_SET(`Platforms`,";
         for (var i = 0; i < Platforms.length; i++) {
             attributes = attributes + `"$.Platforms[${i}]",JSON_OBJECT("name",?,"username",?), `;
-            param.push(Platforms[i].name);
-            param.push(Platforms[i].username);
+            param.push(JSON.parse(Platforms[i]).name);
+            param.push(JSON.parse(Platforms[i]).username);
           }
           attributes = attributes.replace(/,\s*$/, "") + "), "
     }
@@ -116,8 +116,8 @@ async function updateUser(discord_ID, Username=undefined, Profile_Url=undefined,
         attributes = attributes + "Social_Networks = JSON_SET(`Social_Networks`, ";
         for (var i = 0; i < Social_Networks.length; i++) {
             attributes = attributes + `"$.Social_Networks[${i}]",JSON_OBJECT("name",?,"username",?), `;
-            param.push(Social_Networks[i].name);
-            param.push(Social_Networks[i].username);
+            param.push(JSON.parse(Social_Networks[i]).name);
+            param.push(JSON.parse(Social_Networks[i]).username);
           }
           attributes = attributes.replace(/,\s*$/, "") + "), "
     }
