@@ -27,7 +27,7 @@ async function getUser(req, res) {
 
     let bt = null;
     if(user.birthdate != null)
-        moment(user.birthdate).format('YYYYMMDD');
+        bt = moment(user.birthdate).format('YYYYMMDD');
 
     let User = {
         User_ID: ID,
@@ -68,12 +68,12 @@ async function updateUser(req, res) {
     let description = req.body.description;
     let country = req.body.country;
     let birthdate = req.body.birthdate;
-    let banner = `${config.api.URL}/public/upload/images/banner/${req.user.id}.png`;
+    let banner = `${config.api.URL}/public/upload/images/banner/${req.body.id}.png`;
     
     console.log(req.body.social_networks);
 
     db.updateUser(
-        req.user.id,
+        req.body.id,
         username,
         profile_url,
         description,
