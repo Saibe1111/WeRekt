@@ -38,11 +38,9 @@ export default {
 @import "../style";
 
 .btnToTop {
-  //background: $color-main-bg i !important;
   background: linear-gradient(45deg, $color-secondary, $color-secondary-bis);
   color: $color-font-primary i !important;
   background-clip: padding-box;
   border-radius: 10px;
 }
-
 </style>
