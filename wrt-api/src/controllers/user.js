@@ -2,6 +2,7 @@ const { getCoverURL } = require("../helpers/igdb.js");
 const { updateUserWithDiscord } = require("../helpers/discordUser");
 const db = require("../models/userDAO.js");
 const config = require("../config.json");
+const moment = require('moment');
 
 async function getUser(req, res) {
     let ID = req.query.id || req.user.id;
@@ -12,14 +13,21 @@ async function getUser(req, res) {
     }
 
     let user = await db.getUser(ID);
-
+    
     if (user === null) {
         res.status(404).json({ msg: "User not found" });
         return;
     }
+
+    if(user === undefined){
+        res.status(404).json({msg:"User not found"});
+        return;
+    }
     await updateUserWithDiscord(ID);
 
-    let ageOf = null;
+    let bt = null;
+    if(user.birthdate != null)
+        moment(user.birthdate).format('YYYYMMDD');
 
     let User = {
         User_ID: ID,
@@ -27,7 +35,7 @@ async function getUser(req, res) {
         profile_url: user.profile_url,
         banner: user.banner,
         description: user.description,
-        birthdate: user.birthdate,
+        birthdate:bt,
         country: user.country,
         games: [
             {
@@ -63,7 +71,7 @@ async function updateUser(req, res) {
     let banner = `${config.api.URL}/public/upload/images/banner/${req.query.id}.png`;
 
     db.updateUser(
-        req.query.id,
+        req.user.id,
         username,
         profile_url,
         description,
