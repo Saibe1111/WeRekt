@@ -504,7 +504,6 @@ export default {
     saveBtn() {
       let url = new URL(`${process.env.VUE_APP_API_URL}/api/user?`);
 
-      // Social networks
       let socialNetworks = {
         social_networks: [
           {
@@ -560,16 +559,27 @@ export default {
         console.log(pair[0] + ": " + pair[1]);
       }
 
+      let banner = this.bgUserProfile;
+
+      let userId = this.userID;
+
       fetch(url, {
         method: "PUT",
         credentials: "include",
         body: formData,
       }).then((response) => {
         console.log(response.json());
+        console.log(banner);
         if (response.status === 200) {
-          this.$router.push(`/profile/${this.userID}`);
+          this.$router.push({
+            name: "Profile",
+            params: {
+              banner: banner,
+              id: userId,
+            },
+          });
         } else {
-          window.alert("marche pa");
+          window.alert("Saving failed. Please try again.");
         }
       });
     },

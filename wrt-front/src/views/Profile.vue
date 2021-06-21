@@ -258,7 +258,9 @@ import Banner from "../components/Banner.vue";
 
 export default {
   name: "Profile",
-  props: {},
+  props: {
+    banner: "",
+  },
   components: {
     Banner,
   },
@@ -309,7 +311,8 @@ export default {
       console.log(user);
       this.username = user.username;
       if (user.profile_url != null) this.avatarUser = user.profile_url;
-      if (user.banner != null) this.bgUserProfile = user.banner;
+      if (this.banner != null) this.bgUserProfile = this.banner;
+      else if (user.banner != null) this.bgUserProfile = user.banner;
       if (user.description != null) this.aboutMe = user.description;
       if (user.country != null) this.country = user.country;
       if (user.birthdate != null) this.birthdayDate = user.birthdate;
