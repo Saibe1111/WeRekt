@@ -89,7 +89,7 @@ async function createGameTable(connection) {
     return new Promise((resolve, reject) => {
         connection.query(
             `CREATE TABLE IF NOT EXISTS werekt.Game (
-                Game_Id int PRIMARY KEY NOT NULL,
+                Game_Id int PRIMARY KEY NOT NULL AUTO_INCREMENT,
                 Game_Name varchar(255),
                 Cover_Url varchar(255)
             ); `,
