@@ -370,13 +370,13 @@ export default {
       let newPlatform = {
         name: this.plaform,
         description: this.platformUsername,
-        // path à changer une fois qu'on aura des images
-        path: this.bgUserProfile,
+        path: require("../assets/profile/platforms/" + this.plaform + ".png"),
       };
 
       this.userPlatforms = [...this.userPlatforms, newPlatform];
       this.plaform = "";
       this.platformUsername = "";
+      console.log(this.userPlatforms);
     },
     deletePlatform(platformName) {
       this.userPlatforms = this.userPlatforms.filter(
@@ -544,14 +544,10 @@ export default {
         games: this.userGames.map((el) => el.name),
       };
 
-      console.log(JSON.stringify(socialNetworks));
-      console.log(JSON.stringify(lang));
-      console.log(JSON.stringify(plat));
-      console.log(JSON.stringify(games));
-
       // body
       let formData = new FormData();
-      formData.append("image", this.bgUserProfileFile);
+      if (this.bgUserProfileFile != null)
+        formData.append("image", this.bgUserProfileFile);
       formData.append("languages", JSON.stringify(lang));
       formData.append("social_networks", JSON.stringify(socialNetworks));
       formData.append("description", this.aboutMe);
