@@ -2,7 +2,7 @@
   <div class="d-flex flex-column align-center">
     <v-avatar
       :color="$style.colorMainBg"
-      :size="mini ? 70 : $vuetify.breakpoint.mdAndUp ? 150 : 75"
+      :size="mini ? 55 : $vuetify.breakpoint.mdAndUp ? 150 : 75"
     >
       <v-img
         v-if="avatarImg"
@@ -21,7 +21,7 @@
     <span
       :class="
         mini
-          ? $style.usernameMobile
+          ? $style.chat
           : $vuetify.breakpoint.mdAndUp
           ? $style.username
           : $style.usernameMobile
@@ -37,15 +37,7 @@ export default {
   props: {
     id: {
       type: String,
-      required: false,
-    },
-    username: {
-      type: String,
       required: true,
-    },
-    avatarImg: {
-      type: String,
-      default: "",
     },
     mini: {
       type: Boolean,
@@ -56,10 +48,46 @@ export default {
       default: false,
     },
   },
+  data() {
+    return {
+      username: "",
+      avatarImg: "",
+    };
+  },
   methods: {
     redirectProfile() {
       if (this.canRedirect) this.$router.push("/profile/" + this.id);
     },
+    initUserData(user) {
+      this.username = user.username;
+      this.avatarImg = user.profile_url;
+    },
+    async getUser() {
+      let url = process.env.VUE_APP_API_URL;
+      fetch(
+        `${url}/api/user?` +
+          new URLSearchParams({
+            id: this.id,
+          }),
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      )
+        .then((response) => {
+          if (response.status === 404) {
+            console.log("error id");
+          } else {
+            return response.json();
+          }
+        })
+        .then((data) => {
+          if (data) this.initUserData(data);
+        });
+    },
+  },
+  mounted() {
+    this.getUser();
   },
 };
 </script>
@@ -67,18 +95,23 @@ export default {
 <style lang="scss" module>
 @import "../style";
 
+.chat {
+  color: $color-font-primary;
+  @extend .font-2-tiny;
+}
+
 .cursorPointer {
   cursor: pointer;
 }
 
 .username {
-  color: white;
+  color: $color-font-primary;
   font-weight: bold;
   @extend .font-2-medium;
 }
 
 .usernameMobile {
-  color: white;
+  color: $color-font-primary;
   font-weight: bold;
   @extend .font-2-small;
 }
