@@ -259,7 +259,7 @@ import Banner from "../components/Banner.vue";
 export default {
   name: "Profile",
   props: {
-    banner: "",
+    banner: String,
   },
   components: {
     Banner,
