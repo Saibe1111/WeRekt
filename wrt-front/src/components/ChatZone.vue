@@ -5,6 +5,12 @@
       :class="$vuetify.breakpoint.mdAndUp ? $style.title : $style.titleMobile"
     >
       {{ this.selectedRoom.game + " " + this.selectedRoom.id }}
+      <v-icon
+        v-if="$vuetify.breakpoint.smAndDown"
+        color="white"
+        @click="toggleUserPanel()"
+        >mdi-account-details</v-icon
+      >
     </h1>
     <div
       class="d-flex flex-column my-4"
@@ -21,6 +27,7 @@
         :isSender="connectedUserID == msg.senderId"
       />
     </div>
+    <div :class="$style.description" class="mx-8">is writing...</div>
     <v-text-field
       :class="$style.inputStyle"
       class="ma-4"
@@ -58,6 +65,7 @@ export default {
   data() {
     return {
       chatInput: "",
+      userPanel: false,
     };
   },
   methods: {
@@ -69,6 +77,10 @@ export default {
         this.chatInput = "";
       }
     },
+    toggleUserPanel() {
+      this.$emit("toggleUserPanel", !this.userPanel);
+      this.userPanel = !this.userPanel;
+    },
   },
 };
 </script>
@@ -76,6 +88,12 @@ export default {
 
 <style lang="scss" module>
 @import "../style";
+
+.description {
+  color: $color-font-primary;
+  @extend .font-2-tiny;
+}
+
 .title {
   color: $color-font-primary;
   background-color: $color-main-bg;

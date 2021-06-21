@@ -1,18 +1,20 @@
 <template>
   <div id="chat">
     <RoomGroup :rooms="rooms" @roomChanged="changeRoom" />
-    <div class="d-flex flex-row">
-      <v-col cols="11">
-        <ChatZone
-          :messages="messages"
-          :selectedRoom="selectedRoom"
-          :connectedUserID="connectedUserID"
-          @send-msg="sendMessage"
-        />
-      </v-col>
-      <v-col>
-        <ListMembersChat :members="members" />
-      </v-col>
+    <div class="d-flex">
+      <ChatZone
+        :class="$style.chatZone"
+        :messages="messages"
+        :selectedRoom="selectedRoom"
+        :connectedUserID="connectedUserID"
+        @send-msg="sendMessage"
+        @toggleUserPanel="toggleUserPanel"
+      />
+      <ListMembersChat
+        v-if="$vuetify.breakpoint.mdAndUp || userPanel"
+        class="mx-3"
+        :members="members"
+      />
     </div>
   </div>
 </template>
@@ -33,6 +35,7 @@ export default {
     return {
       connectedUserID: "",
       connectedUsername: "",
+      userPanel: false,
       rooms: [
         {
           id: "1",
@@ -87,21 +90,21 @@ export default {
       members: [
         {
           User_ID: "578957887108546571",
-          username: "Vivi",
-          profile_url:
-            "https://cdn.discordapp.com/avatars/578957887108546571/71714a0dbf66a6d85cbdb24953875d03.png",
+          // username: "Vivi",
+          // profile_url:
+          //   "https://cdn.discordapp.com/avatars/578957887108546571/71714a0dbf66a6d85cbdb24953875d03.png",
         },
         {
           User_ID: "345823189449965579",
-          username: "Antoine",
-          profile_url:
-            "https://cdn.discordapp.com/avatars/345823189449965579/a_9b9e67636f6a4154d7c277a8d5509053.png",
+          // username: "Antoine",
+          // profile_url:
+          //   "https://cdn.discordapp.com/avatars/345823189449965579/a_9b9e67636f6a4154d7c277a8d5509053.png",
         },
         {
           User_ID: "283639048483110922",
-          username: "Monica",
-          profile_url:
-            "https://cdn.discordapp.com/avatars/283639048483110922/113cb2453cb70ef21a3212177956ae40.png",
+          // username: "Monica",
+          // profile_url:
+          //   "https://cdn.discordapp.com/avatars/283639048483110922/113cb2453cb70ef21a3212177956ae40.png",
         },
       ],
     };
@@ -132,6 +135,9 @@ export default {
     },
     changeRoom(room) {
       this.selectedRoom = room;
+    },
+    toggleUserPanel(value) {
+      this.userPanel = value;
     },
   },
   mounted() {
@@ -167,10 +173,13 @@ export default {
 
 <style lang="scss" module>
 @import "../style";
-
 .bigTitle {
   color: $color-font-primary;
   @extend .font-1-extra-large;
+}
+
+.chatZone {
+  width: 100%;
 }
 
 .subtitle {

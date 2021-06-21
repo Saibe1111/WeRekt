@@ -55,7 +55,7 @@ export default {
 
 .textBlack {
   color: $color-font-secondary;
-  @extend .font-2-small;
+  @extend .font-2-tiny;
 }
 
 .senderBlack {
@@ -73,7 +73,7 @@ export default {
 
 .textWhite {
   color: $color-font-primary;
-  @extend .font-2-small;
+  @extend .font-2-tiny;
 }
 
 .senderWhite {

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="$style.container">
     <AvatarUser
       class="mb-5"
       v-for="member in members"
@@ -26,8 +26,37 @@ export default {
       type: Array,
     },
   },
+  data() {
+    return {
+      userPanel: false,
+    };
+  },
+  methods: {
+    toggleUserPanel() {
+      this.userPanel = !this.userPanel;
+    },
+  },
 };
 </script>
 
 <style lang="scss" module>
+.parent {
+  height: 90vh;
+  width: 100px;
+  overflow: hidden;
+  position: relative;
+}
+
+.container {
+  height: 90vh;
+  width: 70px;
+  overflow-y: scroll;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+.container::-webkit-scrollbar {
+  /* WebKit */
+  width: 0;
+  height: 0;
+}
 </style>

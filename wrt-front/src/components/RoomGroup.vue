@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <v-navigation-drawer dark clipped app :color="$style.colorMainBg">
+  <div id="roomGroup">
+    <v-navigation-drawer dark bottom clipped app :color="$style.colorMainBg">
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title :class="$style.mainTitle">
@@ -10,15 +10,16 @@
       </v-list-item>
 
       <v-list dense nav>
-        <v-list-item-group v-model="selectedRoom">
+        <v-list-item-group mandatory v-model="selectedRoom">
           <v-list-item
+            active-class="activeClass"
             v-for="room in rooms"
             :key="room.id"
             link
             @click="changeRoom(room)"
           >
             <v-list-item-icon>
-              <v-img max-width="30" :src="room.gameIcon"></v-img>
+              <v-img max-width="25" :src="room.gameIcon"></v-img>
             </v-list-item-icon>
 
             <v-list-item-content>
@@ -48,8 +49,10 @@ export default {
   },
   methods: {
     changeRoom(room) {
-      this.selectedRoom = room;
-      this.$emit("roomChanged", room);
+      if (room != this.selectedRoom) {
+        this.selectedRoom = room;
+        this.$emit("roomChanged", room);
+      }
     },
   },
 };
@@ -64,5 +67,14 @@ export default {
 
 .gameText {
   @extend .font-2-small;
+}
+</style>
+
+<style lang="scss">
+@import "../style";
+
+#roomGroup .v-list-item--active {
+  background-color: $color-secondary !important;
+  color: $color-font-secondary;
 }
 </style>
