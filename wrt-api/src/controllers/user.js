@@ -63,13 +63,14 @@ async function getUser(req, res) {
 }
 
 async function updateUser(req, res) {
-    let username = req.query.username;
-    let profile_url = req.query.profile_url;
-    let description = req.query.description;
-    let country = req.query.country;
-    let birthdate = req.query.birthdate;
+    let username = req.body.username;
+    let profile_url = req.body.profile_url;
+    let description = req.body.description;
+    let country = req.body.country;
+    let birthdate = req.body.birthdate;
     let banner = `${config.api.URL}/public/upload/images/banner/${req.user.id}.png`;
     
+    console.log(req.body.social_networks);
 
     db.updateUser(
         req.user.id,

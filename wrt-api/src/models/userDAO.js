@@ -103,6 +103,7 @@ async function updateUser(discord_ID, Username=undefined, Profile_Url=undefined,
 
     if(Platforms != undefined){
         attributes = attributes + "Platforms = JSON_SET(`Platforms`,";
+        let PLT = JSON.parse(Platforms);
         for (var i = 0; i < Platforms.length; i++) {
             attributes = attributes + `"$.Platforms[${i}]",JSON_OBJECT("name",?,"username",?), `;
             param.push(Platforms[i].name);
@@ -112,12 +113,13 @@ async function updateUser(discord_ID, Username=undefined, Profile_Url=undefined,
     }
 
     if(Social_Networks !=undefined){
-        console.log(Social_Networks);
+
         attributes = attributes + "Social_Networks = JSON_SET(`Social_Networks`, ";
-        for (var i = 0; i < Social_Networks.length; i++) {
+        let SN = JSON.parse(Social_Networks);
+        for (var i = 0; i < SN.social_networks.length; i++) {
             attributes = attributes + `"$.Social_Networks[${i}]",JSON_OBJECT("name",?,"username",?), `;
-            param.push(Social_Networks[i].name);
-            param.push(Social_Networks[i].username);
+            param.push(SN.social_networks[i].name);
+            param.push(SN.social_networks[i].username);
           }
           attributes = attributes.replace(/,\s*$/, "") + "), "
     }
