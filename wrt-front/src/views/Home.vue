@@ -3,7 +3,11 @@
     <!-- First section -->
     <div
       class="d-flex flex-column justify-space-around align-center flex-md-row"
-      :class="$style.sectionHeight"
+      :class="
+        $vuetify.breakpoint.mdAndUp
+          ? $style.sectionHeight
+          : $style.sectionHeightMobile
+      "
     >
       <div
         class="ma-4"
@@ -56,7 +60,11 @@
         align-center
         flex-md-row-reverse
       "
-      :class="$style.sectionHeight"
+      :class="
+        $vuetify.breakpoint.mdAndUp
+          ? $style.sectionHeight
+          : $style.sectionHeightMobile
+      "
     >
       <div
         class="ma-4"
@@ -100,7 +108,7 @@
     </div>
     <!-- Third section -->
     <div class="d-flex flex-column">
-      <div class="mx-2">
+      <div class="mx-4">
         <h1
           :class="
             $vuetify.breakpoint.mdAndUp ? $style.title : $style.titleMobile
@@ -246,6 +254,19 @@ export default {
   -webkit-align-items: center;
   -ms-flex-align: center;
   align-items: center;
+}
+
+.sectionHeightMobile {
+  min-height: 70vh !important;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  margin-bottom: 5%;
 }
 
 .lastSectionHeight {
