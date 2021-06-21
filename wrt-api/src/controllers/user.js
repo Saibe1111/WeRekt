@@ -69,6 +69,7 @@ async function updateUser(req, res) {
     let country = req.query.country;
     let birthdate = req.query.birthdate;
     let banner = `${config.api.URL}/public/upload/images/banner/${req.user.id}.png`;
+    
 
     db.updateUser(
         req.user.id,
@@ -78,9 +79,9 @@ async function updateUser(req, res) {
         country,
         birthdate,
         banner,
-        req.query.languages,
-        req.query.platforms,
-        req.query.social_networks
+        req.body.languages,
+        req.body.platforms,
+        req.body.social_networks
     );
 
     res.status(200).json({msg:"ok"});
