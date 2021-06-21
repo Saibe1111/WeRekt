@@ -6,17 +6,20 @@ async function createUser(discord_ID, username, Profile_Url) {
 
         let sql = "INSERT INTO Users (ID, Username, Profile_Url,Languages,Platforms,Social_Networks)"+
         " values (?,?,?,JSON_OBJECT('Languages',JSON_ARRAY()),JSON_OBJECT('Platforms',JSON_ARRAY()),JSON_OBJECT('Social_Networks',JSON_ARRAY()));";
-
+        return new Promise((resolve,reject) => {
         connection.query(sql, [discord_ID, Usname, Profile_Url], (error) => {
             if (error) {
                 console.error(error.message);
+                reject(error);
 
             } else {
                 console.log("Row inserted");
+                resolve();
 
             }
         });
         connection.end();
+    });
 }
 
 async function getUser(id) {
