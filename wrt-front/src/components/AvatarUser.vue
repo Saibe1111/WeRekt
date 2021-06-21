@@ -2,7 +2,7 @@
   <div class="d-flex flex-column align-center">
     <v-avatar
       :color="$style.colorMainBg"
-      :size="mini ? 55 : $vuetify.breakpoint.mdAndUp ? 150 : 75"
+      :size="mini ? 45 : $vuetify.breakpoint.mdAndUp ? 150 : 75"
     >
       <v-img
         v-if="avatarImg"
