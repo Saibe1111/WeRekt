@@ -67,29 +67,28 @@ async function updateUser(discord_ID, Username=undefined, Profile_Url=undefined,
     let param = [];
     let attributes = "";
 
-
-    if(Username != undefined){
+    if(Username != undefined && Username != ""){
         let Usname = Username.replace(/[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2580-\u27BF]|\uD83E[\uDD10-\uDDFF]/g, "");
         attributes = attributes + "Username=?, ";
         param.push(Usname);
     }
-    if(Profile_Url != undefined){
+    if(Profile_Url != undefined&& Profile_Url != ""){
         attributes = attributes + "Profile_Url=?, ";
         param.push(Profile_Url);
     }
-    if(Description != undefined){
+    if(Description != undefined&& Description != ""){
         attributes = attributes + "Description=?, ";
         param.push(Description);
     }
-    if(Country != undefined){
+    if(Country != undefined&& Country != ""){
         attributes = attributes + "Country=?, ";
         param.push(Country);
     }
-    if(Birthdate != undefined){
+    if(Birthdate != undefined && Birthdate != "null"){
         attributes = attributes + "Birthdate=str_to_date(?,'%Y-%m-%d'), ";
         param.push(Birthdate);
     }
-    if(Banner != undefined){
+    if(Banner != undefined&& Banner != ""){
         attributes = attributes + "Banner=?, "
         param.push(Banner);
     }
@@ -101,7 +100,12 @@ async function updateUser(discord_ID, Username=undefined, Profile_Url=undefined,
             attributes = attributes + `"$.Languages[${i}]",?, `;
             param.push(LG.languages[i]);
           }
+
+        if(LG.languages.length==0){
+            attributes += `"$.Languages",JSON_ARRAY(), `
+        }
           attributes = attributes.replace(/,\s*$/, "") + "), "
+        
 
     }
 
@@ -113,6 +117,9 @@ async function updateUser(discord_ID, Username=undefined, Profile_Url=undefined,
             param.push(PLT.platforms[i].name);
             param.push(PLT.platforms[i].username);
           }
+          if(PLT.platforms.length==0){
+            attributes += `"$.Platforms",JSON_ARRAY(), `
+        }
           attributes = attributes.replace(/,\s*$/, "") + "), "
     }
 
@@ -125,13 +132,15 @@ async function updateUser(discord_ID, Username=undefined, Profile_Url=undefined,
             param.push(SN.social_networks[i].name);
             param.push(SN.social_networks[i].username);
           }
+          if(SN.social_networks.length==0){
+            attributes += `"$.Social_Networks",JSON_ARRAY(), `
+        }
           attributes = attributes.replace(/,\s*$/, "") + "), "
     }
 
     param.push(discord_ID);
 
         let sql = `UPDATE Users SET ${attributes.replace(/,\s*$/, "")} WHERE ID = ?;`;
-        console.log(sql);
         connection.query(sql, param, (error) => {
             if (error) {
                 console.error(error.message);
