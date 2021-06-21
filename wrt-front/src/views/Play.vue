@@ -24,14 +24,14 @@
         </h1>
       </div>
       <div class="d-flex align-center mt-12 mx-5">
-        <v-text-field
+        <v-select
           class="mr-5"
           label="Choose a game"
           v-model="chosenGame"
           hide-details
           dark
           outlined
-        ></v-text-field>
+        ></v-select>
         <v-btn :class="$style.btn" @click="playBtn()">Play</v-btn>
       </div>
     </div>
@@ -49,7 +49,8 @@
         :color="$style.colorSecondary"
         indeterminate
       ></v-progress-circular>
-      <span :class="$style.text">players found</span>
+      <span :class="$style.text">{{ message }}</span>
+
       <v-btn class="mt-7" :class="$style.btn" @click="cancelBtn()"
         >Cancel</v-btn
       >
@@ -66,12 +67,13 @@ export default {
     return {
       connectedUserID: "",
       chosenGame: "",
-      // prendre le nb de gens max + actuel du back
+      message: "In search of new players",
+      nbGamersWaiting: 0,
+      maxGamers: 0,
       waiting: false,
     };
   },
   methods: {
-
     async getConnectedUser() {
       let url = process.env.VUE_APP_API_URL;
       const res = await fetch(`${url}/api/user`, {
@@ -82,7 +84,6 @@ export default {
       const user = await res.json();
       this.connectedUserID = user.User_ID;
     },
-
     async playBtn() {
       // vérifier que le jeu chosenGame existe
       this.waiting = true;
@@ -94,26 +95,24 @@ export default {
 
       socket.connect();
       socket.on("connect", () => {
-          socket.emit("game_search", game, userId);
+        socket.emit("game_search", game, userId);
       });
 
       socket.on("number_user", (nb, max) => {
-        // message = `Nombre de joueurs : ${nb}/${max}`
-        console.log(`Nombre de joueurs : ${nb}/${max}`)
-      });	
-
-      socket.on("launch_game", () => {
-        // message = "La partie se lance ..."
-        document.location.href="/chat";
+        this.nbGamersWaiting = nb;
+        this.maxGamers = max;
+        this.message = `${this.nbGamersWaiting} / ${this.maxGamers} players found`;
       });
 
-      
+      socket.on("launch_game", () => {
+        this.message = "A room for " + this.chosenGame + " is being created";
+        document.location.href = "/chat";
+      });
     },
     cancelBtn() {
       this.waiting = false;
       socket.disconnect();
     },
-    
   },
 };
 </script>
@@ -140,7 +139,7 @@ export default {
 }
 
 .sectionHeight {
-  min-height: 88vh !important;
+  min-height: 80vh !important;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
