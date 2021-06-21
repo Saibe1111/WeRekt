@@ -1,6 +1,20 @@
 <template>
   <div id="roomGroup">
-    <v-navigation-drawer dark bottom clipped app :color="$style.colorMainBg">
+    <v-icon
+      class="ml-2 mb-n8"
+      :class="$vuetify.breakpoint.mdAndUp ? 'mb-n16' : 'mb-n10'"
+      color="white"
+      @click="panelVisible = !panelVisible"
+      >mdi-menu</v-icon
+    >
+    <v-navigation-drawer
+      v-model="panelVisible"
+      dark
+      bottom
+      clipped
+      app
+      :color="$style.colorMainBg"
+    >
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title :class="$style.mainTitle">
@@ -12,6 +26,7 @@
       <v-list dense nav>
         <v-list-item-group mandatory v-model="selectedRoom">
           <v-list-item
+            :ripple="false"
             active-class="activeClass"
             v-for="room in rooms"
             :key="room.id"
@@ -45,6 +60,7 @@ export default {
   data() {
     return {
       selectedRoom: "",
+      panelVisible: true,
     };
   },
   methods: {
@@ -60,6 +76,9 @@ export default {
 
 <style lang="scss" module>
 @import "../style";
+.marginTop {
+  margin-top: -10px;
+}
 
 .mainTitle {
   @extend .font-1-medium-small;

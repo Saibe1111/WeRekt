@@ -1,6 +1,27 @@
 <template>
   <div id="chat">
     <RoomGroup :rooms="rooms" @roomChanged="changeRoom" />
+    <div class="d-flex justify-space-between">
+      <span></span>
+      <h1
+        class="text-center pb-2 justify-center my-n1"
+        :class="$vuetify.breakpoint.mdAndUp ? $style.title : $style.titleMobile"
+      >
+        {{ this.selectedRoom.game + " " + this.selectedRoom.id }}
+      </h1>
+
+      <v-btn
+        icon
+        dark
+        :ripple="false"
+        class="mr-2"
+        :class="$vuetify.breakpoint.mdAndUp ? 'mt-3' : 'pb-5'"
+        color="white"
+        elevation="0"
+        @click="toggleUserPanel()"
+        ><v-icon>mdi-account-details</v-icon></v-btn
+      >
+    </div>
     <div class="d-flex">
       <ChatZone
         :class="$style.chatZone"
@@ -8,13 +29,8 @@
         :selectedRoom="selectedRoom"
         :connectedUserID="connectedUserID"
         @send-msg="sendMessage"
-        @toggleUserPanel="toggleUserPanel"
       />
-      <ListMembersChat
-        v-if="$vuetify.breakpoint.mdAndUp || userPanel"
-        class="mx-3"
-        :members="members"
-      />
+      <ListMembersChat v-if="userPanel" class="mx-3" :members="members" />
     </div>
   </div>
 </template>
@@ -35,7 +51,7 @@ export default {
     return {
       connectedUserID: "",
       connectedUsername: "",
-      userPanel: false,
+      userPanel: true,
       rooms: [
         {
           id: "1",
@@ -68,13 +84,13 @@ export default {
       },
       messages: [
         {
-          content: "Il est bo le lavabo",
-          timestamp: "dfsdfs",
+          content: "I'm the impostor :D",
+          timestamp: "TODO",
           sender: "Antoine",
           senderId: "345823189449965579",
         },
         {
-          content: "mamamia como estas",
+          content: "._.",
           timestamp: "ioiuo",
           sender: "Monica",
           senderId: "283639048483110922",
@@ -125,7 +141,6 @@ export default {
       if (!content) return;
       let newMessage = {
         content: content,
-        // timestamp: Date.now(),
         timestamp: "12:03",
         sender: this.connectedUsername,
         senderId: this.connectedUserID,
@@ -136,8 +151,8 @@ export default {
     changeRoom(room) {
       this.selectedRoom = room;
     },
-    toggleUserPanel(value) {
-      this.userPanel = value;
+    toggleUserPanel() {
+      this.userPanel = !this.userPanel;
     },
   },
   mounted() {
@@ -173,6 +188,19 @@ export default {
 
 <style lang="scss" module>
 @import "../style";
+
+.title {
+  color: $color-font-primary;
+  background-color: $color-main-bg;
+  @extend .font-1-medium;
+}
+
+.titleMobile {
+  color: $color-font-primary;
+  background-color: $color-main-bg;
+  @extend .font-1-small;
+}
+
 .bigTitle {
   color: $color-font-primary;
   @extend .font-1-extra-large;
@@ -185,5 +213,17 @@ export default {
 .subtitle {
   color: $color-font-primary;
   @extend .font-1-large;
+}
+
+.v-btn {
+  transition: none !important;
+}
+
+.v-btn:before {
+  opacity: 0 !important;
+}
+
+.v-ripple__container {
+  opacity: 0 !important;
 }
 </style>

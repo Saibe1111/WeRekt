@@ -26,16 +26,6 @@ export default {
       type: Array,
     },
   },
-  data() {
-    return {
-      userPanel: false,
-    };
-  },
-  methods: {
-    toggleUserPanel() {
-      this.userPanel = !this.userPanel;
-    },
-  },
 };
 </script>
 
