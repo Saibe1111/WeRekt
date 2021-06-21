@@ -9,12 +9,12 @@ module.exports = function (socket) {
             id: user,
             room: game
         };
-        //console.log(socket.userInfo)
         socket.join(game);
         emitInRoom(socket, "number_user",  socket.adapter.rooms.get(game).size, NOMBRE_JOUEUR_MAX);
         if(socket.adapter.rooms.get(game).size >= NOMBRE_JOUEUR_MAX){
             socket.emit("launch_game");
             socket.in(socket.userInfo.room).emit("launch_game");
+            //Ajouter la room à l'utilisateur !
         }
         
     });
