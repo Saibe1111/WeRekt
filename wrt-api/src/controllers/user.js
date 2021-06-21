@@ -74,6 +74,8 @@ async function updateUser(req, res) {
         req.query.platforms,
         req.query.social_networks
     );
+
+    res.status(200).json({msg:"ok"});
 }
 
 async function deleteUser(req, res) {
