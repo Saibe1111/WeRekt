@@ -1,5 +1,8 @@
 <template>
-  <div class="d-flex flex-column align-center justify-center">
+  <div
+    class="d-flex flex-column align-center justify-center"
+    style="height: 80vh"
+  >
     <span :class="$style.bigTitle">404</span>
     <p :class="$style.subtitle">Page Not Found</p>
   </div>
