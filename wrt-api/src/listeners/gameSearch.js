@@ -27,8 +27,8 @@ module.exports = function (socket) {
                 //delete clients[element];
             });
             
-            roomDAO.createRoom(tab);
-            console.log(socket.adapter.rooms)
+            roomDAO.createRoom(tab, game);
+            //console.log(socket.adapter.rooms)
         }
         
     });

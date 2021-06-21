@@ -10,7 +10,7 @@ const event = async (socket, user) => {
     query.forEach(element => {
         tab.push({
             id: element.roomId,
-            game: "Among Us",
+            game: element.game,
             gameIcon:
                 "https://images.igdb.com/igdb/image/upload/t_cover_big/co1uaf.jpg",
         })

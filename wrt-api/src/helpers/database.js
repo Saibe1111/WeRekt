@@ -63,6 +63,7 @@ async function createRoom(connection) {
                 Id int PRIMARY KEY NOT NULL AUTO_INCREMENT,
                 user varchar(255),
                 roomId int,
+                game varchar(255),
                 FOREIGN KEY (user) REFERENCES Users(ID)
             ); `,
 

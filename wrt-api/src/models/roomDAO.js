@@ -1,12 +1,11 @@
-const { createPool } = require('mysql2/promise');
 const database = require('../helpers/database.js');
 
-async function createRoom(users) {
+async function createRoom(users, game) {
     return new Promise(async (resolve, reject) => {
         let max = await getRoomMax();
         var itemsProcessed = 0;
         users.forEach(async user => {
-            await addUserToRoom(user, max + 1);
+            await addUserToRoom(user, max + 1, game);
             if(users.length -1 === itemsProcessed){
                 resolve();
             }
@@ -15,12 +14,12 @@ async function createRoom(users) {
     });
 }
 
-async function addUserToRoom(user, room) {
+async function addUserToRoom(user, room, game) {
     const connection = await database.getConnection();
     return new Promise((resolve, reject) => {
-    let sql = "INSERT INTO Rooms (user, roomId) values (?,?);";
+    let sql = "INSERT INTO Rooms (user, roomId, game) values (?,?,?);";
     
-    connection.query(sql, [user,room], (error) => {
+    connection.query(sql, [user,room,game], (error) => {
         if (error) {
             console.error(error.message);
             resolve();
@@ -44,7 +43,6 @@ async function getRooms(id) {
             if(results === undefined){
                 resolve(null);
             }else if(results.length > 0){
-                
                 resolve(results);
             }else{
                 resolve(null);
@@ -55,7 +53,30 @@ async function getRooms(id) {
     }).catch((error) => {
         console.log(error);
     });
+}
 
+async function getUser(id) {
+    
+    const connection = await database.getConnection();
+    return new Promise((resolve, reject) => {
+        let sql = "SELECT * FROM Rooms where roomId=?;";
+        connection.query(sql, [id], (error, results) => {
+            
+            if (error)
+                console.error(error.message);
+            if(results === undefined){
+                resolve(null);
+            }else if(results.length > 0){
+                resolve(results);
+            }else{
+                resolve(null);
+            }
+            connection.end();
+        });
+
+    }).catch((error) => {
+        console.log(error);
+    });
 }
 
 async function getRoomMax() {
@@ -85,4 +106,5 @@ async function getRoomMax() {
 module.exports = {
     getRooms,
     createRoom,
+    getUser
 }

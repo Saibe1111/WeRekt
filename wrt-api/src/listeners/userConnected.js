@@ -1,4 +1,5 @@
 const getRoom = require("../events/getRoom");
+
 module.exports = function (socket) {
     socket.on("user_connected", function (user) {
         if(user !== null){
@@ -40,7 +41,7 @@ module.exports = function (socket) {
                 senderId: "181782320494280704",
             },
         ];
-        socket.emit("room_Info", messages, members);
+        //socket.emit("room_Info", messages, members);
         let message = {
             content:
                 "cv ?",
@@ -48,6 +49,6 @@ module.exports = function (socket) {
             sender: "Vivi",
             senderId: "578957887108546571",
         };
-        socket.emit("room_Info", message);
+        //socket.emit("room_Info", message);
     });
 };

@@ -54,10 +54,7 @@ export default {
       connectedUsername: "",
       userPanel: true,
       rooms: [],
-      selectedRoom: {
-        id: "1",
-        game: "Among Us",
-      },
+      selectedRoom: {},
       messages: [],
       members: [],
     };
@@ -87,6 +84,7 @@ export default {
     },
     changeRoom(room) {
       this.selectedRoom = room;
+      socket.emit("change_room", this.selectedRoom.id);
     },
     toggleUserPanel() {
       this.userPanel = !this.userPanel;
@@ -105,6 +103,8 @@ export default {
       socket.on("room", (rooms) => {
         if (Array.isArray(rooms)){
           this.rooms = rooms;
+          this.selectedRoom = rooms[0];
+          socket.emit("change_room", this.selectedRoom.id);
         }else{
           this.rooms = [...this.rooms, rooms];
         }
