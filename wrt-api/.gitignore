@@ -104,3 +104,6 @@ dist
 .tern-port
 # config file
 src/config.json
+
+# banner
+src/public/upload/images/banner/*
