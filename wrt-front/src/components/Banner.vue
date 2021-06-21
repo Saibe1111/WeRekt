@@ -1,11 +1,10 @@
 <template>
   <div>
-    <div
-      :class="
-        $vuetify.breakpoint.mdAndUp ? $style.bannerBg : $style.bannerBgMobile
-      "
-      :style="{ background: styleBgUser }"
-    ></div>
+    <v-img
+      :src="bgUserProfile"
+      :class="$style.gradient"
+      :style="$vuetify.breakpoint.mdAndUp ? 'height: 300px' : 'height: 200px'"
+    ></v-img>
     <v-file-input
       v-if="editMode"
       prepend-icon="mdi-camera-image"
@@ -52,31 +51,12 @@ export default {
   components: {
     AvatarUser,
   },
-  computed: {
-    styleBgUser() {
-      return (
-        "linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #1b1b1b 100%), center url('" +
-        this.bgUserProfile +
-        "')"
-      );
-    },
-  },
   emits: ["change-bg-file"],
 };
 </script>
 
 <style lang="scss" module>
 @import "../style";
-
-.bannerBg {
-  height: 317px;
-  width: 100vw;
-}
-
-.bannerBgMobile {
-  height: 150px;
-  width: 100vw;
-}
 
 .btnChangeBg {
   position: absolute;
@@ -102,5 +82,21 @@ export default {
   top: 55px;
   margin-left: -50px;
   left: 50%;
+}
+
+.gradient::after {
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  left: -2px;
+  right: -2px;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0) 0%,
+    #1b1b1b 100%
+  );
+  content: "";
+  z-index: -1;
+  border-radius: 4px;
 }
 </style>
