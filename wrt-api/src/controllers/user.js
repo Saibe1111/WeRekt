@@ -68,7 +68,7 @@ async function updateUser(req, res) {
     let description = req.query.description;
     let country = req.query.country;
     let birthdate = req.query.birthdate;
-    let banner = `${config.api.URL}/public/upload/images/banner/${req.query.id}.png`;
+    let banner = `${config.api.URL}/public/upload/images/banner/${req.user.id}.png`;
 
     db.updateUser(
         req.user.id,
