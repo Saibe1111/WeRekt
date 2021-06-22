@@ -1,9 +1,10 @@
 <template>
   <div id="chat">
-    <RoomGroup :rooms="rooms" @roomChanged="changeRoom" />
+    <RoomGroup :rooms="roomsReversed" @roomChanged="changeRoom" />
     <div class="d-flex justify-space-between">
       <span></span>
       <h1
+        v-if="this.selectedRoom.game"
         class="text-center pb-2 justify-center my-n1"
         :class="$vuetify.breakpoint.mdAndUp ? $style.title : $style.titleMobile"
       >
@@ -29,6 +30,7 @@
         :selectedRoom="selectedRoom"
         :connectedUserID="connectedUserID"
         @send-msg="sendMessage"
+        :isDisabled="isDisabled"
       />
       <ListMembersChat v-if="userPanel" class="mx-3" :members="members" />
     </div>
@@ -59,6 +61,15 @@ export default {
       members: [],
     };
   },
+  computed: {
+    roomsReversed() {
+      return [...this.rooms].reverse();
+    },
+    isDisabled() {
+      if (this.rooms.length == 0) return true;
+      return false;
+    },
+  },
   methods: {
     async getConnectedUser() {
       let url = process.env.VUE_APP_API_URL;
@@ -73,11 +84,26 @@ export default {
     },
     sendMessage(content) {
       if (!content) return;
+
+      let date = new Date();
+      var dateStr =
+        ("00" + date.getDate()).slice(-2) +
+        "/" +
+        ("00" + (date.getMonth() + 1)).slice(-2) +
+        "/" +
+        date.getFullYear() +
+        " " +
+        ("00" + date.getHours()).slice(-2) +
+        ":" +
+        ("00" + date.getMinutes()).slice(-2) +
+        ":" +
+        ("00" + date.getSeconds()).slice(-2);
+
       let newMessage = {
         content: content,
-        timestamp: new Date(),
+        timestamp: dateStr,
         senderId: this.connectedUserID,
-        room: this.selectedRoom.id
+        room: this.selectedRoom.id,
       };
       socket.emit("message", newMessage);
       //this.messages = [...this.messages, newMessage];
@@ -91,40 +117,36 @@ export default {
     },
   },
   async mounted() {
-
     await this.getConnectedUser();
     let userId = this.connectedUserID;
     socket.emit("user_connected", userId);
     socket.connect();
-      socket.on("connect", () => {
-      });
+    socket.on("connect", () => {});
 
-      socket.on("new_message", (message) => {
-        this.messages = [...this.messages, message];
-      });
+    socket.on("new_message", async (message) => {
+      this.messages = [...this.messages, message];
+    });
 
-      socket.on("room", (rooms) => {
-        if (Array.isArray(rooms)){
-          this.rooms = rooms;
-          this.selectedRoom = rooms[0];
-          socket.emit("change_room", this.selectedRoom.id);
-        }else{
-          this.rooms = [...this.rooms, rooms];
-        }
-      });	
+    socket.on("room", (rooms) => {
+      if (Array.isArray(rooms)) {
+        this.rooms = rooms;
+        this.selectedRoom = rooms[rooms.length - 1];
+        socket.emit("change_room", this.selectedRoom.id);
+      } else {
+        this.rooms = [...this.rooms, rooms];
+      }
+    });
 
-      socket.on("room_Info", (messages, users) => {
-        if (Array.isArray(messages)){
-          
-          this.messages = messages;
-          this.members = users;
-        }else{
-          this.messages = [...this.messages, messages];
-        }
-      });	
+    socket.on("room_Info", (messages, users) => {
+      if (Array.isArray(messages)) {
+        this.messages = messages;
+        this.members = users;
+      } else {
+        this.messages = [...this.messages, messages];
+      }
+    });
   },
 };
-
 </script>
 
 <style lang="scss" module>
