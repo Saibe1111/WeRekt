@@ -31,7 +31,7 @@ async function getUser(req, res) {
     if (user.birthdate != null)
         bt = moment(user.birthdate).format('YYYY-MM-DD');
 
-    Igames = await getUserGames(ID);
+    //let Igames = await getUserGames(ID);
 
     let User = {
         User_ID: ID,
@@ -41,7 +41,7 @@ async function getUser(req, res) {
         description: user.description,
         birthdate: bt,
         country: user.country,
-        games: Igames,
+        //games: Igames,
         languages: user.languages.Languages,
         social_networks: user.social_networks.Social_Networks,
         platforms: user.platforms.Platforms,
@@ -59,8 +59,8 @@ async function updateUser(req, res) {
     let banner = `${config.api.URL}/public/upload/images/banner/${req.user.id}.png`;
 
     console.log(req.body.games);
-    await updateUserGames(req.user.id, req.body.games);
-    
+    //await updateUserGames(req.user.id, req.body.games);
+
     db.updateUser(
         req.user.id,
         username,
