@@ -23,14 +23,14 @@
               : $style.secondaryTitleMobile
           "
         >
-          Personal information
+          About me
         </h3>
         <div>
           <v-textarea
-            label="About me"
-            v-model="aboutMe"
+            label="Description"
+            v-model="description"
             dark
-            :rules="aboutMeRules"
+            :rules="descriptionRules"
             :counter="170"
             outlined
             :class="$style.inputText"
@@ -293,7 +293,7 @@ export default {
   data() {
     return {
       valid: false,
-      aboutMeRules: [
+      descriptionRules: [
         (v) =>
           v.length <= 170 ||
           "About me section must be less than 170 characters",
@@ -302,15 +302,7 @@ export default {
       countryList: [],
       languageList: [],
       platformList: ["PC", "Play Station", "Xbox", "Nintendo Switch"],
-      // à remplacer par une liste plus complète de jeu
-      gameList: [
-        "League of Legends",
-        "Fortnite",
-        "Rocket League",
-        "Valorant",
-        "Among Us",
-        "Minecraft",
-      ],
+      gameList: [],
       language: "",
       plaform: "",
       game: "",
@@ -320,7 +312,7 @@ export default {
       // models
       bgUserProfile: "",
       bgUserProfileFile: null,
-      aboutMe: "",
+      description: "",
       avatarUser: "",
       birthdayDate: null,
       country: "",
@@ -376,14 +368,13 @@ export default {
       this.userPlatforms = [...this.userPlatforms, newPlatform];
       this.plaform = "";
       this.platformUsername = "";
-      console.log(this.userPlatforms);
     },
     deletePlatform(platformName) {
       this.userPlatforms = this.userPlatforms.filter(
         (platform) => platform.name !== platformName
       );
     },
-    addGame() {
+    async addGame() {
       if (
         !this.game ||
         this.userGames.map((game) => game.name).includes(this.game)
@@ -394,9 +385,13 @@ export default {
       let newGame = {
         name: this.game,
         description: this.game,
-        // path à changer une fois qu'on aura des images
-        path: this.bgUserProfile,
       };
+      let url = process.env.VUE_APP_API_URL;
+      const res = await fetch(`${url}/api/games/name?game_name=${this.game}`, {
+        method: "GET",
+      });
+      const data = await res.json();
+      newGame.path = data.cover_url;
 
       this.userGames = [...this.userGames, newGame];
       this.game = "";
@@ -427,6 +422,14 @@ export default {
         .forEach((element) => {
           this.languageList = this.languageList.concat(element).sort();
         });
+    },
+    async getGames() {
+      let url = process.env.VUE_APP_API_URL;
+      const response = await fetch(`${url}/api/games/list`, {
+        method: "GET",
+      });
+      const data = await response.json();
+      this.gameList = data.sort();
     },
     changeBgFile(file) {
       // TODO: limiter le poids des fichiers
@@ -459,12 +462,11 @@ export default {
       }
     },
     initUserData(user) {
-      console.log(user);
       this.username = user.username;
       this.userID = user.User_ID;
       if (user.profile_url != null) this.avatarUser = user.profile_url;
       if (user.banner != null) this.bgUserProfile = user.banner;
-      if (user.description != null) this.aboutMe = user.description;
+      if (user.description != null) this.description = user.description;
       if (user.country != null) this.country = user.country;
       if (user.birthdate != null) this.birthdayDate = user.birthdate;
       if (user.languages != null) this.userLanguages = user.languages;
@@ -549,15 +551,11 @@ export default {
         formData.append("image", this.bgUserProfileFile);
       formData.append("languages", JSON.stringify(lang));
       formData.append("social_networks", JSON.stringify(socialNetworks));
-      formData.append("description", this.aboutMe);
+      formData.append("description", this.description);
       formData.append("birthdate", this.birthdayDate);
       formData.append("country", this.country);
       formData.append("platforms", JSON.stringify(plat));
       formData.append("games", JSON.stringify(games));
-
-      for (let pair of formData.entries()) {
-        console.log(pair[0] + ": " + pair[1]);
-      }
 
       let banner = this.bgUserProfile;
 
@@ -568,8 +566,6 @@ export default {
         credentials: "include",
         body: formData,
       }).then((response) => {
-        console.log(response.json());
-        console.log(banner);
         if (response.status === 200) {
           this.$router.push({
             name: "Profile",
@@ -588,6 +584,7 @@ export default {
     this.getUser();
     this.getCountries();
     this.getLanguages();
+    this.getGames();
   },
 };
 </script>
