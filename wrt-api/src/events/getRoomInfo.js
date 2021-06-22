@@ -1,7 +1,9 @@
 const roomDAO = require("../models/roomDAO");
+const messageDAO = require("../models/messageDAO");
 const event = async (socket, room) => {
     socket.join(room);
-    let tab = []
+    //user
+    let tab = [];
     let query = await roomDAO.getUser(room);
     
     if( query === null){
@@ -14,8 +16,25 @@ const event = async (socket, room) => {
         })
     });
     
+    //message
+    let tabMessages = [];
+    let queryMessages = await messageDAO.getRoomMessage(room);
     
-    socket.emit("room_Info", [], tab);
+    if( queryMessages === null){
+        socket.emit("room_Info", [], tab);
+        return;
+    }
+
+    queryMessages.forEach(element => {
+        tabMessages.push({
+            content: element.content,
+            timestamp: element.timestamp,
+            senderId: element.senderId,
+            room:  element.room,
+        })
+    });
+
+    socket.emit("room_Info", tabMessages, tab);
 };
 
 module.exports = event;
