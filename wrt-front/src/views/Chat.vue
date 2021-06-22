@@ -34,7 +34,9 @@
         :selectedRoom="selectedRoom"
         :connectedUserID="connectedUserID"
         @send-msg="sendMessage"
+        @typing-msg="isTyping"
         :isDisabled="isDisabled"
+        :isTypingUser="isTypingUser"
       />
       <ListMembersChat v-if="userPanel" class="mx-3" :members="members" />
     </div>
@@ -64,6 +66,7 @@ export default {
       messages: [],
       members: [],
       roomsAreInitialized: false,
+      isTypingUser: "",
     };
   },
   computed: {
@@ -111,6 +114,9 @@ export default {
         room: this.selectedRoom.id,
       };
       socket.emit("message", newMessage);
+    },
+    isTyping() {
+      this.isTypingUser = this.connectedUsername;
     },
     changeRoom(room) {
       this.selectedRoom = room;

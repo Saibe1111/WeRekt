@@ -33,7 +33,7 @@
         counter="255"
         append-outer-icon="mdi-send"
         @keyup.enter="sendMessage()"
-        @keydown="isWriting()"
+        @keydown="isTyping()"
         @click:append-outer="sendMessage()"
       ></v-text-field>
     </div>
@@ -58,13 +58,22 @@ export default {
     isDisabled: {
       type: Boolean,
     },
+    isTypingUser: {
+      type: String,
+    },
   },
   data() {
     return {
       chatInput: "",
       inputRules: [(v) => v.length < 256 || "Max 255 characters"],
-      messageIsTyping: "",
     };
+  },
+  computed: {
+    messageIsTyping: function () {
+      return !this.isTypingUser || this.isTypingUser == ""
+        ? ""
+        : this.isTypingUser + " is typing...";
+    },
   },
   methods: {
     async sendMessage() {
@@ -76,12 +85,8 @@ export default {
         this.chatInput = "";
       }
     },
-    isWriting() {
-      // console.log("writing");
-      // let typingTimer;
-      // let doneTypingInterval = 5000;
-
-      this.messageIsTyping = this.connectedUserID + " is typing...";
+    isTyping() {
+      this.$emit("typing-msg");
     },
     scrollDown() {
       let content = this.$refs.messagesContainer;
