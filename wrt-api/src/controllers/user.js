@@ -41,7 +41,7 @@ async function getUser(req, res) {
         description: user.description,
         birthdate: bt,
         country: user.country,
-        //games: Igames,
+        games: null,
         languages: user.languages.Languages,
         social_networks: user.social_networks.Social_Networks,
         platforms: user.platforms.Platforms,
