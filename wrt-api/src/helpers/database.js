@@ -12,7 +12,7 @@ async function getConnection() {
     });
 
     con.connect(function(err){
-        if(err) console.err("Connection to database impossible !");
+        if(err) console.error("Connection to database impossible !");
     });
     return con;
 }
