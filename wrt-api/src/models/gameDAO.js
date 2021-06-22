@@ -1,12 +1,13 @@
 const database = require('../helpers/database.js');
-const { getCoverURL, getTop } = require('../helpers/igdb.js');
+const { getCoverURLName, getTop } = require('../helpers/igdb.js');
 
 
 async function createGame(discord_ID, game_name) {
     const connection = await database.getConnection();
 
     let sql = "INSERT INTO Game (Game_Name,Cover_Url) VALUES (?,?);"
-    const CoverURL = await getCoverURL(game_name)
+    const CoverURL = await getCoverURLName(game_name);
+
     connection.query(sql, [game_name, CoverURL], (error) => {
         if (error) {
             console.error(error.message);
@@ -27,6 +28,39 @@ async function createGame(discord_ID, game_name) {
 
         })
     connection.end();
+}
+
+async function insertTop50() {
+    const connection = await database.getConnection();
+    let sql = "INSERT INTO Game (Game_Name,Cover_Url) VALUES (?,?);"
+
+    connection.query("Select * FROM Game;", async function (error, results) {
+        if (error) {
+            console.error(error.message);
+            return;
+        }
+        if (results.length < 0) {
+            let top = await getTopGames(50);
+            top.forEach(e => {
+                connection.query(sql, [e.name, e.cover], (error) => {
+                    console.log("fait");
+                    if (error) {
+                        console.error(error.message);
+                        return;
+                    }
+                })
+            })
+            console.log("Inserted");
+            return;
+        }
+        if (results.length > 0) {
+            return;
+        }
+    })
+
+    connection.end();
+
+
 }
 
 async function playsGame(discord_ID, Game_Id) {
@@ -70,73 +104,96 @@ async function getGame(Nbr_Games = undefined) {
 
 async function getGameByName(Game_Name) {
     const connection = await database.getConnection();
-    return new Promise((resolve, reject) =>{
-    connection.query("SELECT * From `Game` where Game_Name = ?;", [Game_Name],
-        (error, results) => {
-            if (error){
-                console.error(error.message);
-                reject(error);
-            }
-                
-            if(results === undefined){
-                resolve([]);
-                return;
-            }
-            if (results.length > 0) {
-                resolve({
-                    name : results[0].Game_Name,
-                    cover_url : results[0].Cover_Url
-                });
+    return new Promise((resolve, reject) => {
+        connection.query("SELECT * From `Game` where Game_Name = ?;", [Game_Name],
+            (error, results) => {
+                if (error) {
+                    console.error(error.message);
+                    reject(error);
+                }
 
-            }
+                if (results === undefined) {
+                    resolve([]);
+                    return;
+                }
+                if (results.length > 0) {
+                    resolve({
+                        name: results[0].Game_Name,
+                        cover_url: results[0].Cover_Url
+                    });
 
-        })
-    connection.end();
+                }
+
+            })
+        connection.end();
     });
 }
 
-async function getUserGames(discord_ID) {
-    let sql1 = "SELECT Game_Id FROM Plays where User_Id = ?;"
-    let sql2 = "SELECT * FROM Game where Game_Id in (?);"
+async function getPlaysGame(discord_ID) {
     const connection = await database.getConnection();
-    let Games = [];
-    let params = [];
+    let sql = "SELECT Game_Id FROM Plays where User_Id = ?;"
+
     return new Promise((resolve, reject) => {
-        connection.query(sql1, [discord_ID], async (error, results) => {
+        connection.query(sql, [discord_ID], (error, results) => {
             if (error) {
                 console.error(error.message);
                 reject(error);
-
             }
 
             if (results.length > 0) {
-                results.forEach(r => {
-                    params.push(r.Game_Id);
+                let r = [];
+                results.forEach(e => {
+                    r.push(e.Game_Id);
                 })
 
-                await connection.query(sql2, [params.join()], (error, results) => {
-                    if (error) {
-                        console.error(error.message);
-                        reject(error);
-                    }
-                    if (results.length > 0) {
-                        Games.push({ name: results[0].Game_Name, cover_url: results[0].Cover_Url });
-                    }
-                })
+                resolve(r);
+            }else{
 
-
-            } else {
                 resolve([]);
-
             }
+        })
+        connection.end();
+    });
 
-        });
+}
 
+async function getUserGames(discord_ID) {
+
+    let sql = "SELECT Game_Name, Cover_Url FROM Game where Game_Id=?;"
+
+    const idList = await getPlaysGame(discord_ID);
+
+    const connection = await database.getConnection();
+    let Games = [];
+    return new Promise(async function(resolve, reject){
+
+        if(idList.length == 0){
+    
+            resolve([]);
+            return;
+        }
+        for(let i = 0; i<idList.length;i++){
+            let pro = await connection.promise().query(sql, [idList[i]], (error, results) => {
+                if (error) {
+                    console.error(error.message);
+                    reject(error);
+                }
+                if (results.length > 0) {
+                    resolve( {name:results[0].Game_Name, cover_url:results[0].Cover_Url})
+                } else {
+                    resolve([]);
+                }
+            }).then(function(data){
+                    return {name:data[0][0].Game_Name, cover_url:data[0][0].Cover_Url}
+                });
+            Games.push(pro);
+       }
+       resolve(Games)
         connection.end();
     })
 }
 
-async function getTopGames(Nbr_Games){
+async function getTopGames(Nbr_Games) {
     const response = await getTop(Nbr_Games);
     return response;
 }
@@ -174,5 +231,6 @@ module.exports = {
     getUserGames,
     updateUserGames,
     getGameByName,
-    getTopGames
+    getTopGames,
+    insertTop50
 }

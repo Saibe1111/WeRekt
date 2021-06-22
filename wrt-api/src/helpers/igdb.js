@@ -24,8 +24,8 @@ async function getCoverID(game_name) {
 
 }
 
-async function getCoverURL(game_name) {
-    //return `https://images.igdb.com/igdb/image/upload/t_cover_small/${await getCoverID(game_name)}.jpg`
+async function getCoverURLName(game_name) {
+   
     const response = await fetch(`${config.igdb_api.URL}covers`, {
         method: 'POST',
         headers: {
@@ -37,6 +37,7 @@ async function getCoverURL(game_name) {
     }).then(
         response => response.json()
     ).then(function (data) {
+
         return data[0].image_id;
     });
     return `https://images.igdb.com/igdb/image/upload/t_cover_big/${await response}.jpg`;
@@ -93,6 +94,6 @@ async function getTop(Nbr_Games) {
 }
 
 module.exports = {
-    getCoverURL,
+    getCoverURLName,
     getTop
 }
