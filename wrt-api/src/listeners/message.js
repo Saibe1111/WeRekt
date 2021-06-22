@@ -1,5 +1,5 @@
 const messageDAO = require('../models/messageDAO');
-const userDAO = require('../models/userDAO')
+const userDAO = require('../models/userDAO');
 const emitInRoom = require("../events/emitInRoom");
 const moment = require('moment');
 

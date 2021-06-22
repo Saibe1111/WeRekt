@@ -116,11 +116,12 @@ export default {
       socket.emit("message", newMessage);
     },
     isTyping() {
-      this.isTypingUser = this.connectedUsername;
+      socket.emit("typing", this.selectedRoom.id,this.connectedUserID);
     },
     changeRoom(room) {
       this.selectedRoom = room;
       socket.emit("change_room", this.selectedRoom.id);
+      
     },
     toggleUserPanel() {
       this.userPanel = !this.userPanel;
@@ -145,6 +146,13 @@ export default {
       } else {
         this.rooms = [...this.rooms, rooms];
       }
+    });
+
+    socket.on("user_typing", (username) => {
+      this.isTypingUser = username;
+      setTimeout( () => {
+        this.isTypingUser = ""
+      }, 5000);
     });
 
     socket.on("room_Info", (messages, users) => {
