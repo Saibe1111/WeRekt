@@ -21,6 +21,7 @@
     <div>
       <div :class="$style.description" class="mx-8">{{ messageIsTyping }}</div>
       <v-text-field
+        ref="msgInput"
         :disabled="isDisabled"
         :class="$style.inputStyle"
         :rules="inputRules"
@@ -77,7 +78,7 @@ export default {
   },
   methods: {
     async sendMessage() {
-      if (this.chatInput.length > 256) {
+      if (this.chatInput.length > 255) {
         return;
       }
       if (this.chatInput) {
@@ -97,6 +98,7 @@ export default {
     messages: function () {
       setTimeout(() => {
         this.scrollDown();
+        this.$refs.msgInput.focus();
       }, 10);
     },
   },
