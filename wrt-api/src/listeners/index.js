@@ -12,19 +12,16 @@ module.exports = (io) => {
 
     let NOMBRE_JOUEUR_MAX = 2;
     setInterval(() => {
-        console.log("----- JEUX -----");
         for(const [key, value] of io.sockets.adapter.rooms){
             
             if(typeof key === "string"){
             if(key.includes("searching")){
                 io.in(key).emit('number_user', io.sockets.adapter.rooms.get(key).size, NOMBRE_JOUEUR_MAX);
                 if(io.sockets.adapter.rooms.get(key).size >= NOMBRE_JOUEUR_MAX){
-                    console.log(key + " - lancement en cours...");
                     let index = 0;
                     let tab = [];
                     io.sockets.adapter.rooms.get(key).forEach((values,keys)=>{
                         if (index < NOMBRE_JOUEUR_MAX){
-                            //console.log(keys);
                             tab.push(clients[keys]);
                             io.to(keys).emit("launch_game");
                             index++;
@@ -32,14 +29,11 @@ module.exports = (io) => {
                         
                     });
                     roomDAO.createRoom(tab, key.replace('searching ', ''));
-                }else{
-                    console.log(key);
                 }
             }
             }
         }
-        console.log("-----+----+-----");
-    }, 5000);
+    }, 1000);
 
     io.on("connection", function (socket) {
         
@@ -50,7 +44,6 @@ module.exports = (io) => {
     
             files.map((fileName) => {
                 if (fileName !== "index.js") {
-                    //console.debug("Initializing listener at: %s", fileName);
                     const listener = require(path.resolve(__dirname, fileName));
                     listener(socket);
                 }
@@ -58,16 +51,13 @@ module.exports = (io) => {
         });
 
         socket.on("game_search", function (game, user) {
-        
             socket.userInfo = {
                 id: user,
                 room: 'searching ' + game
             };
             clients[socket.id] = user;
-    
             socket.join('searching ' + game);
         });
-
     });
 
     

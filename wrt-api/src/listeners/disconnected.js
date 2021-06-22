@@ -1,6 +1,5 @@
 module.exports = function (socket) {
     socket.on("disconnect", function () {
-        
         if(socket.userInfo?.room ==! undefined){
             socket.leave(socket.userInfo.room);
         }
