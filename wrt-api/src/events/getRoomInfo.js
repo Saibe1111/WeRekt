@@ -30,6 +30,7 @@ const event = async (socket, room) => {
             content: element.content,
             timestamp: element.timestamp,
             senderId: element.senderId,
+            sender: element.Username,
             room:  element.room,
         })
     });

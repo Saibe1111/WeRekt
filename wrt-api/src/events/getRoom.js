@@ -1,4 +1,5 @@
 const roomDAO = require("../models/roomDAO");
+const gameDAO = require("../models/gameDAO");
 const event = async (socket, user) => {
     let tab = []
     let query = await roomDAO.getRooms(user);
@@ -8,11 +9,13 @@ const event = async (socket, user) => {
     }
 
     query.forEach(element => {
+
+        let cover = gameDAO.getGameByName(element.game)
+
         tab.push({
             id: element.roomId,
             game: element.game,
-            gameIcon:
-                "https://images.igdb.com/igdb/image/upload/t_cover_big/co1uaf.jpg",
+            gameIcon: cover,
         })
     });
     

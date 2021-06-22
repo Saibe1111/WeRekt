@@ -21,7 +21,8 @@ async function createMessage(content, timestamp, senderId,roomId) {
 async function getRoomMessage(id) {
     const connection = await database.getConnection();
     return new Promise((resolve, reject) => {
-        let sql = "SELECT * FROM Messages where roomId=?;";
+        //let sql = "SELECT * FROM Messages where roomId=?;";
+        let sql = "SELECT * FROM Messages INNER JOIN Users ON Messages.senderId = Users.ID where roomId=?;";
         connection.query(sql, [id], (error, results) => {
             
             if (error)
