@@ -19,18 +19,21 @@
       />
     </div>
     <div>
-      <div :class="$style.description" class="mx-8">is writing...</div>
+      <div :class="$style.description" class="mx-8">{{ messageIsTyping }}</div>
       <v-text-field
+        :disabled="isDisabled"
         :class="$style.inputStyle"
+        :rules="inputRules"
         class="ma-4"
         label="Chat with your friends..."
         dark
         clearable
         v-model="chatInput"
         solo
-        hide-details
+        counter="255"
         append-outer-icon="mdi-send"
-        @keyup.enter="sendMessage"
+        @keyup.enter="sendMessage()"
+        @keydown="isWriting()"
         @click:append-outer="sendMessage()"
       ></v-text-field>
     </div>
@@ -52,27 +55,45 @@ export default {
     messages: {
       type: Array,
     },
+    isDisabled: {
+      type: Boolean,
+    },
   },
   data() {
     return {
       chatInput: "",
+      inputRules: [(v) => v.length < 256 || "Max 255 characters"],
+      messageIsTyping: "",
     };
   },
   methods: {
     async sendMessage() {
+      if (this.chatInput.length > 256) {
+        return;
+      }
       if (this.chatInput) {
         await this.$emit("send-msg", this.chatInput);
-        this.scrollDown();
         this.chatInput = "";
       }
     },
+    isWriting() {
+      // console.log("writing");
+      // let typingTimer;
+      // let doneTypingInterval = 5000;
+
+      this.messageIsTyping = this.connectedUserID + " is typing...";
+    },
     scrollDown() {
       let content = this.$refs.messagesContainer;
-      content.scrollTop += content.scrollHeight;
+      content.scrollTop = content.scrollHeight;
     },
   },
-  mounted() {
-    this.scrollDown();
+  watch: {
+    messages: function () {
+      setTimeout(() => {
+        this.scrollDown();
+      }, 10);
+    },
   },
 };
 </script>

@@ -23,7 +23,7 @@
         </v-list-item-content>
       </v-list-item>
 
-      <v-list dense nav>
+      <v-list nav>
         <v-list-item-group mandatory v-model="selectedRoom">
           <v-list-item
             :ripple="false"
@@ -34,12 +34,19 @@
             @click="changeRoom(room)"
           >
             <v-list-item-icon>
-              <v-img max-width="25" :src="room.gameIcon"></v-img>
+              <v-img max-width="30" :src="room.gameIcon"></v-img>
             </v-list-item-icon>
 
             <v-list-item-content>
               <v-list-item-title :class="$style.gameText"
                 >{{ room.game }} {{ room.id }}</v-list-item-title
+              >
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item v-if="this.rooms.length == 0">
+            <v-list-item-content>
+              <v-list-item-title :class="$style.gameText"
+                >No room available</v-list-item-title
               >
             </v-list-item-content>
           </v-list-item>
@@ -59,7 +66,7 @@ export default {
   },
   data() {
     return {
-      selectedRoom: "",
+      selectedRoom: {},
       panelVisible: true,
     };
   },
@@ -70,6 +77,9 @@ export default {
         this.$emit("roomChanged", room);
       }
     },
+  },
+  mounted() {
+    this.selectedRoom = this.rooms[0];
   },
 };
 </script>
@@ -85,6 +95,7 @@ export default {
 }
 
 .gameText {
+  font-size: 14px !important;
   @extend .font-2-small;
 }
 </style>

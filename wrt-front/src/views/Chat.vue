@@ -1,6 +1,10 @@
 <template>
   <div id="chat">
-    <RoomGroup :rooms="roomsReversed" @roomChanged="changeRoom" />
+    <RoomGroup
+      v-if="roomsAreInitialized"
+      :rooms="roomsReversed"
+      @roomChanged="changeRoom"
+    />
     <div class="d-flex justify-space-between">
       <span></span>
       <h1
@@ -59,6 +63,7 @@ export default {
       selectedRoom: {},
       messages: [],
       members: [],
+      roomsAreInitialized: false,
     };
   },
   computed: {
@@ -106,7 +111,6 @@ export default {
         room: this.selectedRoom.id,
       };
       socket.emit("message", newMessage);
-      //this.messages = [...this.messages, newMessage];
     },
     changeRoom(room) {
       this.selectedRoom = room;
@@ -122,14 +126,14 @@ export default {
     socket.emit("user_connected", userId);
     socket.connect();
     socket.on("connect", () => {});
-
-    socket.on("new_message", async (message) => {
+    socket.on("new_message", (message) => {
       this.messages = [...this.messages, message];
     });
 
     socket.on("room", (rooms) => {
       if (Array.isArray(rooms)) {
         this.rooms = rooms;
+        this.roomsAreInitialized = true;
         this.selectedRoom = rooms[rooms.length - 1];
         socket.emit("change_room", this.selectedRoom.id);
       } else {
@@ -145,6 +149,10 @@ export default {
         this.messages = [...this.messages, messages];
       }
     });
+
+    setTimeout(() => {
+      this.roomsAreInitialized = true;
+    }, 1000);
   },
 };
 </script>

@@ -18,7 +18,9 @@
         {{ this.timestamp }}
       </div>
     </div>
-    <div :class="isSender ? $style.textBlack : $style.textWhite">
+    <div
+      :class="[isSender ? $style.textBlack : $style.textWhite, $style.wrapword]"
+    >
       {{ this.content }}
     </div>
   </div>
@@ -81,4 +83,15 @@ export default {
   @extend .textWhite;
 }
 /* Black bubble style end */
+
+.wrapword {
+  white-space: -moz-pre-wrap !important;
+  white-space: -webkit-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  word-break: break-all;
+  white-space: normal;
+}
 </style>
