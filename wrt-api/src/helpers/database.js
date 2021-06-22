@@ -87,7 +87,7 @@ async function createMessage(connection) {
             `CREATE TABLE IF NOT EXISTS werekt.Messages ( 
                 ID int PRIMARY KEY NOT NULL AUTO_INCREMENT,
                 content varchar(255),
-                timestamp varchar(255),
+                timestamp DATETIME,
                 senderId varchar(255),
                 roomId int,
                 FOREIGN KEY (senderId) REFERENCES Users(ID),

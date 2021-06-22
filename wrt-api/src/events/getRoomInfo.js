@@ -1,5 +1,7 @@
 const roomDAO = require("../models/roomDAO");
 const messageDAO = require("../models/messageDAO");
+const moment = require('moment');
+
 const event = async (socket, room) => {
     socket.join(room);
     //user
@@ -20,7 +22,7 @@ const event = async (socket, room) => {
     let tabMessages = [];
     let queryMessages = await messageDAO.getRoomMessage(room);
     
-    if( queryMessages === null){
+    if(queryMessages === null){
         socket.emit("room_Info", [], tab);
         return;
     }
@@ -28,7 +30,7 @@ const event = async (socket, room) => {
     queryMessages.forEach(element => {
         tabMessages.push({
             content: element.content,
-            timestamp: element.timestamp,
+            timestamp: moment(element.timestamp, 'YYYY-MM-DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss'),
             senderId: element.senderId,
             sender: element.Username,
             room:  element.room,
