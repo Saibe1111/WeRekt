@@ -62,25 +62,25 @@ const router = new VueRouter({
   routes,
 });
 
-// router.beforeEach((to, from, next) => {
-//   if (to.name !== "Home") {
-//     let url = process.env.VUE_APP_API_URL;
-//     fetch(`${url}/api/auth/state`, {
-//       method: "GET",
-//       credentials: "include",
-//     }
-//     ).then(
-//       (response) => {
-//         if (response.status === 200) {
-//           next();
-//         }
-//         else {
-//           next({ name: 'Home' });
-//         }
-//       }
-//     )
-//   }
-//   else next();
-// })
+router.beforeEach((to, from, next) => {
+  if (to.name !== "Home") {
+    let url = process.env.VUE_APP_API_URL;
+    fetch(`${url}/api/auth/state`, {
+      method: "GET",
+      credentials: "include",
+    }
+    ).then(
+      (response) => {
+        if (response.status === 200) {
+          next();
+        }
+        else {
+          next({ name: 'Home' });
+        }
+      }
+    )
+  }
+  else next();
+})
 
 export default router;
