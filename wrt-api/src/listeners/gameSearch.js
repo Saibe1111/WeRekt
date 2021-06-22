@@ -28,7 +28,6 @@ module.exports = function (socket) {
             });
             
             roomDAO.createRoom(tab, game);
-            //console.log(socket.adapter.rooms)
         }
         
     });
