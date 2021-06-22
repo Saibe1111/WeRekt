@@ -32,7 +32,7 @@
           "
           class="mb-2"
         >
-          Find the matching players to play with
+          Find the right players for you
         </h1>
         <p
           :class="
@@ -41,8 +41,7 @@
               : $style.descriptionMobile
           "
         >
-          A social platform where you can join a team which meets your
-          expectations
+          A social platform that helps you put together the perfect team
         </p>
       </div>
       <v-img
@@ -96,8 +95,8 @@
               : $style.descriptionMobile
           "
         >
-          Don't play alone anymore. Meet people playing the same games who want
-          to play them at the same time as you
+          Don't play own your own anymore! Meet people who want to play the same
+          game as you right now
         </p>
       </div>
       <v-img
@@ -128,7 +127,7 @@
       </div>
       <div :class="$style.gamesGrid">
         <div class="d-flex justify-space-around px-16 py-10">
-          <v-row>
+          <v-row v-if="this.games.length == 0">
             <v-col
               v-for="n in 12"
               :key="n"
@@ -136,11 +135,26 @@
               cols="4"
               class="d-flex justify-center"
             >
-              <v-img
-                :src="`https://picsum.photos/500/300?image=${n * 5 + 10}`"
+              <v-skeleton-loader
                 :aspect-ratio="3 / 4"
-                max-width="150"
+                width="150"
+                height="225"
+                type="image"
+                dark
+                tile
               >
+              </v-skeleton-loader>
+            </v-col>
+          </v-row>
+          <v-row v-else>
+            <v-col
+              v-for="(game, index) in games"
+              :key="index"
+              md="2"
+              cols="4"
+              class="d-flex justify-center"
+            >
+              <v-img :src="game.cover" :aspect-ratio="3 / 4" max-width="150">
               </v-img>
             </v-col>
           </v-row>
@@ -179,7 +193,23 @@ export default {
   name: "Home",
   components: {},
   data() {
-    return {};
+    return {
+      games: [],
+    };
+  },
+  methods: {
+    async getGames() {
+      let url = process.env.VUE_APP_API_URL;
+      const res = await fetch(`${url}/api/games/top?nbr_games=12`, {
+        method: "GET",
+      });
+
+      const data = await res.json();
+      this.games = data.games;
+    },
+  },
+  async mounted() {
+    this.getGames();
   },
 };
 </script>
