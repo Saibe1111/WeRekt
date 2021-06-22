@@ -3,7 +3,7 @@ const database = require('../helpers/database.js');
 async function createMessage(content, timestamp, senderId,roomId) {
     const connection = await database.getConnection();
     return new Promise((resolve, reject) => {
-    let sql = "INSERT INTO Messages (content, timestamp, senderId, roomId) values (?,?,?,?) ORDER BY timestamp ASC;";
+    let sql = "INSERT INTO Messages (content, timestamp, senderId, roomId) values (?,?,?,?) ORDER BY timestamp;";
     
     connection.query(sql, [content, timestamp, senderId,roomId], (error) => {
         if (error) {
