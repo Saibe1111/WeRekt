@@ -29,7 +29,6 @@ async function checkDbExist() {
     await createUser(connection);
     await createGameTable(connection);
     await createPlaysTable(connection);
-    await createMessageTable(connection);
     await createIsFriendOfTable(connection);
     await createCredentialsTable(connection);
     await createRoom(connection);
@@ -184,31 +183,6 @@ async function createPlaysTable(connection) {
                     reject(error)
                 } else {
                     console.log("CREATE TABLE PLAYS")
-                    resolve();
-                }
-            }
-        );
-    }).catch((error) => {
-        console.log(error);
-    });
-}
-
-async function createMessageTable(connection) {
-    return new Promise((resolve, reject) => {
-        connection.query(
-            `CREATE TABLE IF NOT EXISTS werekt.Message ( 
-                Id_Message int,
-                Name varchar(255),
-                Content varchar(255),
-                Sent_Time Date
-            ); `,
-
-            (error) => {
-                if (error) {
-                    console.error(error.message);
-                    reject(error)
-                } else {
-                    console.log("CREATE TABLE Message")
                     resolve();
                 }
             }

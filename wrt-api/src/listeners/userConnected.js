@@ -2,23 +2,14 @@ const getRoom = require("../events/getRoom");
 
 module.exports = function (socket) {
     socket.on("user_connected", function (user) {
+        
         if(user !== null){
             getRoom(socket, user);
         }
         
         //Messages
 
-        let members = [
-            {
-                User_ID: "578957887108546571",
-            },
-            {
-                User_ID: "345823189449965579",
-            },
-            {
-                User_ID: "283639048483110922",
-            },
-        ];
+        
 
         let messages = [
             {

@@ -1,11 +1,11 @@
 const database = require('../helpers/database.js');
 
-async function createMessage(user, room, game) {
+async function createMessage(content, timestamp, senderId,roomId) {
     const connection = await database.getConnection();
     return new Promise((resolve, reject) => {
-    let sql = "INSERT INTO Rooms (user, roomId, game) values (?,?,?);";
+    let sql = "INSERT INTO Messages (content, timestamp, senderId, roomId) values (?,?,?,?);";
     
-    connection.query(sql, [user,room,game], (error) => {
+    connection.query(sql, [content, timestamp, senderId,roomId], (error) => {
         if (error) {
             console.error(error.message);
             resolve();
@@ -18,10 +18,10 @@ async function createMessage(user, room, game) {
 });
 }
 
-async function getMessage(id) {
+async function getRoomMessage(id) {
     const connection = await database.getConnection();
     return new Promise((resolve, reject) => {
-        let sql = "SELECT * FROM Rooms where user=?;";
+        let sql = "SELECT * FROM Messages where roomId=?;";
         connection.query(sql, [id], (error, results) => {
             
             if (error)
@@ -47,5 +47,5 @@ async function getMessage(id) {
 
 module.exports = {
     createMessage,
-    getMessage,
+    getRoomMessage,
 }

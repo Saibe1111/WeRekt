@@ -1,5 +1,6 @@
 const roomDAO = require("../models/roomDAO");
 const event = async (socket, room) => {
+    socket.join(room);
     let tab = []
     let query = await roomDAO.getUser(room);
     
@@ -9,9 +10,10 @@ const event = async (socket, room) => {
 
     query.forEach(element => {
         tab.push({
-            id: element.user,
+            User_ID: element.user,
         })
     });
+    
     
     socket.emit("room_Info", [], tab);
 };

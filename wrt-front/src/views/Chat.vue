@@ -75,12 +75,12 @@ export default {
       if (!content) return;
       let newMessage = {
         content: content,
-        timestamp: "12:03",
-        sender: this.connectedUsername,
+        timestamp: new Date(),
         senderId: this.connectedUserID,
+        room: this.selectedRoom.id
       };
-
-      this.messages = [...this.messages, newMessage];
+      socket.emit("message", newMessage);
+      //this.messages = [...this.messages, newMessage];
     },
     changeRoom(room) {
       this.selectedRoom = room;
@@ -92,12 +92,15 @@ export default {
   },
   async mounted() {
 
-    console.log('Montage')
     await this.getConnectedUser();
     let userId = this.connectedUserID;
     socket.emit("user_connected", userId);
     socket.connect();
       socket.on("connect", () => {
+      });
+
+      socket.on("new_message", (message) => {
+        this.messages = [...this.messages, message];
       });
 
       socket.on("room", (rooms) => {
@@ -112,6 +115,7 @@ export default {
 
       socket.on("room_Info", (messages, users) => {
         if (Array.isArray(messages)){
+          
           this.messages = messages;
           this.members = users;
         }else{

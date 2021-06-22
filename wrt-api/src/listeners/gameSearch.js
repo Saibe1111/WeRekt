@@ -14,7 +14,7 @@ module.exports = function (socket) {
         clients[socket.id] = user;
 
         socket.join(game);
-        emitInRoom(socket, "number_user",  socket.adapter.rooms.get(game).size, NOMBRE_JOUEUR_MAX);
+        emitInRoom(socket, "number_user", socket.userInfo.room, socket.adapter.rooms.get(game).size, NOMBRE_JOUEUR_MAX);
         
         if(socket.adapter.rooms.get(game).size >= NOMBRE_JOUEUR_MAX){
             

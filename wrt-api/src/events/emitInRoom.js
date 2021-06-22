@@ -1,5 +1,5 @@
-const event = (socket, event ,...args) => {
-    socket.in(socket.userInfo.room).emit(event, ...args);
+const event = (socket, event, room ,...args) => {
+    socket.in(room).emit(event, ...args);
     socket.emit(event, ...args);
 };
 
