@@ -147,12 +147,28 @@ export default {
         this.rooms = [...this.rooms, rooms];
       }
     });
-
+    let usersTyping = [];
     socket.on("user_typing", (username) => {
-      this.isTypingUser = username;
-      setTimeout( () => {
-        this.isTypingUser = ""
-      }, 5000);
+
+      if(!usersTyping.includes(username)){
+        usersTyping.push(username);
+        if(usersTyping.length > 1){
+          this.isTypingUser = `${usersTyping.toString()} are`;
+        }else{
+          this.isTypingUser = `${usersTyping[0]} is`;
+        }
+        setTimeout( () => {
+          usersTyping.shift();
+          if(usersTyping.length > 1){
+          this.isTypingUser = `${usersTyping.toString()} are`;
+          }else if (usersTyping.length === 1){
+            this.isTypingUser = `${usersTyping[0]} is`;
+          }else{
+            this.isTypingUser = "";
+          }
+        }, 5000);
+      }
+      
     });
 
     socket.on("room_Info", (messages, users) => {

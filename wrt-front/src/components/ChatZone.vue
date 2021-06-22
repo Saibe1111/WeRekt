@@ -73,7 +73,7 @@ export default {
     messageIsTyping: function () {
       return !this.isTypingUser || this.isTypingUser == ""
         ? ""
-        : this.isTypingUser + " is typing...";
+        : this.isTypingUser + " typing...";
     },
   },
   methods: {
