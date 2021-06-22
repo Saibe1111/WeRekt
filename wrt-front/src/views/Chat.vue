@@ -131,6 +131,7 @@ export default {
     await this.getConnectedUser();
     let userId = this.connectedUserID;
     socket.emit("user_connected", userId);
+    socket.disconnect();
     socket.connect();
     socket.on("connect", () => {});
     socket.on("new_message", (message) => {

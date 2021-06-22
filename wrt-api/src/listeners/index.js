@@ -1,10 +1,48 @@
+const { cpuUsage } = require("process");
+const gameSearch = require("../middlewares/gameSearch");
+const roomDAO = require('../models/roomDAO');
+
+let clients = {};
+
 module.exports = (io) => {
     const fs = require("fs");
     const path = require("path");
 
     const listenersPath = path.resolve(__dirname);
 
+    let NOMBRE_JOUEUR_MAX = 2;
+    setInterval(() => {
+        console.log("----- JEUX -----");
+        for(const [key, value] of io.sockets.adapter.rooms){
+            
+            if(typeof key === "string"){
+            if(key.includes("searching")){
+                io.in(key).emit('number_user', io.sockets.adapter.rooms.get(key).size, NOMBRE_JOUEUR_MAX);
+                if(io.sockets.adapter.rooms.get(key).size >= NOMBRE_JOUEUR_MAX){
+                    console.log(key + " - lancement en cours...");
+                    let index = 0;
+                    let tab = [];
+                    io.sockets.adapter.rooms.get(key).forEach((values,keys)=>{
+                        if (index < NOMBRE_JOUEUR_MAX){
+                            //console.log(keys);
+                            tab.push(clients[keys]);
+                            io.to(keys).emit("launch_game");
+                            index++;
+                        }
+                        
+                    });
+                    roomDAO.createRoom(tab, key.replace('searching ', ''));
+                }else{
+                    console.log(key);
+                }
+            }
+            }
+        }
+        console.log("-----+----+-----");
+    }, 5000);
+
     io.on("connection", function (socket) {
+        
         fs.readdir(listenersPath, (err, files) => {
             if (err) {
                 process.exit(1);
@@ -18,6 +56,18 @@ module.exports = (io) => {
                 }
             });
         });
+
+        socket.on("game_search", function (game, user) {
+        
+            socket.userInfo = {
+                id: user,
+                room: 'searching ' + game
+            };
+            clients[socket.id] = user;
+    
+            socket.join('searching ' + game);
+        });
+
     });
 
     
