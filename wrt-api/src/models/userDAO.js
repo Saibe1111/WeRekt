@@ -13,7 +13,6 @@ async function createUser(discord_ID, username, Profile_Url) {
                 reject(error);
 
             } else {
-                console.log("Row inserted");
                 resolve();
 
             }
@@ -54,7 +53,7 @@ async function getUser(id) {
         });
 
     }).catch((error) => {
-        console.log(error);
+        console.error(error.message);
     });
 
 
@@ -151,7 +150,6 @@ async function updateUser(discord_ID, Username = undefined, Profile_Url = undefi
             console.error(error.message);
             return;
         } else {
-            console.log("Row Updated");
 
         }
     }
@@ -171,7 +169,6 @@ async function deleteUser(id) {
             return;
         }
         else {
-            console.log("Row deleted");
         }
     });
     connection.end();

@@ -57,7 +57,6 @@ async function updateUser(req, res) {
     let birthdate = req.body.birthdate;
     let banner = `${config.api.URL}/public/upload/images/banner/${req.user.id}.png`;
 
-    console.log(req.body.games);
     await updateUserGames(req.user.id, req.body.games);
 
     db.updateUser(

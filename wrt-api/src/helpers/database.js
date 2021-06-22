@@ -46,14 +46,13 @@ async function werektDb(connection) {
                     console.error(error.message);
                     reject(error)
                 } else {
-                    console.log("CREATE DATABASE WEREKT")
                     resolve();
                 }
             }
         );
         
     }).catch((error) => {
-        console.log(error);
+        console.error(error.message);
     });
 }
 
@@ -73,14 +72,13 @@ async function createRoom(connection) {
                     console.error(error.message);
                     reject(error);
                 } else {
-                    console.log("CREATE TABLE ROOMS");
                     resolve();
                 }
             }
         );
         
     }).catch((error) => {
-        console.log(error);
+        console.error(error.message);
     });
 }
 
@@ -102,14 +100,13 @@ async function createMessage(connection) {
                     console.error(error.message);
                     reject(error);
                 } else {
-                    console.log("CREATE TABLE MESSAGES");
                     resolve();
                 }
             }
         );
         
     }).catch((error) => {
-        console.log(error);
+        console.error(error.message);
     });
 }
 
@@ -136,14 +133,13 @@ async function createUser(connection) {
                     console.error(error.message);
                     reject(error)
                 } else {
-                    console.log("CREATE TABLE USER")
                     resolve();
                 }
             }
         );
         
     }).catch((error) => {
-        console.log(error);
+        console.error(error.message);
     });
 }
 
@@ -161,14 +157,14 @@ async function createGameTable(connection) {
                     console.error(error.message);
                     reject(error)
                 } else {
-                    console.log("CREATE TABLE GAME")
+                  
                     resolve();
                 }
             }
         );
         
     }).catch((error) => {
-        console.log(error);
+        console.error(error.message);
     });
 }
 
@@ -188,14 +184,14 @@ async function createPlaysTable(connection) {
                     console.error(error.message);
                     reject(error)
                 } else {
-                    console.log("CREATE TABLE PLAYS")
+
                     resolve();
                 }
             }
         );
         
     }).catch((error) => {
-        console.log(error);
+        console.error(error.message);
     });
 }
 
@@ -215,14 +211,14 @@ async function createIsFriendOfTable(connection) {
                     console.error(error.message);
                     reject(error)
                 } else {
-                    console.log("CREATE TABLE IsFriendOf");
+
                     resolve();
                 }
             }
         );
         
     }).catch((error) => {
-        console.log(error);
+        console.error(error.message);
     });
 }
 
@@ -240,14 +236,13 @@ async function createCredentialsTable(connection) {
                     console.error(error.message);
                     reject(error)
                 } else {
-                    console.log("CREATE TABLE Credentials");
                     resolve();
                 }
             }
         );
         
     }).catch((error) => {
-        console.log(error);
+        console.error(error.message);
     });
 }
 
