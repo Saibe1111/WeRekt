@@ -107,8 +107,9 @@ async function getListGames() {
         return data;
     });
     let ret = [];
-    response.forEach(e => {
-        ret.push(e.name)
+
+    Array.prototype.forEach.call(response, res =>{
+        ret.push(res.name);
     })
     return ret;
 }
