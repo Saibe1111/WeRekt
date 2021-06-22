@@ -16,6 +16,7 @@ const io = require("socket.io")(http, {
     },
 });
 const initListeners = require("./listeners");
+const { insertTop50 } = require("./models/gameDAO");
 
 database.checkDbExist();
 
@@ -49,6 +50,7 @@ app.use(
     express.static(__dirname + "/../node_modules/socket.io/client-dist")
 );
 
+insertTop50();
 initListeners(io);
 
 http.listen(config.express.PORT, () => {

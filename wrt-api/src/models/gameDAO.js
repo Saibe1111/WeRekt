@@ -12,7 +12,6 @@ async function createGame(discord_ID, game_name) {
         if (error) {
             console.error(error.message);
         } else {
-            console.log("Game Inserted");
         }
     });
 
@@ -32,36 +31,23 @@ async function createGame(discord_ID, game_name) {
 
 async function insertTop50() {
     const connection = await database.getConnection();
+    let top = await getTopGames(50);
+
+
+
     let sql = "INSERT INTO Game (Game_Name,Cover_Url) VALUES (?,?);"
 
-    connection.query("Select * FROM Game;", async function (error, results) {
-        if (error) {
-            console.error(error.message);
-            return;
-        }
-        if (results.length < 0) {
-            let top = await getTopGames(50);
-            top.forEach(e => {
-                connection.query(sql, [e.name, e.cover], (error) => {
-                    console.log("fait");
-                    if (error) {
-                        console.error(error.message);
-                        return;
-                    }
-                })
-            })
-            console.log("Inserted");
-            return;
-        }
-        if (results.length > 0) {
-            return;
-        }
-    })
+    top.forEach(function (e) {
+        connection.query(sql, [e.name, e.cover], (error) => {
+            if (error) {
+                console.error(error.message);
+            }
+        });
+    });
 
     connection.end();
-
-
 }
+
 
 async function playsGame(discord_ID, Game_Id) {
     const connection = await database.getConnection();
@@ -147,7 +133,7 @@ async function getPlaysGame(discord_ID) {
                 })
 
                 resolve(r);
-            }else{
+            } else {
 
                 resolve([]);
             }
@@ -165,30 +151,30 @@ async function getUserGames(discord_ID) {
 
     const connection = await database.getConnection();
     let Games = [];
-    return new Promise(async function(resolve, reject){
+    return new Promise(async function (resolve, reject) {
 
-        if(idList.length == 0){
-    
+        if (idList.length == 0) {
+
             resolve([]);
             return;
         }
-        for(let i = 0; i<idList.length;i++){
+        for (let i = 0; i < idList.length; i++) {
             let pro = await connection.promise().query(sql, [idList[i]], (error, results) => {
                 if (error) {
                     console.error(error.message);
                     reject(error);
                 }
                 if (results.length > 0) {
-                    resolve( {name:results[0].Game_Name, cover_url:results[0].Cover_Url})
+                    resolve({ name: results[0].Game_Name, cover_url: results[0].Cover_Url })
                 } else {
                     resolve([]);
                 }
-            }).then(function(data){
-                    return {name:data[0][0].Game_Name, cover_url:data[0][0].Cover_Url}
-                });
+            }).then(function (data) {
+                return { name: data[0][0].Game_Name, cover_url: data[0][0].Cover_Url }
+            });
             Games.push(pro);
-       }
-       resolve(Games)
+        }
+        resolve(Games)
         connection.end();
     })
 }
@@ -226,7 +212,6 @@ async function updateUserGames(discord_ID, Games) {
 }
 
 module.exports = {
-
     getGame,
     getUserGames,
     updateUserGames,
