@@ -71,12 +71,15 @@ async function getGame(Nbr_Games = undefined) {
 async function getGameByName(Game_Name) {
     const connection = await database.getConnection();
     return new Promise((resolve, reject) =>{
-    connection.query("SELECT * From `game` where Game_Name = ?;", [game_name],
+    connection.query("SELECT * From `game` where Game_Name = ?;", [Game_Name],
         (error, results) => {
             if (error)
                 console.error(error.message);
                 reject(error);
-
+            if(results === undefined){
+                resolve([]);
+                return;
+            }
             if (results.length > 0) {
                 resolve({
                     name : results[0].Game_Name,
