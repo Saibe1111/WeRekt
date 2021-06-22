@@ -128,12 +128,30 @@ export default {
     },
   },
   async mounted() {
+    let usersTyping = [];
+
     await this.getConnectedUser();
     let userId = this.connectedUserID;
     socket.emit("user_connected", userId);
     socket.connect();
     socket.on("connect", () => {});
     socket.on("new_message", (message) => {
+      console.log(usersTyping[0], message.sender)
+      if(usersTyping.includes(message.sender)){
+        var index = usersTyping.indexOf(message.sender);
+        if (index !== -1) {
+          usersTyping.splice(usersTyping, 1);
+          if(usersTyping.length > 1){
+            this.isTypingUser = `${usersTyping.toString()} are`;
+          }else if (usersTyping.length === 1){
+            this.isTypingUser = `${usersTyping[0]} is`;
+          }else{
+            this.isTypingUser = "";
+          }
+        }
+
+      }
+
       this.messages = [...this.messages, message];
     });
 
@@ -147,7 +165,7 @@ export default {
         this.rooms = [...this.rooms, rooms];
       }
     });
-    let usersTyping = [];
+    
     socket.on("user_typing", (username) => {
 
       if(!usersTyping.includes(username)){
