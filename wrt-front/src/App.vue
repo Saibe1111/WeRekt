@@ -3,7 +3,7 @@
     <v-main class="pa-0">
       <div :class="$style.background">
         <NavBar></NavBar>
-        <ToTopBtn />
+        <ToTopBtn v-if="btnIsVisible" />
         <v-main>
           <router-view />
           <Footer />
@@ -25,7 +25,12 @@ export default {
     ToTopBtn,
     Footer,
   },
-  data: () => ({}),
+  computed: {
+    btnIsVisible() {
+      if (this.$route.path == "/chat") return false;
+      return true;
+    },
+  },
 };
 </script>
 
