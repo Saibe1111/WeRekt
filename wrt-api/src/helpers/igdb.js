@@ -87,13 +87,34 @@ async function getTop(Nbr_Games) {
             cover: c
         })
     }
-
     return ret;
 
+}
 
+async function getListGames() {
+
+    const response = await fetch(`${config.igdb_api.URL}games`, {
+        method: 'POST',
+        headers: {
+
+            'Client-ID': config.igdb_api.CLIENT_ID,
+            'Authorization': 'Bearer ' + config.igdb_api.AUTHORIZATION
+        },
+        body: `fields name; where total_rating_count > 75 & multiplayer_modes > 2; sort total_rating desc; limit 100;`
+    }).then(
+        response => response.json()
+    ).then(function (data) {
+        return data;
+    });
+    let ret = [];
+    response.forEach(e => {
+        ret.push(e.name)
+    })
+    return ret;
 }
 
 module.exports = {
     getCoverURLName,
-    getTop
+    getTop,
+    getListGames
 }

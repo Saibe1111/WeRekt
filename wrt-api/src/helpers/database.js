@@ -12,7 +12,7 @@ async function getConnection() {
     });
 
     con.connect(function(err){
-        if(err) console.error("Connection to database impossible !");
+        if(err) console.error("Connection to database impossible ! ", err.message);
     });
     return con;
 }
@@ -33,6 +33,7 @@ async function checkDbExist() {
     await createCredentialsTable(connection);
     await createRoom(connection);
     await createMessage(connection);
+    connection.end();
 
 }
 
@@ -50,6 +51,7 @@ async function werektDb(connection) {
                 }
             }
         );
+        
     }).catch((error) => {
         console.log(error);
     });
@@ -76,6 +78,7 @@ async function createRoom(connection) {
                 }
             }
         );
+        
     }).catch((error) => {
         console.log(error);
     });
@@ -104,6 +107,7 @@ async function createMessage(connection) {
                 }
             }
         );
+        
     }).catch((error) => {
         console.log(error);
     });
@@ -137,6 +141,7 @@ async function createUser(connection) {
                 }
             }
         );
+        
     }).catch((error) => {
         console.log(error);
     });
@@ -161,6 +166,7 @@ async function createGameTable(connection) {
                 }
             }
         );
+        
     }).catch((error) => {
         console.log(error);
     });
@@ -187,6 +193,7 @@ async function createPlaysTable(connection) {
                 }
             }
         );
+        
     }).catch((error) => {
         console.log(error);
     });
@@ -213,7 +220,7 @@ async function createIsFriendOfTable(connection) {
                 }
             }
         );
-       
+        
     }).catch((error) => {
         console.log(error);
     });
@@ -238,7 +245,7 @@ async function createCredentialsTable(connection) {
                 }
             }
         );
-       
+        
     }).catch((error) => {
         console.log(error);
     });
