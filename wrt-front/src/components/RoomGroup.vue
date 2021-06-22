@@ -34,7 +34,7 @@
             @click="changeRoom(room)"
           >
             <v-list-item-icon>
-              <v-img max-width="30" :src="room.gameIcon"></v-img>
+              <v-img max-width="40" :src="room.gameIcon"></v-img>
             </v-list-item-icon>
 
             <v-list-item-content>
