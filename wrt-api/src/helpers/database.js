@@ -147,7 +147,7 @@ async function createGameTable(connection) {
         connection.query(
             `CREATE TABLE IF NOT EXISTS werekt.Game (
                 Game_Id int PRIMARY KEY NOT NULL AUTO_INCREMENT,
-                Game_Name varchar(255),
+                Game_Name varchar(255) UNIQUE,
                 Cover_Url varchar(255)
             ); `,
 
