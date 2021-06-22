@@ -18,7 +18,12 @@ const event = async (socket, user) => {
             gameIcon: cover,
         })
     });
-    
+
+    let userInfo = {
+        room:tab[ tab.length -1 ].id,
+    }
+
+    socket.userInfo = userInfo ;
     socket.emit("room", tab);
 };
 

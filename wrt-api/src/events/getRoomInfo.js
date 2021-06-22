@@ -3,6 +3,10 @@ const messageDAO = require("../models/messageDAO");
 const moment = require('moment');
 
 const event = async (socket, room) => {
+
+    socket.leave(socket.userInfo.room);
+
+    socket.userInfo.room = room;
     socket.join(room);
     //user
     let tab = [];
