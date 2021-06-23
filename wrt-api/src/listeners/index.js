@@ -12,7 +12,6 @@ function start(io) {
     let nbMax = 0;
     let player = [];
     for (const [key, value] of Object.entries(clients)) {
-        console.log(clients);
         nbMax = value.search.game_max_player;
         player = [];
         for (const [key2, value2] of Object.entries(clients)) {
@@ -42,7 +41,7 @@ function start(io) {
                     nb++;
                 }else{
                     //P2 Pas remplit mais profil oui
-                    if(value2.search.language !== null){
+                    if(value2.search.language === null){
                         if(value2.info.languages.includes(value.search.language)){
                             nb++;
                         }

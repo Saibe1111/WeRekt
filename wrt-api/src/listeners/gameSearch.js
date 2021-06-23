@@ -29,7 +29,7 @@ module.exports = function (socket) {
             },
             info:{
                 age: age,
-                languages: userInfo.languages
+                languages: userInfo.languages.Languages
             }
         };
         socket.join('searching ' + game);
