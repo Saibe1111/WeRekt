@@ -15,10 +15,13 @@ async function createGame(discord_ID, game_name) {
         }
     });
 
-    connection.query("SELECT * From `game` where Game_Name = ?;", [game_name],
+    connection.query("SELECT * From `Game` where Game_Name = ?;", [game_name],
         (error, results) => {
             if (error)
                 console.error(error.message);
+            if(results === undefined){
+                console.error("here's results undefined error ",error.message)
+            }
 
             if (results.length > 0) {
                 playsGame(discord_ID, results[0].Game_Id);
@@ -29,24 +32,6 @@ async function createGame(discord_ID, game_name) {
     connection.end();
 }
 
-async function insertTop50() {
-    const connection = await database.getConnection();
-    let top = await getTopGames(50);
-
-
-
-    let sql = "INSERT INTO Game (Game_Name,Cover_Url) VALUES (?,?);"
-
-    top.forEach(function (e) {
-        connection.query(sql, [e.name, e.cover], (error) => {
-            if (error) {
-                console.error(error.message);
-            }
-        });
-    });
-
-    connection.end();
-}
 
 
 async function playsGame(discord_ID, Game_Id) {
@@ -188,20 +173,24 @@ async function updateUserGames(discord_ID, Games) {
     const connection = await database.getConnection();
     let tab = JSON.parse(Games).games;
     connection.query("SELECT * FROM Game;", (error, results) => {
-        if (results.length == 0) {
-            tab.forEach(g => {
-                createGame(discord_ID, g);
-            })
+        if(error){
+            console.log("here the update user error",error.message);
+
         }
+        // if (results.length == 0) {
+        //     tab.forEach(g => {
+        //         createGame(discord_ID, g);
+        //     })
+        // }
         tab.forEach(element => {
-            results.forEach(r => {
+            results.forEach(async function(r)  {
 
                 if (element === r.Game_Name) {
 
                     playsGame(discord_ID, r.Game_Id);
                 }
                 else {
-                    createGame(discord_ID, element);
+                    await createGame(discord_ID, element);
                 }
             })
         });
@@ -216,6 +205,5 @@ module.exports = {
     getUserGames,
     updateUserGames,
     getGameByName,
-    getTopGames,
-    insertTop50
+    getTopGames
 }

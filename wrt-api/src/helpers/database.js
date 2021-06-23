@@ -1,6 +1,7 @@
 const mysql = require("mysql2");
 const config = require("../config.json");
 const { Sequelize } = require("sequelize");
+const { getTop } = require('../helpers/igdb.js');
 
 async function getConnection() {
 
@@ -22,7 +23,8 @@ async function checkDbExist() {
     const connection = mysql.createConnection({
         host: config.mysql.HOST,
         user: config.mysql.USER,
-        password: config.mysql.PASSWORD,
+        password: config.mysql.PASSWORD
+        
     });
 
     await werektDb(connection);
@@ -33,6 +35,7 @@ async function checkDbExist() {
     await createCredentialsTable(connection);
     await createRoom(connection);
     await createMessage(connection);
+    await insertTop50(connection);
     connection.end();
 
 }
@@ -246,9 +249,28 @@ async function createCredentialsTable(connection) {
     });
 }
 
+async function insertTop50() {
+    const connection = await getConnection();
+
+    let top = await getTop(50);
+
+    let sql = "INSERT INTO Game (Game_Name,Cover_Url) VALUES (?,?);"
+
+    top.forEach(function (e) {
+        connection.query(sql, [e.name, e.cover], (error) => {
+            if (error) {
+                console.error(error.message);
+            }
+        });
+    });
+
+    connection.end();
+
+}
+
 module.exports = {
     getConnection,
-    checkDbExist,
+    checkDbExist
 }
 
 

@@ -50,7 +50,6 @@ app.use(
     express.static(__dirname + "/../node_modules/socket.io/client-dist")
 );
 
-insertTop50();
 initListeners(io);
 
 http.listen(config.express.PORT, () => {
