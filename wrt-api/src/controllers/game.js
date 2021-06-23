@@ -13,7 +13,8 @@ async function getAGameByName(req,res){
 
     res.json({
         "name" : game.name,
-        "cover_url": game.cover_url
+        "cover_url": game.cover_url,
+        "online_max":game.online_max
     });
 }
 

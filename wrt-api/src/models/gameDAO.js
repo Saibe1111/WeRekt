@@ -3,7 +3,7 @@ const { getTop } = require('../helpers/igdb.js');
 
 
 async function getGame(Nbr_Games = undefined) {
-    let sql = "SELECT Game_Name, Cover_Url FROM Game"
+    let sql = "SELECT Game_Name, Cover_Url, Online_Max FROM Game"
 
     if (Nbr_Games != undefined) {
         sql += ` ORDER BY RAND() LIMIT ${Nbr_Games}`
@@ -45,7 +45,8 @@ async function getGameByName(Game_Name) {
                 if (results.length > 0) {
                     resolve({
                         name: results[0].Game_Name,
-                        cover_url: results[0].Cover_Url
+                        cover_url: results[0].Cover_Url,
+                        online_max:results[0].Online_Max
                     });
 
                 }
@@ -85,7 +86,7 @@ async function getPlaysGame(discord_ID) {
 
 async function getUserGames(discord_ID) {
 
-    let sql = "SELECT Game_Name, Cover_Url FROM Game where Game_Id=?;"
+    let sql = "SELECT * FROM Game where Game_Id=?;"
 
     const idList = await getPlaysGame(discord_ID);
 
@@ -106,13 +107,13 @@ async function getUserGames(discord_ID) {
                 }
                 if (results.length > 0) {
                     console.log(results);
-                    resolve({ name: results[0].Game_Name, cover_url: results[0].Cover_Url })
+                    resolve({ name: results[0].Game_Name, cover_url: results[0].Cover_Url, online_max:results[0].Online_Max })
                 } else {
                     resolve([]);
                 }
             }).then(function (data) {
 
-                return { name: data[0][0].Game_Name, cover_url: data[0][0].Cover_Url }
+                return { name: data[0][0].Game_Name, cover_url: data[0][0].Cover_Url, online_max:results[0][0].Online_Max }
             });
             Games.push(pro);
         }

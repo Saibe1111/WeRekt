@@ -69,7 +69,7 @@ async function getTop(Nbr_Games) {
             'Client-ID': config.igdb_api.CLIENT_ID,
             'Authorization': 'Bearer ' + config.igdb_api.AUTHORIZATION
         },
-        body: `fields name, cover; where total_rating_count > 20 & multiplayer_modes > 2; sort total_rating desc; limit ${Nbr_Games};`
+        body: `fields name, cover, multiplayer_modes.onlinemax; where total_rating_count > 20 & multiplayer_modes.onlinemax > 0; sort total_rating desc; limit ${Nbr_Games};`
     }).then(
         response => response.json()
     ).then(function (data) {
@@ -77,14 +77,21 @@ async function getTop(Nbr_Games) {
         return data;
     });
     
-
     for(var i = 0; i<response.length;i++){
         c = await getCoverURL(response[i].cover);
+        online = 0
+        Array.prototype.forEach.call(response[i].multiplayer_modes, m=>{       
+            if(m.onlinemax === undefined) return;
+            online = Math.max(m.onlinemax,online);
+        });
 
         ret.push({
             name: response[i].name,
-            cover: c
+            cover: c,
+            online_max:online
         })
+
+        console.log(ret);
     }
     return ret;
 
