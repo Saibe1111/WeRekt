@@ -36,6 +36,7 @@ async function checkDbExist() {
     await createRoom(connection);
     await createMessage(connection);
     await insertTop();
+    console.log("Game table set");
     connection.end();
 
 }
@@ -152,7 +153,8 @@ async function createGameTable(connection) {
             `CREATE TABLE IF NOT EXISTS werekt.Game (
                 Game_Id int PRIMARY KEY NOT NULL AUTO_INCREMENT,
                 Game_Name varchar(255) UNIQUE,
-                Cover_Url varchar(255)
+                Cover_Url varchar(255),
+                Online_Max int
             ); `,
 
             (error) => {
@@ -254,7 +256,7 @@ async function insertTop() {
 
 
 
-    let sql = "INSERT INTO Game (Game_Name,Cover_Url) VALUES (?,?);"
+    let sql = "INSERT INTO Game (Game_Name,Cover_Url, Online_Max) VALUES (?,?,?);"
     let top = []
     connection.query("Select count(Game_Id) as cnt From Game;", async function (error, results) {
 
@@ -265,15 +267,25 @@ async function insertTop() {
         if (results[0].cnt < config.igdb_api.GAMES_LIMIT) {
             top = await getTop(config.igdb_api.GAMES_LIMIT);
             top.forEach(function (e) {
-                connection.query(sql, [e.name, e.cover], (error) => {
+                connection.query(sql, [e.name, e.cover, e.online_max], (error) => {
                     if (error) {
                         console.error(error.message);
                     }
                 });
             });
+            connection.query("INSERT INTO Game (Game_Name, Cover_Url,Online_Max) VALUES (?,?,?);", ["Zugzwang", 
+            "https://cdn.discordapp.com/attachments/652503230932058114/857220754989776916/unknown.png",2], (error)=>{
+                if(error){
+                    console.error(error.message);
+                }
+            });
         }
 
     });
+
+    
+
+    
 
 
 }

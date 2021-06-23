@@ -62,7 +62,6 @@
                 clearable
                 :class="$style.inputText"
               ></v-select>
-              <v-spacer></v-spacer>
               <v-autocomplete
                 label="Language"
                 v-model="language"
@@ -72,9 +71,20 @@
                 clearable
                 item-color="amber accent-4"
                 :class="$style.inputText"
+                class="mx-md-4"
               ></v-autocomplete>
+              <v-select
+                label="Game level"
+                v-model="level"
+                dark
+                item-color="amber accent-4"
+                :items="levelList"
+                outlined
+                clearable
+                :class="$style.inputText"
+              ></v-select>
             </div>
-            <div class="d-flex align-center mx-4">
+            <!-- <div class="d-flex align-center mx-4">
               <span :class="$style.inputText">Age range :</span>
               <v-range-slider
                 v-model="ageRange"
@@ -87,7 +97,7 @@
                 class="align-center ma-6"
               >
               </v-range-slider>
-            </div>
+            </div>-->
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
@@ -123,11 +133,12 @@ export default {
   data() {
     return {
       // Models
-      ageMin: 13,
-      ageMax: 100,
-      ageRange: [13, 100],
-      platform: "",
-      language: "",
+      // ageMin: 13,
+      // ageMax: 100,
+      // ageRange: [13, 100],
+      platform: null,
+      language: null,
+      level: null,
       // Page data
       connectedUserID: "",
       chosenGame: "",
@@ -137,6 +148,7 @@ export default {
       message: "In search of new players",
       platformList: ["PC", "Play Station", "Xbox", "Nintendo Switch"],
       languageList: [],
+      levelList: ["Beginner", "Intermediate", "Experienced"],
       gamesList: [],
       gamesRules: [(v) => !!v || "Game is required"],
     };
@@ -176,7 +188,6 @@ export default {
         });
     },
     async playBtn() {
-      // vérifier que le jeu chosenGame existe
       if (this.chosenGame && this.chosenGame.length > 0) {
         this.waiting = true;
         let game = this.chosenGame;
@@ -187,7 +198,14 @@ export default {
         socket.disconnect();
         socket.connect();
         socket.on("connect", () => {
-          socket.emit("game_search", game, userId, this.language, this.platform, this.ageMin, this.ageMax);
+          socket.emit(
+            "game_search",
+            game,
+            userId,
+            this.language,
+            this.platform,
+            this.level
+          );
         });
 
         socket.on("number_user", (nb, max) => {
@@ -197,7 +215,7 @@ export default {
         });
 
         socket.on("launch_game", () => {
-          socket.emit("leave_room", 'searching ' + game);
+          socket.emit("leave_room", "searching " + game);
           this.message = "A room for " + game + " is being created";
           socket.disconnect();
           document.location.href = "/chat";

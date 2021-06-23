@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex flex-wrap justify-space-around">
+  <div :class="$style.container" class="d-flex flex-wrap justify-space-around">
     <v-col
       v-for="(img, index) in imgList"
       :key="index"
@@ -57,6 +57,10 @@ export default {
 
 <style lang="scss" module>
 @import "../style";
+.container {
+  overflow-y: scroll;
+  max-height: 410px;
+}
 
 .description {
   color: $color-font-primary;
