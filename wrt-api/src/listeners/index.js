@@ -13,7 +13,6 @@ module.exports = (io) => {
     let NOMBRE_JOUEUR_MAX = 2;
     setInterval(() => {
         for(const [key, value] of io.sockets.adapter.rooms){
-            console.log(key);
             if(typeof key === "string"){
             if(key.includes("searching")){
                 io.in(key).emit('number_user', io.sockets.adapter.rooms.get(key).size, NOMBRE_JOUEUR_MAX);
@@ -53,10 +52,10 @@ module.exports = (io) => {
         socket.on("game_search", function (game, user, language, platform, maxAge, minAge) {
             socket.userInfo = {
                 id: user,
-                room: 'searching ' + game + ' ' + language + ' ' + platform
+                room: 'searching ' + game
             };
             clients[socket.id] = user;
-            socket.join('searching ' + game + ' ' + language + ' ' + platform);
+            socket.join('searching ' + game);
         });
     });
 
