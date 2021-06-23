@@ -1,5 +1,8 @@
+const {clients} = require("./index");
+
 module.exports = function (socket) {
     socket.on("disconnect", function () {
+        delete clients[socket.id];
         if(socket.userInfo?.room ==! undefined){
             socket.leave(socket.userInfo.room);
         }

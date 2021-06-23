@@ -50,7 +50,7 @@ app.use(
     express.static(__dirname + "/../node_modules/socket.io/client-dist")
 );
 
-initListeners(io);
+initListeners.start(io);
 
 http.listen(config.express.PORT, () => {
     console.log(`The server is listening on port: ${config.express.PORT}`);

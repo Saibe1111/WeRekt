@@ -204,8 +204,7 @@ export default {
             userId,
             this.language,
             this.platform,
-            this.ageMin,
-            this.ageMax
+            this.level
           );
         });
 
