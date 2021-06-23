@@ -91,7 +91,6 @@ async function getTop(Nbr_Games) {
             online_max:online
         })
 
-        console.log(ret);
     }
     return ret;
 
