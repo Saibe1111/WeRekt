@@ -132,11 +132,11 @@ async function getUserGames(discord_ID) {
                 }
             }).then(function (data) {
 
-                return { name: data[0][0].Game_Name, cover_url: data[0][0].Cover_Url, online_max:results[0][0].Online_Max }
+                return { name: data[0][0].Game_Name, cover_url: data[0][0].Cover_Url, online_max:data[0][0].Online_Max }
             });
             Games.push(pro);
         }
-        resolve(Games)
+        resolve(Games);
         connection.end();
     })
 }
