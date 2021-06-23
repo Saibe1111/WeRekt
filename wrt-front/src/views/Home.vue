@@ -95,7 +95,7 @@
               : $style.descriptionMobile
           "
         >
-          Don't play own your own anymore! Meet people who want to play the same
+          Don't play on your own anymore! Meet people who want to play the same
           game as you right now
         </p>
       </div>
