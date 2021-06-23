@@ -210,7 +210,6 @@ export default {
 
       const data = await res.json();
       this.games = data.games;
-      console.log(this.games);
     },
   },
   async mounted() {
