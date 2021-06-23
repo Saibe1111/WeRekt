@@ -154,7 +154,11 @@
               cols="4"
               class="d-flex justify-center"
             >
-              <v-img :src="game.cover" :aspect-ratio="3 / 4" max-width="150">
+              <v-img
+                :src="game.Cover_Url"
+                :aspect-ratio="3 / 4"
+                max-width="150"
+              >
               </v-img>
             </v-col>
           </v-row>
@@ -200,12 +204,13 @@ export default {
   methods: {
     async getGames() {
       let url = process.env.VUE_APP_API_URL;
-      const res = await fetch(`${url}/api/games/top?nbr_games=12`, {
+      const res = await fetch(`${url}/api/games?nbrGames=12`, {
         method: "GET",
       });
 
       const data = await res.json();
       this.games = data.games;
+      console.log(this.games);
     },
   },
   async mounted() {
