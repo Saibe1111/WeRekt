@@ -197,8 +197,7 @@ export default {
         });
 
         socket.on("launch_game", () => {
-          socket.emit("leave_room");
-
+          socket.emit("leave_room", 'searching ' + game);
           this.message = "A room for " + game + " is being created";
           socket.disconnect();
           document.location.href = "/chat";
