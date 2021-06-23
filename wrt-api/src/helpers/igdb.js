@@ -37,7 +37,6 @@ async function getCoverURLName(game_name) {
     }).then(
         response => response.json()
     ).then(function (data) {
-
         return data[0].image_id;
     });
     return `https://images.igdb.com/igdb/image/upload/t_cover_big/${await response}.jpg`;
@@ -70,7 +69,7 @@ async function getTop(Nbr_Games) {
             'Client-ID': config.igdb_api.CLIENT_ID,
             'Authorization': 'Bearer ' + config.igdb_api.AUTHORIZATION
         },
-        body: `fields name, cover; where total_rating_count > 50 & multiplayer_modes > 2; sort total_rating desc; limit ${Nbr_Games};`
+        body: `fields name, cover; where total_rating_count > 20 & multiplayer_modes > 2; sort total_rating desc; limit ${Nbr_Games};`
     }).then(
         response => response.json()
     ).then(function (data) {
@@ -100,7 +99,7 @@ async function getListGames() {
             'Client-ID': config.igdb_api.CLIENT_ID,
             'Authorization': 'Bearer ' + config.igdb_api.AUTHORIZATION
         },
-        body: `fields name; where total_rating_count > 75 & multiplayer_modes > 2; sort total_rating desc; limit 100;`
+        body: `fields name; where total_rating_count > 20 & multiplayer_modes > 2; sort total_rating desc; limit ${config.igdb_api.GAMES_LIMIT};`
     }).then(
         response => response.json()
     ).then(function (data) {
