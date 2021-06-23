@@ -10,7 +10,8 @@
     "igdb_api":{
         "URL" : "https://api.igdb.com/v4/",
         "CLIENT_ID" :"",
-        "AUTHORIZATION" :""
+        "AUTHORIZATION" :"",
+        "GAMES_LIMIT":100
     },
     "mysql":{
         "HOST" : "",

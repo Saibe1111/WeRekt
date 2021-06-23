@@ -1,5 +1,4 @@
-const{getGame, getGameByName, getTopGames} = require('../models/gameDAO.js');
-const{getListGames} = require('../helpers/igdb.js');
+const{getGame, getGameByName, getTopGames, getList} = require('../models/gameDAO.js');
 
 async function getGames(req, res){
     const games = await getGame(req.query.nbrGames);
@@ -28,8 +27,9 @@ async function getTop50(req, res){
 }
 
 async function getListGame(req, res){
-
-    res.json(await getListGames());
+    const games = await getList();
+    
+    res.json(games);
 }
 
 module.exports = {

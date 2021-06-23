@@ -12,8 +12,8 @@ async function getConnection() {
         database: "werekt"
     });
 
-    con.connect(function(err){
-        if(err) console.error("Connection to database impossible ! ", err.message);
+    con.connect(function (err) {
+        if (err) console.error("Connection to database impossible ! ", err.message);
     });
     return con;
 }
@@ -24,7 +24,7 @@ async function checkDbExist() {
         host: config.mysql.HOST,
         user: config.mysql.USER,
         password: config.mysql.PASSWORD
-        
+
     });
 
     await werektDb(connection);
@@ -35,7 +35,7 @@ async function checkDbExist() {
     await createCredentialsTable(connection);
     await createRoom(connection);
     await createMessage(connection);
-    await insertTop50(connection);
+    await insertTop();
     connection.end();
 
 }
@@ -53,7 +53,7 @@ async function werektDb(connection) {
                 }
             }
         );
-        
+
     }).catch((error) => {
         console.error(error.message);
     });
@@ -79,7 +79,7 @@ async function createRoom(connection) {
                 }
             }
         );
-        
+
     }).catch((error) => {
         console.error(error.message);
     });
@@ -107,7 +107,7 @@ async function createMessage(connection) {
                 }
             }
         );
-        
+
     }).catch((error) => {
         console.error(error.message);
     });
@@ -140,7 +140,7 @@ async function createUser(connection) {
                 }
             }
         );
-        
+
     }).catch((error) => {
         console.error(error.message);
     });
@@ -160,12 +160,12 @@ async function createGameTable(connection) {
                     console.error(error.message);
                     reject(error)
                 } else {
-                  
+
                     resolve();
                 }
             }
         );
-        
+
     }).catch((error) => {
         console.error(error.message);
     });
@@ -192,7 +192,7 @@ async function createPlaysTable(connection) {
                 }
             }
         );
-        
+
     }).catch((error) => {
         console.error(error.message);
     });
@@ -219,7 +219,7 @@ async function createIsFriendOfTable(connection) {
                 }
             }
         );
-        
+
     }).catch((error) => {
         console.error(error.message);
     });
@@ -243,28 +243,38 @@ async function createCredentialsTable(connection) {
                 }
             }
         );
-        
+
     }).catch((error) => {
         console.error(error.message);
     });
 }
 
-async function insertTop50() {
+async function insertTop() {
     const connection = await getConnection();
 
-    let top = await getTop(50);
+
 
     let sql = "INSERT INTO Game (Game_Name,Cover_Url) VALUES (?,?);"
+    let top = []
+    connection.query("Select count(Game_Id) as cnt From Game;", async function (error, results) {
 
-    top.forEach(function (e) {
-        connection.query(sql, [e.name, e.cover], (error) => {
-            if (error) {
-                console.error(error.message);
-            }
-        });
+        if (error) {
+            console.error("A Select error from insertTop50 ", error.messsage);
+        }
+
+        if (results[0].cnt < config.igdb_api.GAMES_LIMIT) {
+            top = await getTop(config.igdb_api.GAMES_LIMIT);
+            top.forEach(function (e) {
+                connection.query(sql, [e.name, e.cover], (error) => {
+                    if (error) {
+                        console.error(error.message);
+                    }
+                });
+            });
+        }
+
     });
 
-    connection.end();
 
 }
 
