@@ -5,7 +5,7 @@ async function getAuth(req, res) {
 }
 
 async function discordRedirect(req, res) {
-    res.redirect(config.front.URL);
+    res.redirect(`${config.front.URL}/play`);
 }
 
 async function logout(req, res) {

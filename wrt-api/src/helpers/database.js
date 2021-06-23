@@ -258,34 +258,40 @@ async function insertTop() {
 
     let sql = "INSERT INTO Game (Game_Name,Cover_Url, Online_Max) VALUES (?,?,?);"
     let top = []
-    connection.query("Select count(Game_Id) as cnt From Game;", async function (error, results) {
+    return new Promise((resolve, reject) => {
+        connection.query("Select count(Game_Id) as cnt From Game;", async function (error, results) {
 
-        if (error) {
-            console.error("A Select error from insertTop50 ", error.messsage);
-        }
+            if (error) {
+                console.error("A Select error from insertTop50 ", error.messsage);
+                reject(error);
+            }
 
-        if (results[0].cnt < config.igdb_api.GAMES_LIMIT) {
-            top = await getTop(config.igdb_api.GAMES_LIMIT);
-            top.forEach(function (e) {
-                connection.query(sql, [e.name, e.cover, e.online_max], (error) => {
-                    if (error) {
-                        console.error(error.message);
-                    }
+            if (results[0].cnt < config.igdb_api.GAMES_LIMIT) {
+                top = await getTop(config.igdb_api.GAMES_LIMIT);
+                top.forEach(function (e) {
+                    connection.query(sql, [e.name, e.cover, e.online_max], (error) => {
+                        if (error) {
+                            console.error(error.message);
+                            reject(error);
+                        }
+                    });
                 });
-            });
-            connection.query("INSERT INTO Game (Game_Name, Cover_Url,Online_Max) VALUES (?,?,?);", ["Zugzwang", 
-            "https://cdn.discordapp.com/attachments/652503230932058114/857220754989776916/unknown.png",2], (error)=>{
-                if(error){
-                    console.error(error.message);
-                }
-            });
-        }
+                connection.query("INSERT INTO Game (Game_Name, Cover_Url,Online_Max) VALUES (?,?,?);", ["Zugzwang",
+                    "https://cdn.discordapp.com/attachments/652503230932058114/857220754989776916/unknown.png", 2], (error) => {
+                        if (error) {
+                            console.error(error.message);
+                        }else{
+                            resolve();
+                        }
+                    });
+            }
+
+        });
+        
 
     });
 
-    
 
-    
 
 
 }
