@@ -19,13 +19,15 @@
       />
     </div>
     <div>
-      <div :class="$style.description" class="mx-8">{{ messageIsTyping }}</div>
+      <div :class="$style.description" class="mx-8 mb-4" style="height: 14px">
+        {{ messageIsTyping }}
+      </div>
       <v-text-field
         ref="msgInput"
         :disabled="isDisabled"
         :class="$style.inputStyle"
         :rules="inputRules"
-        class="ma-4"
+        class="mx-4"
         label="Chat with your friends..."
         dark
         clearable

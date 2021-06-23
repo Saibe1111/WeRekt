@@ -26,11 +26,8 @@
       <v-list nav>
         <v-list-item-group mandatory v-model="selectedRoom">
           <v-list-item
-            :ripple="false"
-            active-class="activeClass"
             v-for="room in rooms"
             :key="room.id"
-            link
             @click="changeRoom(room)"
           >
             <v-list-item-icon>
@@ -73,7 +70,6 @@ export default {
   methods: {
     changeRoom(room) {
       if (room != this.selectedRoom) {
-        this.selectedRoom = room;
         this.$emit("roomChanged", room);
       }
     },

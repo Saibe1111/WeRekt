@@ -38,7 +38,7 @@
         :isDisabled="isDisabled"
         :isTypingUser="isTypingUser"
       />
-      <ListMembersChat v-if="userPanel" class="mx-3" :members="members" />
+      <ListMembersChat v-if="userPanel" class="mx-3 mt-3" :members="members" />
     </div>
   </div>
 </template>
@@ -67,6 +67,7 @@ export default {
       members: [],
       roomsAreInitialized: false,
       isTypingUser: "",
+      usersTyping: [],
     };
   },
   computed: {
@@ -116,40 +117,38 @@ export default {
       socket.emit("message", newMessage);
     },
     isTyping() {
-      socket.emit("typing", this.selectedRoom.id,this.connectedUserID);
+      socket.emit("typing", this.selectedRoom.id, this.connectedUserID);
     },
     changeRoom(room) {
       this.selectedRoom = room;
+      this.isTypingUser = "";
+      this.usersTyping = [];
       socket.emit("change_room", this.selectedRoom.id);
-      
     },
     toggleUserPanel() {
       this.userPanel = !this.userPanel;
     },
   },
   async mounted() {
-    let usersTyping = [];
-
     await this.getConnectedUser();
     let userId = this.connectedUserID;
     socket.emit("user_connected", userId);
     socket.connect();
     socket.on("connect", () => {});
     socket.on("new_message", (message) => {
-      console.log(usersTyping[0], message.sender)
-      if(usersTyping.includes(message.sender)){
-        var index = usersTyping.indexOf(message.sender);
+      console.log(this.usersTyping[0], message.sender);
+      if (this.usersTyping.includes(message.sender)) {
+        var index = this.usersTyping.indexOf(message.sender);
         if (index !== -1) {
-          usersTyping.splice(usersTyping, 1);
-          if(usersTyping.length > 1){
-            this.isTypingUser = `${usersTyping.toString()} are`;
-          }else if (usersTyping.length === 1){
-            this.isTypingUser = `${usersTyping[0]} is`;
-          }else{
+          this.usersTyping.splice(this.usersTyping, 1);
+          if (this.usersTyping.length > 1) {
+            this.isTypingUser = `${this.usersTyping.toString()} are`;
+          } else if (this.usersTyping.length === 1) {
+            this.isTypingUser = `${this.usersTyping[0]} is`;
+          } else {
             this.isTypingUser = "";
           }
         }
-
       }
 
       this.messages = [...this.messages, message];
@@ -165,28 +164,26 @@ export default {
         this.rooms = [...this.rooms, rooms];
       }
     });
-    
-    socket.on("user_typing", (username) => {
 
-      if(!usersTyping.includes(username)){
-        usersTyping.push(username);
-        if(usersTyping.length > 1){
-          this.isTypingUser = `${usersTyping.toString()} are`;
-        }else{
-          this.isTypingUser = `${usersTyping[0]} is`;
+    socket.on("user_typing", (username) => {
+      if (!this.usersTyping.includes(username)) {
+        this.usersTyping.push(username);
+        if (this.usersTyping.length > 1) {
+          this.isTypingUser = `${this.usersTyping.toString()} are`;
+        } else {
+          this.isTypingUser = `${this.usersTyping[0]} is`;
         }
-        setTimeout( () => {
-          usersTyping.shift();
-          if(usersTyping.length > 1){
-          this.isTypingUser = `${usersTyping.toString()} are`;
-          }else if (usersTyping.length === 1){
-            this.isTypingUser = `${usersTyping[0]} is`;
-          }else{
+        setTimeout(() => {
+          this.usersTyping.shift();
+          if (this.usersTyping.length > 1) {
+            this.isTypingUser = `${this.usersTyping.toString()} are`;
+          } else if (this.usersTyping.length === 1) {
+            this.isTypingUser = `${this.usersTyping[0]} is`;
+          } else {
             this.isTypingUser = "";
           }
         }, 5000);
       }
-      
     });
 
     socket.on("room_Info", (messages, users) => {
