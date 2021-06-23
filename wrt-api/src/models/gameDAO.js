@@ -84,6 +84,25 @@ async function getPlaysGame(discord_ID) {
 
 }
 
+async function getMaxPlayer(Game_Name){
+    const connection = await database.getConnection();
+
+    return new Promise((resolve, reject) =>{
+        connection.query("Select Online_Max From Game where Game_Name = ?;", [Game_Name], (error, results)=>{
+            if(error){
+                console.error("getMaxPlayer error", error.message);
+                reject(error);
+            }
+
+            if(results.length > 0){
+                resolve(results[0].Online_Max);
+            }
+        });
+
+        connection.end();
+    });
+}
+
 async function getUserGames(discord_ID) {
 
     let sql = "SELECT * FROM Game where Game_Id=?;"
@@ -193,5 +212,6 @@ module.exports = {
     updateUserGames,
     getGameByName,
     getTopGames,
-    getList
+    getList,
+    getMaxPlayer
 }

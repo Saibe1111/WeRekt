@@ -36,6 +36,7 @@ async function checkDbExist() {
     await createRoom(connection);
     await createMessage(connection);
     await insertTop();
+    console.log("Game table set");
     connection.end();
 
 }
@@ -281,6 +282,8 @@ async function insertTop() {
         }
 
     });
+
+    
 
     
 
