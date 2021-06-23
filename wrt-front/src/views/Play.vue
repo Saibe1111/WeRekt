@@ -187,7 +187,7 @@ export default {
         socket.disconnect();
         socket.connect();
         socket.on("connect", () => {
-          socket.emit("game_search", game, userId);
+          socket.emit("game_search", game, userId, this.language, this.platform, this.ageMin, this.ageMax);
         });
 
         socket.on("number_user", (nb, max) => {
