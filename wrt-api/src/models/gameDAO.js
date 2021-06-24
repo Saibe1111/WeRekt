@@ -129,6 +129,8 @@ async function getMaxPlayer(Game_Name) {
                 if (results.length > 0) {
                     connection.release();
                     resolve(results[0].Online_Max);
+                }else{
+                    resolve(0);
                 }
             });
         })
@@ -139,19 +141,22 @@ async function getMaxPlayer(Game_Name) {
 
 async function getUserGames(discord_ID){
     let sql = "SELECT * FROM Game INNER JOIN Plays ON Game.Game_Id = Plays.Game_Id where Plays.User_Id = ?";
-
-    return new Promise((resolve, results) =>{
+    console.log("HAHAHAHA")
+    return new Promise((resolve, reject) =>{
         database.getConnection((error, connection)=>{
+            console.log("HOHOHO")
             connection.query(sql, [discord_ID], (error, results)=>{
                 connection.release();
                 if(error) reject(error);
                 if(results.length > 0){
                     let Game = [];
+                    console.log("HIHIHI")
                     Array.prototype.forEach.call(results, res=>{
                         Game.push({name: res.Game_Name, cover_url: res.Cover_Url, onlinemax: res.Online_Max})
                     });
                     resolve(Game);
-                }
+                }else
+                resolve([]);
             })
         })
     })
@@ -187,6 +192,9 @@ async function getList() {
                     connection.release();
                     resolve(r);
                 }
+                else{
+                    resolve();
+                }
             });
         });
 
@@ -219,6 +227,7 @@ async function updateUserGames(discord_ID, Games) {
                     if (results.length > 0) {
                         playsGame(discord_ID, results[0].Game_Id);
                     }
+                    
                 })
             })
             connection.release();
