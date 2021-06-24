@@ -227,6 +227,11 @@ export default {
           this.message = `${this.nbGamersWaiting} / ${this.maxGamers} players found`;
         });
 
+        socket.on("two_search_error", () => {
+          this.showPopup = true;
+          this.cancelBtn();
+        });
+
         socket.on("launch_game", () => {
           socket.emit("leave_room", "searching " + game);
           this.message = "A room for " + game + " is being created";

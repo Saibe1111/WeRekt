@@ -18,6 +18,14 @@ module.exports = function (socket) {
         }
         let nbMax = await gameDAO.getMaxPlayer(game);
 
+
+        for (const [key, value] of Object.entries(clients)) {
+            if(value.id === user){
+                delete clients[key];
+                socket.to(key).emit("two_search_error");
+            }
+        }
+
         clients[socket.id] = {
             id: user,
             search:{
