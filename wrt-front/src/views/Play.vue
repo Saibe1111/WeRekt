@@ -4,6 +4,15 @@
     class="d-flex flex-column align-center justify-center"
     :class="$style.sectionHeight"
   >
+    <PopupMessage
+      :width="500"
+      :isOpen="showPopup"
+      :title="'Removed'"
+      :message="'You can only search for one game at a time'"
+      @closePopup="closePopup()"
+    >
+    </PopupMessage>
+
     <div v-if="!waiting">
       <div class="d-flex justify-center text-center my-10 mb-12">
         <h1
@@ -127,11 +136,15 @@
 
 <script>
 import socket from "../socket";
+import PopupMessage from "../components/PopupMessage.vue";
 export default {
   name: "Play",
-  components: {},
+  components: {
+    PopupMessage,
+  },
   data() {
     return {
+      showPopup: false,
       // Models
       // ageMin: 13,
       // ageMax: 100,
@@ -227,6 +240,9 @@ export default {
     cancelBtn() {
       this.waiting = false;
       socket.disconnect();
+    },
+    closePopup() {
+      this.showPopup = false;
     },
   },
   mounted() {
