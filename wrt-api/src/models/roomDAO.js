@@ -72,7 +72,7 @@ async function getUser(id) {
         database.getConnection((error, connection) => {
             if (error) reject(error);
             connection.query(sql, [id], (error, results) => {
-
+                connection.release();
                 if (error)
                     console.error(error.message);
                 if (results === undefined) {
@@ -82,7 +82,7 @@ async function getUser(id) {
                 } else {
                     resolve(null);
                 }
-                connection.end();
+
             });
         })
 
