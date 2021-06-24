@@ -96,7 +96,7 @@
     </div>
     <div v-else class="d-flex flex-column align-center">
       <h1
-        :class="$vuetify.breakpoint.mdAndUp ? $style.title : $style.titleMobile"
+        :class="$vuetify.breakpoint.mdAndUp ? $style.title : $style.titleMobile" class="text-center"
       >
         Finding
         <span :class="$style.textColor">{{ chosenGame }}</span>
