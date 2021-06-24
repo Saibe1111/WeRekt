@@ -141,16 +141,13 @@ async function getMaxPlayer(Game_Name) {
 
 async function getUserGames(discord_ID){
     let sql = "SELECT * FROM Game INNER JOIN Plays ON Game.Game_Id = Plays.Game_Id where Plays.User_Id = ?";
-    console.log("HAHAHAHA")
     return new Promise((resolve, reject) =>{
         database.getConnection((error, connection)=>{
-            console.log("HOHOHO")
             connection.query(sql, [discord_ID], (error, results)=>{
                 connection.release();
                 if(error) reject(error);
                 if(results.length > 0){
                     let Game = [];
-                    console.log("HIHIHI")
                     Array.prototype.forEach.call(results, res=>{
                         Game.push({name: res.Game_Name, cover_url: res.Cover_Url, onlinemax: res.Online_Max})
                     });
