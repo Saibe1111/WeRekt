@@ -2,21 +2,15 @@ const mysql = require("mysql2");
 const config = require("../config.json");
 const { Sequelize } = require("sequelize");
 const { getTop } = require('../helpers/igdb.js');
+const pool = mysql.createPool({
+    connectionLimit: 500,
+    host: config.mysql.HOST,
+    user: config.mysql.USER,
+    password: config.mysql.PASSWORD,
+    database: "werekt"
+});
 
-async function getConnection() {
 
-    const con = await mysql.createConnection({
-        host: config.mysql.HOST,
-        user: config.mysql.USER,
-        password: config.mysql.PASSWORD,
-        database: "werekt"
-    });
-
-    con.connect(function (err) {
-        if (err) console.error("Connection to database impossible ! ", err.message);
-    });
-    return con;
-}
 
 async function checkDbExist() {
 
@@ -252,42 +246,52 @@ async function createCredentialsTable(connection) {
 }
 
 async function insertTop() {
-    const connection = await getConnection();
-
-
 
     let sql = "INSERT INTO Game (Game_Name,Cover_Url, Online_Max) VALUES (?,?,?);"
     let top = []
     return new Promise((resolve, reject) => {
-        connection.query("Select count(Game_Id) as cnt From Game;", async function (error, results) {
+        pool.getConnection((error, connection) => {
 
             if (error) {
-                console.error("A Select error from insertTop50 ", error.messsage);
+                console.error("pool connection insertTop error", error.message);
                 reject(error);
             }
+            connection.query("Select count(Game_Id) as cnt From Game;", async function (error, results) {
 
-            if (results[0].cnt < config.igdb_api.GAMES_LIMIT) {
-                top = await getTop(config.igdb_api.GAMES_LIMIT);
-                top.forEach(function (e) {
-                    connection.query(sql, [e.name, e.cover, e.online_max], (error) => {
-                        if (error) {
-                            console.error(error.message);
-                            reject(error);
-                        }
+                if (error) {
+                    console.error("A Select error from insertTop50 ", error.messsage);
+                    reject(error);
+                }
+
+                if (results[0].cnt < config.igdb_api.GAMES_LIMIT) {
+                    top = await getTop(config.igdb_api.GAMES_LIMIT);
+                    top.forEach(function (e) {
+                        connection.query(sql, [e.name, e.cover, e.online_max], (error) => {
+                            if (error) {
+                                console.error(error.message);
+                                connection.release();
+                                reject(error);
+                            }
+                        });
                     });
-                });
-                connection.query("INSERT INTO Game (Game_Name, Cover_Url,Online_Max) VALUES (?,?,?);", ["Zugzwang",
-                    "https://cdn.discordapp.com/attachments/652503230932058114/857220754989776916/unknown.png", 2], (error) => {
-                        if (error) {
-                            console.error(error.message);
-                        }else{
-                            resolve();
-                        }
-                    });
-            }
+                    connection.query("INSERT INTO Game (Game_Name, Cover_Url,Online_Max) VALUES (?,?,?);", ["Zugzwang",
+                        "https://cdn.discordapp.com/attachments/652503230932058114/857220754989776916/unknown.png", 2], (error) => {
+                            if (error) {
+                                console.error(error.message);
+                                connection.release();
+                                reject(error);
+                            } else {
+                                connection.release();
+                                resolve();
+                            }
+                        });
+                }
+
+            });
+
 
         });
-        
+
 
     });
 
@@ -297,8 +301,10 @@ async function insertTop() {
 }
 
 module.exports = {
-    getConnection,
-    checkDbExist
+    checkDbExist,
+    getConnection: (callback)=>{
+        return pool.getConnection(callback);
+    }
 }
 
 
