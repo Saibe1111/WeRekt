@@ -128,21 +128,18 @@ export default {
     toggleUserPanel() {
       this.userPanel = !this.userPanel;
     },
+    displayUsersTyping() {
+      if (this.usersTyping.length > 1) {
+        let SortTab = this.usersTyping;
+        SortTab.sort();
+        this.isTypingUser = `${SortTab.join(", ")} are`;
+      } else if (this.usersTyping.length === 1) {
+        this.isTypingUser = `${this.usersTyping[0]} is`;
+      } else {
+        this.isTypingUser = "";
+      }
+    },
   },
-
-  displayUsersTyping() {
-    
-    if (this.usersTyping.length > 1) {
-      let SortTab = this.usersTyping;
-      SortTab.sort();
-      this.isTypingUser = `${SortTab.join(', ')} are`;
-    } else if (this.usersTyping.length === 1) {
-      this.isTypingUser = `${this.usersTyping[0]} is`;
-    } else {
-      this.isTypingUser = "";
-    }
-  },
-
   async mounted() {
     await this.getConnectedUser();
     let userId = this.connectedUserID;
@@ -152,7 +149,6 @@ export default {
     socket.on("connect", () => {});
 
     socket.on("new_message", (message) => {
-      
       if (this.usersTyping.includes(message.sender)) {
         var index = this.usersTyping.indexOf(message.sender);
         if (index !== -1) {
@@ -184,7 +180,6 @@ export default {
           this.usersTyping.shift();
           this.displayUsersTyping();
         }, 5000);
-
       }
     });
 
