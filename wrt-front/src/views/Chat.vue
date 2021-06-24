@@ -129,25 +129,35 @@ export default {
       this.userPanel = !this.userPanel;
     },
   },
+
+  displayUsersTyping() {
+    
+    if (this.usersTyping.length > 1) {
+      let SortTab = this.usersTyping;
+      SortTab.sort();
+      this.isTypingUser = `${SortTab.join(', ')} are`;
+    } else if (this.usersTyping.length === 1) {
+      this.isTypingUser = `${this.usersTyping[0]} is`;
+    } else {
+      this.isTypingUser = "";
+    }
+  },
+
   async mounted() {
     await this.getConnectedUser();
     let userId = this.connectedUserID;
     socket.emit("user_connected", userId);
     socket.connect();
+
     socket.on("connect", () => {});
+
     socket.on("new_message", (message) => {
-      console.log(this.usersTyping[0], message.sender);
+      
       if (this.usersTyping.includes(message.sender)) {
         var index = this.usersTyping.indexOf(message.sender);
         if (index !== -1) {
           this.usersTyping.splice(this.usersTyping, 1);
-          if (this.usersTyping.length > 1) {
-            this.isTypingUser = `${this.usersTyping.toString()} are`;
-          } else if (this.usersTyping.length === 1) {
-            this.isTypingUser = `${this.usersTyping[0]} is`;
-          } else {
-            this.isTypingUser = "";
-          }
+          this.displayUsersTyping();
         }
       }
 
@@ -168,21 +178,13 @@ export default {
     socket.on("user_typing", (username) => {
       if (!this.usersTyping.includes(username)) {
         this.usersTyping.push(username);
-        if (this.usersTyping.length > 1) {
-          this.isTypingUser = `${this.usersTyping.toString()} are`;
-        } else {
-          this.isTypingUser = `${this.usersTyping[0]} is`;
-        }
+        this.displayUsersTyping();
+
         setTimeout(() => {
           this.usersTyping.shift();
-          if (this.usersTyping.length > 1) {
-            this.isTypingUser = `${this.usersTyping.toString()} are`;
-          } else if (this.usersTyping.length === 1) {
-            this.isTypingUser = `${this.usersTyping[0]} is`;
-          } else {
-            this.isTypingUser = "";
-          }
+          this.displayUsersTyping();
         }, 5000);
+
       }
     });
 
