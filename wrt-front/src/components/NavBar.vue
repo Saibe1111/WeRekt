@@ -7,7 +7,9 @@
     elevate-on-scroll
   >
     <v-toolbar-title>
-      <router-link to="/" :class="$style.logo">WeRekt</router-link>
+      <router-link :to="isLog ? '/play' : '/'" :class="$style.logo"
+        >WeRekt</router-link
+      >
     </v-toolbar-title>
     <v-spacer></v-spacer>
     <div v-if="isLog" class="mr-5">

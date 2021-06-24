@@ -308,7 +308,6 @@ export default {
       }
     },
     initUserData(user) {
-      console.log(user);
       this.username = user.username;
       if (user.profile_url != null) this.avatarUser = user.profile_url;
       if (this.banner != null) this.bgUserProfile = this.banner;
