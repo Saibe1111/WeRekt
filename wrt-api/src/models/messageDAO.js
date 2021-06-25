@@ -1,41 +1,55 @@
 const database = require('../helpers/database.js');
 
-async function createMessage(content, timestamp, senderId,roomId) {
-    const connection = await database.getConnection();
+
+async function createMessage(content, timestamp, senderId, roomId) {
+    
     return new Promise((resolve, reject) => {
-    let sql = "INSERT INTO Messages (content, timestamp, senderId, roomId) values (?,?,?,?);";
-    
-    connection.query(sql, [content, timestamp, senderId,roomId], (error) => {
-        if (error) {
-            console.error(error.message);
-            resolve();
-        } else {
-            resolve();
-        }
+        let sql = "INSERT INTO Messages (content, timestamp, senderId, roomId) values (?,?,?,?);";
+        database.getConnection((error, connection) => {
+            if(error){
+                console.error("database connection createMessage error");
+                reject(error);
+            }
+            connection.query(sql, [content, timestamp, senderId, roomId], (error) => {
+                connection.release();
+                if (error) {
+                    console.error(error.message);
+                    reject(error);
+                } else {
+                    resolve();
+                }
+            });
+        });
+
     });
-    
-    connection.end();
-});
 }
 
 async function getRoomMessage(id) {
-    const connection = await database.getConnection();
+    
     return new Promise((resolve, reject) => {
         
         let sql = "SELECT * FROM Messages INNER JOIN Users ON Messages.senderId = Users.ID where roomId=? ORDER BY timestamp;";
-        connection.query(sql, [id], (error, results) => {
-            
-            if (error)
-                console.error(error.message);
-            if(results === undefined){
-                resolve(null);
-            }else if(results.length > 0){
-                
-                resolve(results);
-            }else{
-                resolve(null);
+        database.getConnection((error, connection) => {
+            if(error){
+                console.error("database connection getRoomMessage error");
+                reject(error);
             }
-            connection.end();
+            connection.query(sql, [id], (error, results) => {
+                connection.release();
+                if (error) {
+                    console.error(error.message);
+                    reject(error);
+                }
+                if (results === undefined) {
+                    resolve(null);
+                } else if (results.length > 0) {
+
+                    resolve(results);
+                } else {
+                    resolve(null);
+                }
+
+            });
         });
 
     }).catch((error) => {

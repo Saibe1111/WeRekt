@@ -1,55 +1,63 @@
 const database = require('../helpers/database.js');
 
+
 async function createUser(discord_ID, username, Profile_Url) {
-    const connection = await database.getConnection();
+
+    
     let Usname = username.replace(/[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2580-\u27BF]|\uD83E[\uDD10-\uDDFF]/g, "");
 
     let sql = "INSERT INTO Users (ID, Username, Profile_Url,Languages,Platforms,Social_Networks)" +
         " values (?,?,?,JSON_OBJECT('Languages',JSON_ARRAY()),JSON_OBJECT('Platforms',JSON_ARRAY()),JSON_OBJECT('Social_Networks',JSON_ARRAY()));";
     return new Promise((resolve, reject) => {
-        connection.query(sql, [discord_ID, Usname, Profile_Url], (error) => {
-            if (error) {
-                console.error(error.message);
-                reject(error);
+        database.getConnection((error, connection) => {
+            if (error) reject(error);
+            connection.query(sql, [discord_ID, Usname, Profile_Url], (error) => {
+                if (error) {
+                    console.error(error.message);
+                    reject(error);
 
-            } else {
-                resolve();
-
-            }
+                } else {
+                    resolve();
+                }
+            });
         });
-        connection.end();
-    });
+
+    }).catch(error => console.error("", error.message));
 }
 
 async function getUser(id) {
-    const connection = await database.getConnection();
+    
     return new Promise((resolve, reject) => {
-
         let sql = "SELECT * FROM Users where ID=?;";
-        connection.query(sql, [id], (error, results) => {
-            if (error)
-                console.error(error.message);
-            if (results === undefined) {
-                resolve(null);
-            } else if (results.length > 0) {
 
-                resolve({
-                    id: results[0].ID,
-                    username: results[0].Username,
-                    profile_url: results[0].Profile_Url,
-                    description: results[0].Description,
-                    country: results[0].Country,
-                    birthdate: results[0].Birthdate,
-                    banner: results[0].Banner,
-                    languages: results[0].Languages,
-                    platforms: results[0].Platforms,
-                    social_networks: results[0].Social_Networks
+        database.getConnection((error, connection) => {
+            if (error) reject(error);
+            connection.query(sql, [id], (error, results) => {
+                connection.release();
+                if (error)
+                    console.error(error.message);
+                if (results === undefined) {
+                    resolve(null);
+                } else if (results.length > 0) {
 
-                });
-            } else {
-                resolve(null);
-            }
-            connection.end();
+                    resolve({
+                        id: results[0].ID,
+                        username: results[0].Username,
+                        profile_url: results[0].Profile_Url,
+                        description: results[0].Description,
+                        country: results[0].Country,
+                        birthdate: results[0].Birthdate,
+                        banner: results[0].Banner,
+                        languages: results[0].Languages,
+                        platforms: results[0].Platforms,
+                        social_networks: results[0].Social_Networks
+
+                    });
+                } else {
+                    resolve(null);
+                }
+
+            });
         });
 
     }).catch((error) => {
@@ -61,8 +69,6 @@ async function getUser(id) {
 
 async function updateUser(discord_ID, Username = undefined, Profile_Url = undefined, Description = undefined,
     Country = undefined, Birthdate = undefined, Banner = undefined, Languages = undefined, Platforms = undefined, Social_Networks = undefined) {
-    const connection = await database.getConnection();
-
     let param = [];
     let attributes = "";
 
@@ -77,9 +83,9 @@ async function updateUser(discord_ID, Username = undefined, Profile_Url = undefi
     }
     if (Description != undefined) {
         attributes = attributes + "Description=?, ";
-        if (Description != "") {            
+        if (Description != "") {
             param.push(Description);
-        }else{
+        } else {
             param.push(null);
         }
 
@@ -145,33 +151,36 @@ async function updateUser(discord_ID, Username = undefined, Profile_Url = undefi
     param.push(discord_ID);
 
     let sql = `UPDATE Users SET ${attributes.replace(/,\s*$/, "")} WHERE ID = ?;`;
-    connection.query(sql, param, (error) => {
-        if (error) {
-            console.error(error.message);
-            return;
-        } else {
+    return new Promise((resolve, reject) => {
+        database.getConnection((error, connection) => {
+            if (error) reject(error);
+            connection.query(sql, param, (error) => {
+                connection.release();
+                if (error) 
+                    reject(error);
+                resolve();
+               
+            });
+        })
+    }).catch(error => console.error(error.message));
 
-        }
-    }
-
-    )
-    connection.end();
 
 }
 
 async function deleteUser(id) {
-    const connection = await database.getConnection();
-
+    
     let sql = "DELETE FROM Users WHERE ID=?;";
-    connection.query(sql, [id], (error, results) => {
+    database.getConnection((error, connection) =>{
+        if(error) console.error("database connection deleteUser error", error.message);
+    connection.query(sql, [id], (error) => {
+        connection.release();
         if (error) {
             console.error(error.message);
             return;
         }
-        else {
-        }
     });
-    connection.end();
+});
+
 
 }
 

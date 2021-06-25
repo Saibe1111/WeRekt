@@ -35,7 +35,6 @@
       </div>
       <div class="d-flex align-center mx-4">
         <v-autocomplete
-          class="mr-5"
           ref="gameChoice"
           label="Choose a game"
           v-model="chosenGame"
@@ -55,12 +54,10 @@
       <v-expansion-panels dark popout>
         <v-expansion-panel>
           <v-expansion-panel-header expand-icon="mdi-menu-down">
-            <span :class="$style.inputText" class="mx-4"
-              >Optional matchmaking settings</span
-            >
+            <span :class="$style.inputText">Optional matchmaking settings</span>
           </v-expansion-panel-header>
           <v-expansion-panel-content>
-            <div class="d-flex flex-column flex-md-row ma-4">
+            <div class="d-flex flex-column flex-md-row my-4">
               <v-select
                 label="Platform"
                 v-model="platform"
@@ -93,27 +90,13 @@
                 :class="$style.inputText"
               ></v-select>
             </div>
-            <!-- <div class="d-flex align-center mx-4">
-              <span :class="$style.inputText">Age range :</span>
-              <v-range-slider
-                v-model="ageRange"
-                :max="ageMax"
-                :min="ageMin"
-                :thumb-color="$style.colorSecondary"
-                dark
-                hide-details
-                thumb-label="always"
-                class="align-center ma-6"
-              >
-              </v-range-slider>
-            </div>-->
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
     </div>
     <div v-else class="d-flex flex-column align-center">
       <h1
-        :class="$vuetify.breakpoint.mdAndUp ? $style.title : $style.titleMobile"
+        :class="$vuetify.breakpoint.mdAndUp ? $style.title : $style.titleMobile" class="text-center"
       >
         Finding
         <span :class="$style.textColor">{{ chosenGame }}</span>
@@ -146,9 +129,6 @@ export default {
     return {
       showPopup: false,
       // Models
-      // ageMin: 13,
-      // ageMax: 100,
-      // ageRange: [13, 100],
       platform: null,
       language: null,
       level: null,
