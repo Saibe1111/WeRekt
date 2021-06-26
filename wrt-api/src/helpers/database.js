@@ -1,6 +1,5 @@
 const mysql = require("mysql2");
 const config = require("../config.json");
-const { Sequelize } = require("sequelize");
 const { getTop } = require('../helpers/igdb.js');
 const pool = mysql.createPool({
     connectionLimit: 500,
